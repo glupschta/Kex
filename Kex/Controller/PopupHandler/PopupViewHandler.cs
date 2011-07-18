@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows.Input;
 using Kex.Interfaces;
 
-namespace Kex.PopupHandler
+namespace Kex.Controller.PopupHandler
 {
     public class PopupViewHandler : IPopupHandler
     {

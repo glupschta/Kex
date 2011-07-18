@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using Microsoft.WindowsAPICodePack.Shell;
 
-namespace Kex.Converters
+namespace Kex.Views.Converters
 {
     public class ThumbnailConverter : IValueConverter
     {

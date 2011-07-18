@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Windows.Data;
 
-namespace Kex.Converters
+namespace Kex.Views.Converters
 {
     public class LengthConverter : IValueConverter
     {

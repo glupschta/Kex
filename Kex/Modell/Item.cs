@@ -1,12 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using System.IO;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Kex.Interfaces;
 using Microsoft.WindowsAPICodePack.Shell;
 
-namespace Kex
+namespace Kex.Modell
 {
     public class Item : IItem
     {

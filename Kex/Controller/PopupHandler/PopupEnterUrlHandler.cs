@@ -2,27 +2,33 @@
 using System.Windows.Input;
 using Kex.Interfaces;
 
-namespace Kex.PopupHandler
+namespace Kex.Controller.PopupHandler
 {
-    public class PopupFilterHandler : IPopupHandler
+    public class PopupEnterUrlHandler : IPopupHandler
     {
         public string Name
         {
-            get { return "Filter"; }
+            get { return "Url"; }
         }
 
         public MatchMode MatchMode
         {
-            get { return MatchMode.StartsWith; }
+            get { return MatchMode.Contains; }
         }
 
         public IEnumerable<string> ListItems
         {
-            get { return null; }
+            get
+            {
+                var history= ListerManager.Manager.CurrentLister.NavigationHistory.Locations;
+                history.Reverse();
+                return history;
+            }
         }
 
         public void ItemSelected(string item)
         {
+            ListerManager.Manager.SetDirectory(item);
         }
 
         public void HandleKey(object sender, KeyEventArgs e)
@@ -31,7 +37,6 @@ namespace Kex.PopupHandler
 
         public void TextChanged(string text)
         {
-            MessageHost.ViewHandler.SetFilter(text);
         }
     }
 }

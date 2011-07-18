@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
-using Kex.Controller;
 using Kex.Interfaces;
 using Kex.Views;
 
-namespace Kex.PopupHandler
+namespace Kex.Controller.PopupHandler
 {
     public class PopupBrowsingHandler : IPopupHandler
     {

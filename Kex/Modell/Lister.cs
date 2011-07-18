@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Kex.Interfaces;
 
-namespace Kex
+namespace Kex.Modell
 {
     public class Lister : ILister
     {

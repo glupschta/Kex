@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Input;
 using Kex.Interfaces;
 
-namespace Kex.PopupHandler
+namespace Kex.Controller.PopupHandler
 {
     public class PopupSortingHandler : IPopupHandler
     {

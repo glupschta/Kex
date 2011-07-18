@@ -7,9 +7,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using Kex.Controller.PopupHandler;
 using Kex.Interfaces;
-using Kex.ItemProvider;
-using Kex.PopupHandler;
+using Kex.Modell;
+using Kex.Modell.ItemProvider;
 using Kex.Views;
 
 namespace Kex.Controller

@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Kex.Converters
+namespace Kex.Views.Converters
 {
     public class DateTimeConverter : IValueConverter 
     {

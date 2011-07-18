@@ -4,13 +4,10 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Windows.Threading;
 using Kex.Interfaces;
 using Microsoft.WindowsAPICodePack.Shell;
 
-namespace Kex.ItemProvider
+namespace Kex.Modell.ItemProvider
 {
     public class FilesystemItemProvider : IItemProvider
     {

@@ -2,10 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
-using Kex.Controller;
 using Kex.Interfaces;
 
-namespace Kex.PopupHandler
+namespace Kex.Controller.PopupHandler
 {
     public class PopupDrivesHandler : IPopupHandler
     {

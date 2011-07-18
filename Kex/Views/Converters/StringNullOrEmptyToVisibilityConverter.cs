@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Kex.Converters
+namespace Kex.Views.Converters
 {
     public class StringNullOrEmptyToVisibilityConverter : IValueConverter
     {

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Kex.Modell;
 using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Kex.Interfaces
