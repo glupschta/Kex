@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="Kex.Views.ListerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Views="clr-namespace:Kex.Views" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <Style TargetType="{x:Type ListViewItem}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                    <Setter Property="Background" Value="{StaticResource ResourceKey=selectionGradient}" />
+                </DataTrigger>
+            </Style.Triggers>
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="LightBlue" Opacity=".8"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Orange" Opacity=".4"/>
+            </Style.Resources>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <ListView Grid.Row="0" Name="View" Background="{StaticResource ResourceKey=backGradient}"
+                View="{DynamicResource ResourceKey=fullView}" FocusVisualStyle="{x:Null}"
+                ItemsSource="{Binding Items}" KeyDown="ListViewKeyDown"
+                MouseUp="View_MouseUp" MouseDoubleClick="ViewMouseDoubleClick"
+                AllowDrop="True" Drop="DropList_Drop" DragEnter="DropList_DragEnter"
+                PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" 
+                PreviewMouseMove="List_MouseMove" Focusable="true" IsSynchronizedWithCurrentItem="True">
+        </ListView>
+        <Views:ListerStatusbar x:Name="statusbar" Grid.Row="2"/>
+    </Grid>
+
+</UserControl>
+    

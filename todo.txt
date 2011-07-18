@@ -1,0 +1,7 @@
+/select/copy/paste
+Filter
+pin/upin
+navigation history 
+statusbar
+key for half way down/up (visible area/complete directory?)
+open in background

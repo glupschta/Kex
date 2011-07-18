@@ -1,0 +1,27 @@
+﻿<Window x:Class="Kex.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        xmlns:UI="clr-namespace:Kex.Views" 
+        Title="MainWindow" Height="350" Width="525" Icon="/Kex;component/Icon1.ico">
+    <Window.Resources>
+        <LinearGradientBrush x:Key="lightBlueGradient">
+            <GradientStop Color="LightGray" Offset="1" />
+            <GradientStop Color="White" Offset="0" />
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="lightGrayGradient">
+            <GradientStop Color="LightGray" Offset="0" />
+            <GradientStop Color="White" Offset="1" />
+        </LinearGradientBrush>
+    </Window.Resources>
+    <TabControl Focusable="False">
+        <TabItem Focusable="False">
+            <TabItem.Header>
+                <TextBlock x:Name="header"/>
+            </TabItem.Header>
+            <Grid Name="stackPanel" Width="Auto" Height="Auto">
+                <UI:ListboxTextInput x:Name="listPopup" />
+            </Grid>
+        </TabItem>
+    </TabControl>
+</Window>

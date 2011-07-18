@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="Kex.Views.ListerStatusbar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:Converters="clr-namespace:Kex.Converters" mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <StatusBar>
+        <StatusBar.Resources>
+            <Converters:StringNullOrEmptyToVisibilityConverter x:Key="nullToVisibility" />
+            <Converters:AnyToVisibilityConverter x:Key="anyToVisibility" />
+
+            <LinearGradientBrush x:Key="inputFieldGradient" StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#FFFFFF" Offset="0" />
+                <GradientStop Color="#FFFFFF" Offset="0.4" />
+                <GradientStop Color="#DDDDDD" Offset="1" />
+            </LinearGradientBrush>
+        </StatusBar.Resources>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="22"/>
+            </Grid.RowDefinitions>
+        </Grid>
+        <WrapPanel Grid.Column="0">
+            <WrapPanel>
+                <TextBlock Padding="2,0,0,0" Text="{Binding Items.Count}"/>
+                <TextBlock Text=" Item(s)" />
+                <TextBlock x:Name="debug" />
+            </WrapPanel>
+            <WrapPanel Visibility="{Binding SelectedItems, Converter={StaticResource anyToVisibility}}">
+                <TextBlock Text=", " />
+                <TextBlock Padding="2,0,0,0"  Text="{Binding SelectedItems.ItemCount}"/>
+                <TextBlock Text=" Item(s) Selected, Size: " />
+                <TextBlock Padding="2,0,0,0"  Text="{Binding SelectedItems.ItemSize}"/>
+            </WrapPanel>
+            <WrapPanel Visibility="{Binding Filter, Converter={StaticResource nullToVisibility}}">
+                <TextBlock Padding="50,0,0,0" Text="Filter: "/>
+                <TextBlock  Padding="2,0,0,0" Text="{Binding Filter}"/>
+            </WrapPanel>
+            <WrapPanel Visibility="{Binding Filter, Converter={StaticResource nullToVisibility}}">
+                <TextBlock Padding="50,0,0,0" Text="Filter: "/>
+                <TextBlock  Padding="2,0,0,0"  Text="{Binding Filter}"/>
+            </WrapPanel>
+        </WrapPanel>
+    </StatusBar>
+</UserControl>
