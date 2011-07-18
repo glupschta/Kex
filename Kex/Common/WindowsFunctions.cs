@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.IO;
 using System.Runtime.InteropServices;
-using Microsoft.Win32;
-using Shell32;
-using Kex.Interfaces;
 
-namespace Kex
+namespace Kex.Common
 {
     public class WindowsFunctions
     {

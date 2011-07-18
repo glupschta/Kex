@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using Kex.Common;
 using Kex.Interfaces;
 
 namespace Kex.Controller.PopupHandler

@@ -1,7 +1,7 @@
 ﻿using System.Windows.Input;
 using Kex.Interfaces;
 
-namespace Kex
+namespace Kex.Common
 {
     public class CommandKeyHandler
     {

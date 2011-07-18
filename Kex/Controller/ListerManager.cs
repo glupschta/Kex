@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using Kex.Common;
 using Kex.Controller.PopupHandler;
 using Kex.Interfaces;
 using Kex.Modell;

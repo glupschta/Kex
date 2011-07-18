@@ -71,19 +71,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BrowsingHistory.cs" />
-    <Compile Include="CommandKeyHandler.cs" />
-    <Compile Include="FileAction.cs" />
-    <Compile Include="Formatter.cs" />
+    <Compile Include="Common\BrowsingHistory.cs" />
+    <Compile Include="Common\CommandKeyHandler.cs" />
+    <Compile Include="Common\FileAction.cs" />
+    <Compile Include="Common\Formatter.cs" />
     <Compile Include="Modell\Item.cs" />
     <Compile Include="Modell\ItemSelection.cs" />
     <Compile Include="Modell\ItemType.cs" />
     <Compile Include="Modell\Lister.cs" />
-    <Compile Include="MatchMode.cs" />
-    <Compile Include="MessageHost.cs" />
-    <Compile Include="PathPart.cs" />
-    <Compile Include="PathResolver.cs" />
-    <Compile Include="ShellContextMenu1.cs" />
+    <Compile Include="Common\MatchMode.cs" />
+    <Compile Include="Common\MessageHost.cs" />
+    <Compile Include="Common\PathPart.cs" />
+    <Compile Include="Common\PathResolver.cs" />
+    <Compile Include="Common\ShellContextMenu1.cs" />
     <Compile Include="Views\ListboxTextInput.xaml.cs">
       <DependentUpon>ListboxTextInput.xaml</DependentUpon>
     </Compile>
@@ -97,7 +97,7 @@
       <DependentUpon>PathHeader.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TileView.cs" />
-    <Compile Include="WindowsFunctions.cs" />
+    <Compile Include="Common\WindowsFunctions.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

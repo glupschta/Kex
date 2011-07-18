@@ -4,9 +4,8 @@ using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
-using System.Linq;
 
-namespace Kex
+namespace Kex.Common
  {
 
      /// <summary>

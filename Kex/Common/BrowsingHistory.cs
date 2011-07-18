@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Kex.Interfaces;
+﻿using System.Collections.Generic;
 
-namespace Kex
+namespace Kex.Common
 {
     public class BrowsingHistory
     {

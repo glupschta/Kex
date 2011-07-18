@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Media.Imaging;
+using Kex.Common;
 using Kex.Interfaces;
 using Microsoft.WindowsAPICodePack.Shell;
 

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Kex.Interfaces;
 using Kex.Modell;
 using Microsoft.VisualBasic.FileIO;
 
-namespace Kex
+namespace Kex.Common
 {
 
     public class FileAction

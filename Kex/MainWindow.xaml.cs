@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using Kex.Common;
 using Kex.Controller;
 
 namespace Kex

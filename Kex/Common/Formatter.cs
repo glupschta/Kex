@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kex
+namespace Kex.Common
 {
     public class Formatter
     {

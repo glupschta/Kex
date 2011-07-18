@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Kex.Common;
 using Kex.Interfaces;
 using Microsoft.WindowsAPICodePack.Shell;
 

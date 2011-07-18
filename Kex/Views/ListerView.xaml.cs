@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Kex.Common;
 using Kex.Interfaces;
 
 namespace Kex.Views
