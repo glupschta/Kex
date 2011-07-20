@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Kex.Common;
-using Kex.Interfaces;
+using Kex.Model;
 using Kex.Views;
 
 namespace Kex.Controller.PopupHandler
@@ -65,6 +65,7 @@ namespace Kex.Controller.PopupHandler
             if (selection != null)
             {
                 ListerManager.Manager.CurrentView.View.SelectedItem = selection;
+                ListerManager.Manager.CurrentView.View.ScrollIntoView(selection);
                 Keyboard.Focus(textinput.input);
             }
         }

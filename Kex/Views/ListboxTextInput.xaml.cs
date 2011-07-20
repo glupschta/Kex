@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Kex.Common;
-using Kex.Interfaces;
+using Kex.Controller.PopupHandler;
 
 namespace Kex.Views
 {
@@ -21,7 +21,7 @@ namespace Kex.Views
             DataContext = this;
             input.KeyDown += ListboxTextInput_KeyDown;
             input.TextChanged += input_TextChanged;
-            popup.LostKeyboardFocus += popup_LostFocus;
+            //popup.LostKeyboardFocus += popup_LostFocus;
             listView.PreviewGotKeyboardFocus += (sender, eventArgs) => eventArgs.Handled = true;
         }
 

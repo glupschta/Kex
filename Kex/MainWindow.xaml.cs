@@ -16,6 +16,7 @@ namespace Kex
             ListerManager.Initialize(header, stackPanel, listPopup);
             MessageHost.ViewHandler = ListerManager.Manager;
             ListerManager.Manager.OpenLister(@"C:\");
+            ListerManager.Manager.SetView("thumbView");
             Activated += MainView_Activated;
         }
 

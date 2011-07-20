@@ -5,6 +5,10 @@ namespace Kex.Views
 {
     public class TileView : ViewBase
     {
+        public TileView() :base()
+        {
+        }
+
         public DataTemplate ItemTemplate { get; set; }
 
         protected override object DefaultStyleKey

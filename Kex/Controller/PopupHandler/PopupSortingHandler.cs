@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Kex.Common;
-using Kex.Interfaces;
 
 namespace Kex.Controller.PopupHandler
 {
@@ -45,7 +44,7 @@ namespace Kex.Controller.PopupHandler
         {
             if (string.IsNullOrEmpty(property))
             {
-                MessageHost.ViewHandler.CurrentLister.SortProperty = null;
+                MessageHost.ViewHandler.SetSorting(null, descending);
                 return;
             }
             if (property.Length == 0) return;

@@ -42,7 +42,8 @@
     <Views:TileView x:Key="simpleView">
         <Views:TileView.ItemTemplate>
             <DataTemplate>
-                <Grid>
+                <StackPanel Orientation="Horizontal">
+                <Grid Width="50" Height="50">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="22"/>
                         <RowDefinition Height="22"/>
@@ -50,6 +51,7 @@
                     <Image Grid.Row="0" Source="{Binding Thumbnail}"/>
                     <TextBlock Grid.Row="1" Text="{Binding Name}" TextAlignment="Center"/>
                 </Grid>
+                </StackPanel>
             </DataTemplate>
         </Views:TileView.ItemTemplate>
     </Views:TileView>
@@ -57,16 +59,24 @@
     <Views:TileView x:Key="thumbView">
         <Views:TileView.ItemTemplate>
             <DataTemplate>
-                <Grid>
+                <Grid Width="90" Height="90">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="50"/>
-                        <RowDefinition Height="22"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition MinHeight="22"/>
                     </Grid.RowDefinitions>
                     <Image Grid.Row="0" Source="{Binding Thumbnail}"/>
-                    <TextBlock Grid.Row="1" Text="{Binding Name}" TextAlignment="Center"/>
+                    <TextBlock Grid.Row="1" Text="{Binding Name}" TextAlignment="Center" TextWrapping="Wrap"/>
                 </Grid>
             </DataTemplate>
         </Views:TileView.ItemTemplate>
     </Views:TileView>
+    
+    <ItemsPanelTemplate x:Key="gridVirtualizing">
+        <VirtualizingStackPanel/>
+    </ItemsPanelTemplate>
+
+    <ItemsPanelTemplate x:Key="tileVirtualizing">
+        <Views:VirtualizingWrapPanel/>
+    </ItemsPanelTemplate>
 
 </ResourceDictionary>

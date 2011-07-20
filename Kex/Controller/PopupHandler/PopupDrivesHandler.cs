@@ -3,20 +3,25 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using Kex.Common;
-using Kex.Interfaces;
 
 namespace Kex.Controller.PopupHandler
 {
     public class PopupDrivesHandler : IPopupHandler
     {
-        private readonly Dictionary<string, string> drives;
-
-        public PopupDrivesHandler()
+        private static Dictionary<string, string> drives;
+        private static Dictionary<string, string> Drives
         {
-            drives = DriveInfo.GetDrives().ToDictionary(GetDriveInfoString, d => d.RootDirectory.FullName);
+            get
+            {
+                if (drives == null)
+                {
+                    drives = DriveInfo.GetDrives().ToDictionary(GetDriveInfoString, d => d.RootDirectory.FullName);
+                }
+                return drives;
+            }
         }
 
-        public string GetDriveInfoString(DriveInfo di)
+        public static string GetDriveInfoString(DriveInfo di)
         {
             try
             {
@@ -39,12 +44,12 @@ namespace Kex.Controller.PopupHandler
 
         public IEnumerable<string> ListItems
         {
-            get { return drives.Keys; }
+            get { return Drives.Keys; }
         }
 
         public void ItemSelected(string item)
         {
-            ListerManager.Manager.SetDirectory(drives[item]);
+            ListerManager.Manager.SetDirectory(Drives[item]);
         }
 
         public void HandleKey(object sender, KeyEventArgs e)

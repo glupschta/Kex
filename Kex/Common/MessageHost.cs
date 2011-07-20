@@ -1,6 +1,4 @@
-﻿using Kex.Interfaces;
-
-namespace Kex.Common
+﻿namespace Kex.Common
 {
     public static class MessageHost
     {

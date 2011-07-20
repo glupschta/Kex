@@ -75,10 +75,12 @@
     <Compile Include="Common\CommandKeyHandler.cs" />
     <Compile Include="Common\FileAction.cs" />
     <Compile Include="Common\Formatter.cs" />
-    <Compile Include="Modell\Item.cs" />
-    <Compile Include="Modell\ItemSelection.cs" />
-    <Compile Include="Modell\ItemType.cs" />
-    <Compile Include="Modell\Lister.cs" />
+    <Compile Include="Model\FileProperties.cs" />
+    <Compile Include="Model\FileItem.cs" />
+    <Compile Include="Model\ItemSelection.cs" />
+    <Compile Include="Model\ItemType.cs" />
+    <Compile Include="Model\IVirtualizedPropertyProvider.cs" />
+    <Compile Include="Model\FileLister.cs" />
     <Compile Include="Common\MatchMode.cs" />
     <Compile Include="Common\MessageHost.cs" />
     <Compile Include="Common\PathPart.cs" />
@@ -98,6 +100,7 @@
     </Compile>
     <Compile Include="Views\TileView.cs" />
     <Compile Include="Common\WindowsFunctions.cs" />
+    <Compile Include="Views\VirtualizingWrapPanel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -112,12 +115,12 @@
     <Compile Include="Views\Converters\LengthConverter.cs" />
     <Compile Include="Views\Converters\StringNullOrEmptyToVisibilityConverter.cs" />
     <Compile Include="Views\Converters\ThumbNailConverter.cs" />
-    <Compile Include="Interfaces\IItem.cs" />
-    <Compile Include="Interfaces\IItemProvider.cs" />
-    <Compile Include="Interfaces\ILister.cs" />
-    <Compile Include="Interfaces\IListerMessages.cs" />
-    <Compile Include="Interfaces\IPopupHandler.cs" />
-    <Compile Include="Modell\ItemProvider\FilesystemItemProvider.cs" />
+    <Compile Include="Model\IItem.cs" />
+    <Compile Include="Model\ItemProvider\IItemProvider.cs" />
+    <Compile Include="Model\ILister.cs" />
+    <Compile Include="Common\IListerMessages.cs" />
+    <Compile Include="Controller\PopupHandler\IPopupHandler.cs" />
+    <Compile Include="Model\ItemProvider\FilesystemItemProvider.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

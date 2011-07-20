@@ -9,9 +9,9 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using Kex.Common;
 using Kex.Controller.PopupHandler;
-using Kex.Interfaces;
+using Kex.Model;
+using Kex.Model.ItemProvider;
 using Kex.Modell;
-using Kex.Modell.ItemProvider;
 using Kex.Views;
 
 namespace Kex.Controller
@@ -70,7 +70,7 @@ namespace Kex.Controller
 
         public void SetDirectory(string directory)
         {
-            CurrentView.Lister.ItemProvider = new FilesystemItemProvider(directory);
+            _header.Text = directory;
             CurrentView.Lister.CurrentDirectory = directory;
             CurrentView.View.Items.Filter = null;
             CurrentView.View.Items.SortDescriptions.Clear();
@@ -127,8 +127,14 @@ namespace Kex.Controller
         public void SetView(string view)
         {
             var xamlView = CurrentView.FindResource(view) as ViewBase;
-            EnsureFocusOnItemChange();
+            if (xamlView == null)
+            {
+                throw new Exception("View not found: "+view);
+            }
             CurrentView.View.View = xamlView;
+            var itemsPanel = (ItemsPanelTemplate)CurrentView.FindResource(view == "fullView" ? "gridVirtualizing" : "tileVirtualizing");
+            CurrentView.View.ItemsPanel = itemsPanel;
+            EnsureFocusOnItemChange();
         }
 
         public void EnsureFocusOnItemChange()
@@ -240,13 +246,14 @@ namespace Kex.Controller
 
         public void OpenLister()
         {
-            OpenLister(CurrentItem.ResolvedPath);
+            OpenLister(CurrentItem.FullPath);
         }
 
         public void OpenLister(string directory)
         {
             var itemProvider = new FilesystemItemProvider(directory);
-            var lister = new Lister {ItemProvider = itemProvider};
+            _header.Text = directory;
+            var lister = new FileLister {ItemProvider = itemProvider};
             var listerView = new ListerView { Lister = lister, DataContext = lister };
             var ind = _views.Count > 0 ? _views.IndexOf(CurrentView) + 1 : 0;
             _views.Insert(ind, listerView);
@@ -403,7 +410,7 @@ namespace Kex.Controller
                 return;
             }
             var menu = new ShellContextMenu1();
-            if (sel.Type == ItemType.Container)
+            if (sel.ItemType == ItemType.Container)
             {
                 var dir = new[] { new DirectoryInfo(sel.FullPath) };
                 menu.ShowContextMenu(dir, position.Value);
@@ -446,7 +453,7 @@ namespace Kex.Controller
             SetFocusToIndex(listView.SelectedIndex);
         }
 
-        private void SetFocusToItem(IItem iitem)
+        public void SetFocusToItem(IItem iitem)
         {
             var item = CurrentView.View.ItemContainerGenerator.ContainerFromItem(iitem) as ListViewItem;
             if (item != null)
@@ -468,7 +475,7 @@ namespace Kex.Controller
             var item = CurrentView.View.ItemContainerGenerator.ContainerFromIndex(index) as ListViewItem;
             if (item != null)
             {
-                CurrentView.View.ScrollIntoView(CurrentView.View.SelectedItem);
+                CurrentView.View.ScrollIntoView(item);
                 Keyboard.Focus(item);
                 item.Focus();
             } 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using Kex.Interfaces;
+using Kex.Model;
 using Kex.Modell;
 using Microsoft.VisualBasic.FileIO;
 
@@ -21,14 +21,14 @@ namespace Kex.Common
                 target = getTargetLocation(targetLocation, item);
                 try
                 {
-                    if (item.Type == ItemType.Container)
+                    if (item.ItemType == ItemType.Container)
                     {
                         if (selection.FileAction == FileActionType.Copy)
                             FileSystem.CopyDirectory(item.FullPath, target);
                         else if (selection.FileAction == FileActionType.Move)
                             FileSystem.MoveDirectory(item.FullPath, target);
                     }
-                    else if (item.Type == ItemType.Executable)
+                    else if (item.ItemType == ItemType.Executable)
                     {
                         if (selection.FileAction == FileActionType.Copy)
                             File.Copy(item.FullPath, target);
@@ -64,9 +64,9 @@ namespace Kex.Common
             {
                 try
                 {
-                    if (item.Type == ItemType.Container)
+                    if (item.ItemType == ItemType.Container)
                         FileSystem.DeleteDirectory(item.FullPath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
-                    else if (item.Type == ItemType.Executable)
+                    else if (item.ItemType == ItemType.Executable)
                         File.Delete(item.FullPath);
                 }
                 catch (Exception ex)

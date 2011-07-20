@@ -5,7 +5,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Kex.Common;
-using Kex.Interfaces;
+using Kex.Controller;
+using Kex.Model;
 
 namespace Kex.Views
 {
@@ -22,8 +23,7 @@ namespace Kex.Views
             keyHandler = new CommandKeyHandler();
         }
 
-
-        public ILister Lister { get;  set;}
+        public ILister<FileProperties> Lister { get;  set;}
 
         private void ListViewKeyDown(object sender, KeyEventArgs e)
         {
@@ -32,7 +32,7 @@ namespace Kex.Views
             bool shift = ((e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift);
             bool control = ((e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control);
             bool alt = ((e.KeyboardDevice.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt);
-            e.Handled = keyHandler.HandleKey(Lister, e.Key, shift, control, alt);
+            e.Handled = CommandKeyHandler.HandleKey(e.Key, shift, control, alt);
         }
 
         private void ViewMouseDoubleClick(object sender, MouseButtonEventArgs e)

@@ -3,21 +3,22 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using Kex.Common;
-using Kex.Interfaces;
+using Kex.Model;
+using Kex.Model.ItemProvider;
 
 namespace Kex.Modell
 {
-    public class Lister : ILister
+    public class FileLister : ILister<FileProperties>
     {
-        public Lister()
+        public FileLister()
         {
             NavigationHistory = new BrowsingHistory();
         }
 
         public BrowsingHistory NavigationHistory { get; set; }
 
-        private IItemProvider _itemProvider;
-        public IItemProvider ItemProvider
+        private IItemProvider<FileProperties> _itemProvider;
+        public IItemProvider<FileProperties> ItemProvider
         {
             get { return _itemProvider; }
             set { 
@@ -39,32 +40,13 @@ namespace Kex.Modell
                     _dirInfo = new DirectoryInfo(_currentDirectory);
                     
                 }
-                Refresh();
-                if (PropertyChanged == null) return;
-                OnPropertyChanged("CurrentDirectory");
-                OnPropertyChanged("PathParts");
-                OnPropertyChanged("SelectedItems");
-            }
-        }
-
-        public string Filter
-        {
-            get { return _filter; }
-            set { 
-                _filter = value;
-                OnPropertyChanged("Filter");
+                Items = ItemProvider.GetItems();
                 OnPropertyChanged("Items");
-            }
-        }
-
-        public string SortProperty
-        {
-            get { return _sortProperty; }
-            set
-            {
-                _sortProperty = value;
-                OnPropertyChanged("SortProperty");
-                OnPropertyChanged("Items");
+                //Refresh();
+                //if (PropertyChanged == null) return;
+                //OnPropertyChanged("CurrentDirectory");
+                //OnPropertyChanged("PathParts");
+                //OnPropertyChanged("SelectedItems");
             }
         }
 
@@ -84,8 +66,6 @@ namespace Kex.Modell
             }
         }
 
-
-
         public ItemSelection SelectedItems
         {
             get
@@ -102,8 +82,6 @@ namespace Kex.Modell
 
         public void Refresh()
         {
-            Filter = null;
-            SortProperty = null;
             Items = ItemProvider.GetItems();
         }
 

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Converters1="clr-namespace:Kex.Views.Converters" mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Popup x:Name="popup" PopupAnimation="Fade" AllowsTransparency="True"
-           StaysOpen="True" HorizontalOffset="0">
+           StaysOpen="False" HorizontalOffset="0">
         <Popup.Resources>
             <LinearGradientBrush x:Key="headerGradient" StartPoint="0,0" EndPoint="0,1">
                 <GradientStop Color="White" Offset="0" />

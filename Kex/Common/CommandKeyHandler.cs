@@ -1,12 +1,11 @@
 ﻿using System.Windows.Input;
-using Kex.Interfaces;
+using Kex.Model;
 
 namespace Kex.Common
 {
     public class CommandKeyHandler
     {
-
-        public bool HandleKey(ILister lister, Key k, bool shift, bool control, bool alt)
+        public static bool HandleKey(Key k, bool shift, bool control, bool alt)
         {
             switch(k)
             {
@@ -91,7 +90,6 @@ namespace Kex.Common
                 case Key.M:
                     MessageHost.ViewHandler.ShowSpecialFolderPopup();
                     break;
-                    break;
                 case Key.P:
                     MessageHost.ViewHandler.CloseCurrentLister();
                     break;
@@ -128,11 +126,5 @@ namespace Kex.Common
             return true;
         }
 
-        public string Name
-        {
-            get { return "Command"; }
-        }
-
-        public void Clear(ILister list){}
     }
 }

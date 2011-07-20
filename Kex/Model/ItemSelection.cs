@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Kex.Common;
-using Kex.Interfaces;
+using Kex.Model;
 
 namespace Kex.Modell
 {
@@ -23,7 +23,8 @@ namespace Kex.Modell
         {
             get
             {
-                return Formatter.FormatLength(Selection.Sum(it => it.Length));
+                return "0";
+                //return Formatter.FormatLength(Selection.Sum(it => it.Length));
             }
         }
 
