@@ -2,11 +2,11 @@
 
 namespace Kex.Model.ItemProvider
 {
-    public interface IItemProvider<out T>
+    public interface IItemProvider<T>
     {
         string CurrentContainer { get; set; }
-        IEnumerable<IItem> GetItems();
         void DoAction(IItem item);
-        T Fetch(IItem item);
+        IEnumerable<IItem<T>> GetItems();
+        T FetchDetails(IItem<T> item);
     }
 }

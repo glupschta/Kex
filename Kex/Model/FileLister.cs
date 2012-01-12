@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using Kex.Common;
+using Kex.Controller;
 using Kex.Model;
 using Kex.Model.ItemProvider;
 
@@ -32,7 +33,7 @@ namespace Kex.Modell
             get { return _currentDirectory; }
             set
             {
-                NavigationHistory.Push(value, _currentDirectory);
+                NavigationHistory.Push(value, _currentDirectory, value);
                 ItemProvider.CurrentContainer = value;
                 _currentDirectory = value;
                 if (value != null)
@@ -41,12 +42,6 @@ namespace Kex.Modell
                     
                 }
                 Items = ItemProvider.GetItems();
-                OnPropertyChanged("Items");
-                //Refresh();
-                //if (PropertyChanged == null) return;
-                //OnPropertyChanged("CurrentDirectory");
-                //OnPropertyChanged("PathParts");
-                //OnPropertyChanged("SelectedItems");
             }
         }
 
@@ -90,12 +85,12 @@ namespace Kex.Modell
             return (_dirInfo.Parent != null) ? _dirInfo.Parent.FullName : null;
         }
 
-        public string HistoryBack()
+        public HistoryItem HistoryBack()
         {
             return NavigationHistory.Previous;
         }
 
-        public string HistoryForward()
+        public HistoryItem HistoryForward()
         {
             return NavigationHistory.Next;
         }
@@ -110,8 +105,6 @@ namespace Kex.Modell
 
         private DirectoryInfo _dirInfo;
         private string _currentDirectory;
-        private string _filter;
-        private string _sortProperty;
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

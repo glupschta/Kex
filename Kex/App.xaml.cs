@@ -7,5 +7,6 @@ namespace Kex
     /// </summary>
     public partial class App : Application
     {
+
     }
 }

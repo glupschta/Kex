@@ -35,6 +35,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="GongShell">
       <HintPath>..\References\GongShell.dll</HintPath>
@@ -75,14 +84,17 @@
     <Compile Include="Common\CommandKeyHandler.cs" />
     <Compile Include="Common\FileAction.cs" />
     <Compile Include="Common\Formatter.cs" />
+    <Compile Include="Common\IListerViewManager.cs" />
+    <Compile Include="Controller\DragDropHandler.cs" />
+    <Compile Include="Controller\ListerManager.cs" />
+    <Compile Include="Controller\PopupHandler\ShellPropertyPopupHandler.cs" />
+    <Compile Include="Controller\TabbedListerViewManager.cs" />
     <Compile Include="Model\FileProperties.cs" />
     <Compile Include="Model\FileItem.cs" />
     <Compile Include="Model\ItemSelection.cs" />
     <Compile Include="Model\ItemType.cs" />
-    <Compile Include="Model\IVirtualizedPropertyProvider.cs" />
     <Compile Include="Model\FileLister.cs" />
     <Compile Include="Common\MatchMode.cs" />
-    <Compile Include="Common\MessageHost.cs" />
     <Compile Include="Common\PathPart.cs" />
     <Compile Include="Common\PathResolver.cs" />
     <Compile Include="Common\ShellContextMenu1.cs" />
@@ -95,12 +107,8 @@
     <Compile Include="Views\ListerView.xaml.cs">
       <DependentUpon>ListerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PathHeader.xaml.cs">
-      <DependentUpon>PathHeader.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\TileView.cs" />
     <Compile Include="Common\WindowsFunctions.cs" />
-    <Compile Include="Views\VirtualizingWrapPanel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -109,7 +117,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controller\ListerManager.cs" />
+    <Compile Include="Controller\CommandManager.cs" />
     <Compile Include="Views\Converters\AnyToVisibilityConverter.cs" />
     <Compile Include="Views\Converters\DateTimeConverter.cs" />
     <Compile Include="Views\Converters\LengthConverter.cs" />
@@ -118,7 +126,7 @@
     <Compile Include="Model\IItem.cs" />
     <Compile Include="Model\ItemProvider\IItemProvider.cs" />
     <Compile Include="Model\ILister.cs" />
-    <Compile Include="Common\IListerMessages.cs" />
+    <Compile Include="Common\ICommandManager.cs" />
     <Compile Include="Controller\PopupHandler\IPopupHandler.cs" />
     <Compile Include="Model\ItemProvider\FilesystemItemProvider.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -149,10 +157,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\PathHeader.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\PopupHandler\PopupBrowsingHandler.cs" />
@@ -179,6 +183,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

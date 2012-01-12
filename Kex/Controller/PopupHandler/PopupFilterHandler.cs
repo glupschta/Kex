@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 using Kex.Common;
 
@@ -31,7 +32,12 @@ namespace Kex.Controller.PopupHandler
 
         public void TextChanged(string text)
         {
-            MessageHost.ViewHandler.SetFilter(text);
+            ListerManager.Instance.CommandManager.SetFilter(text);
+        }
+
+        public Func<string, string, bool> Filter
+        {
+            get { return null; }
         }
     }
 }

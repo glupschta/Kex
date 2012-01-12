@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Kex.Controller;
 using Kex.Model;
 using Kex.Modell;
 using Microsoft.VisualBasic.FileIO;
@@ -38,7 +39,7 @@ namespace Kex.Common
                 }
                 catch (Exception ex)
                 {
-                    MessageHost.ViewHandler.HandleException(ex);
+                    ListerManager.Instance.CommandManager.HandleException(ex);
                 }
             }
             return target;
@@ -64,14 +65,19 @@ namespace Kex.Common
             {
                 try
                 {
-                    if (item.ItemType == ItemType.Container)
-                        FileSystem.DeleteDirectory(item.FullPath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
-                    else if (item.ItemType == ItemType.Executable)
-                        File.Delete(item.FullPath);
+                    switch (item.ItemType)
+                    {
+                        case ItemType.Container:
+                            FileSystem.DeleteDirectory(item.FullPath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                            break;
+                        case ItemType.Executable:
+                            File.Delete(item.FullPath);
+                            break;
+                    }
                 }
                 catch (Exception ex)
                 {
-                    MessageHost.ViewHandler.HandleException(ex);
+                    ListerManager.Instance.CommandManager.HandleException(ex);
                 }
             }
         }

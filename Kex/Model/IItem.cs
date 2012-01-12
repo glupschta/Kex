@@ -6,15 +6,17 @@ using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Kex.Model
 {
-    public interface IItem : INotifyPropertyChanged
+    public interface IItem
     {
         string FullPath { get; set; }
         string Name { get; set; }
         ItemType ItemType { get; set; }
-        void OnNotifyPropertyChanged(string property);
         bool IsSelected { get; set; }
+        void OnNotifyPropertyChanged(string property);
+    }
 
-        //T Properties { get; }
-        //bool Loaded { get; set; }
+    public interface IItem<T> : INotifyPropertyChanged, IItem
+    {
+        T Properties { get; set; }
     }
 }

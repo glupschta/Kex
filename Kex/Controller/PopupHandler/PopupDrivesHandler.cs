@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -11,13 +12,8 @@ namespace Kex.Controller.PopupHandler
         private static Dictionary<string, string> drives;
         private static Dictionary<string, string> Drives
         {
-            get
-            {
-                if (drives == null)
-                {
-                    drives = DriveInfo.GetDrives().ToDictionary(GetDriveInfoString, d => d.RootDirectory.FullName);
-                }
-                return drives;
+            get {
+                return drives ?? (drives = DriveInfo.GetDrives().ToDictionary(GetDriveInfoString, d => d.RootDirectory.FullName));
             }
         }
 
@@ -37,19 +33,25 @@ namespace Kex.Controller.PopupHandler
             get { return "Drives"; }
         }
 
-        public MatchMode MatchMode
-        {
-            get { return MatchMode.StartsWith; }
-        }
-
         public IEnumerable<string> ListItems
         {
             get { return Drives.Keys; }
         }
 
+        public Func<string, string, bool> Filter
+        {
+            get { return (source, text) => source.StartsWith(text, StringComparison.OrdinalIgnoreCase); }
+        }
+
         public void ItemSelected(string item)
         {
-            ListerManager.Manager.SetDirectory(Drives[item]);
+            try
+            {
+                ListerManager.Instance.CommandManager.SetContainer(Drives[item]);
+            } catch(Exception ex)
+            {
+                MainWindow.Debug(ex);
+            }
         }
 
         public void HandleKey(object sender, KeyEventArgs e)

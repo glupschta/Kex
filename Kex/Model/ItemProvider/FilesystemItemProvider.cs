@@ -4,7 +4,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using Kex.Common;
+using Kex.Controller;
 using Kex.Modell;
 using Microsoft.WindowsAPICodePack.Shell;
 
@@ -14,8 +16,9 @@ namespace Kex.Model.ItemProvider
     {
         public FilesystemItemProvider()
         {
-            _currentWorker = new BackgroundWorker();
-            _currentWorker.WorkerSupportsCancellation = true;
+            _currentWorker = new BackgroundWorker {WorkerSupportsCancellation = true};
+            ThumbnailFormatOption = ShellThumbnailFormatOption.IconOnly;
+            ThumbnailRetrievalOption = ShellThumbnailRetrievalOption.Default;
         }
 
         public FilesystemItemProvider(string directory) : this()
@@ -28,34 +31,40 @@ namespace Kex.Model.ItemProvider
             get; set; 
         }
 
-        protected virtual IEnumerable<IItem> GetItemsEnumerable()
+        protected virtual IEnumerable<IItem<FileProperties>> GetItemsEnumerable()
         {
-            var allItems = new List<IItem>();
+            var allItems = new List<IItem<FileProperties>>();
+            allItems.Add(new FileItem(CurrentContainer+"\\..",ItemType.Container, this));
             allItems.AddRange(Directory.EnumerateDirectories(CurrentContainer).Select(di => new FileItem(di, ItemType.Container, this)));
             allItems.AddRange(Directory.EnumerateFiles(CurrentContainer).Select(fi => new FileItem(fi, ItemType.Executable, this)));
             return allItems;
         }
 
-        public IEnumerable<IItem> GetItems()
+        public IEnumerable<IItem<FileProperties>> GetItems()
         {
             var allItems = GetItemsEnumerable();
             try
             {
                 if (allItems.Any())
                 {
-                    Fetch(allItems.First());
-                    FetchPropertiesAsync(allItems);
+                    const int preload = 1;
+                    foreach(var item in allItems.Take(preload))
+                    {
+                        FetchDetails(item);
+                    }
+                    FetchPropertiesAsync(allItems.Skip(preload));
                 }
             }
             catch (Exception ex)
             {
-                MessageHost.ViewHandler.HandleException(ex);
+                MessageBox.Show(ex.ToString());
             }
             return allItems;
         }
 
-        public FileProperties Fetch(IItem item)
+        public FileProperties FetchDetails(IItem<FileProperties> item)
         {
+            var fi = item as FileItem;
             var props = new FileProperties();
             try
             {
@@ -67,16 +76,17 @@ namespace Kex.Model.ItemProvider
                 props.LastModified = props.ShellObject.Properties.System.DateCreated.Value;
                 props.Thumbnail = props.ShellObject.Thumbnail.MediumBitmapSource;
                 props.Thumbnail.Freeze();
-                ((IVirtualizedPropertyProvider<FileProperties>) item).Loaded = true;
+                item.Properties = props;
+                fi.PropertiesChanged();
             } catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex);
+                Debug.WriteLine(ex);
             }
             return props;
         }
 
         [STAThread]
-        public void FetchPropertiesAsync(IEnumerable<IItem> items)
+        public void FetchPropertiesAsync(IEnumerable<IItem<FileProperties>> items)
         {
             if (_currentWorker.IsBusy)
             {
@@ -89,8 +99,7 @@ namespace Kex.Model.ItemProvider
 
         private void WorkerDoWork(object sender, DoWorkEventArgs e)
         {
-            _shellError = false;
-            var items = e.Argument as IEnumerable<IItem>;
+            var items = e.Argument as IEnumerable<IItem<FileProperties>>;
             if (items == null) return;
             foreach (var item in items)
             {
@@ -99,103 +108,31 @@ namespace Kex.Model.ItemProvider
                     e.Cancel = true;
                     break;
                 }
-                Fetch(item);
+                FetchDetails(item);
             }
         }
 
-        protected virtual ShellThumbnailFormatOption ThumbnailFormatOption
-        {
-            get { return ShellThumbnailFormatOption.Default; }
-        }
+        protected ShellThumbnailFormatOption ThumbnailFormatOption { get; set; }
 
-        protected virtual ShellThumbnailRetrievalOption ThumbnailRetrievalOption
-        {
-            get { return ShellThumbnailRetrievalOption.Default; }
-        }
-
-        //public void FetchProperties(IItem item)
-        //{
-        //    if (item == null) return;
-
-        //    if (_shellError)
-        //    {
-        //        SetPropertiesFromFileInfo(item);
-        //    }
-        //    else
-        //    {
-        //        try
-        //        {
-        //            item.ShellObject = ShellObject.FromParsingName(item.FullPath);
-        //            item.ShellObject.Thumbnail.FormatOption = ThumbnailFormatOption;
-        //            item.ShellObject.Thumbnail.RetrievalOption = ThumbnailRetrievalOption;
-        //            SetPropertiesFromShellObject(item);
-        //        } catch
-        //        {
-        //            _shellError = true;
-        //        } 
-        //    }
-        //    FireChanges(item);
-        //}
-
-        //private static void SetPropertiesFromShellObject(IItem item)
-        //{
-        //    item.Length = (long)(item.ShellObject.Properties.System.Size.Value ?? 0);
-        //    item.Created = item.ShellObject.Properties.System.DateCreated.Value;
-        //    item.LastModified = item.ShellObject.Properties.System.DateCreated.Value;
-        //    item.Thumbnail = item.ShellObject.Thumbnail.MediumBitmapSource;
-        //    item.Thumbnail.Freeze();
-        //}
-
-        //private static void SetPropertiesFromFileInfo(IItem item)
-        //{
-        //    FileSystemInfo fileInfo;
-        //    try
-        //    {
-        //        if (item.Type == ItemType.Container)
-        //        {
-        //            fileInfo = new DirectoryInfo(item.FullPath);
-        //            item.Length = 0;
-        //        }
-        //        else
-        //        {
-        //            var fi = new FileInfo(item.FullPath);
-        //            fileInfo = fi;
-        //            item.Length = fi.Length;
-        //        }
-        //        item.Created = fileInfo.CreationTime;
-        //        item.LastModified = fileInfo.LastWriteTime;
-        //    } catch {}
-        //}
-
-        //public static void FireChanges(IItem item)
-        //{
-        //    item.OnNotifyPropertyChanged("Created");
-        //    item.OnNotifyPropertyChanged("LastModified");
-        //    item.OnNotifyPropertyChanged("Length");
-        //    item.OnNotifyPropertyChanged("Thumbnail");
-        //}
+        protected ShellThumbnailRetrievalOption ThumbnailRetrievalOption { get; set; }
 
         public virtual void DoAction(IItem item)
         {
-            var casted = item as IVirtualizedPropertyProvider<FileProperties>;
-            var CurrentItem = casted.Properties;
-            if (CurrentItem == null)
+            var currentItem = ((IItem<FileProperties>)item).Properties;
+            if (currentItem == null) return;
+            if (currentItem.ShellObject != null && currentItem.ShellObject.IsLink)
             {
-                return;
-            }
-            if (CurrentItem.ShellObject != null && CurrentItem.ShellObject.IsLink)
-            {
-                var properties = CurrentItem.ShellObject.Properties;
+                var properties = currentItem.ShellObject.Properties;
                 var target = ((string)properties.GetProperty("System.Link.TargetParsingPath").ValueAsObject);
                 if (Directory.Exists(target))
                 {
-                    MessageHost.ViewHandler.SetDirectory(target);
+                    ListerManager.Instance.CommandManager.SetContainer(target);
                     return;
                 }
             }
             if (item.ItemType == ItemType.Container)
             {
-                MessageHost.ViewHandler.SetDirectory(item.FullPath);
+                ListerManager.Instance.CommandManager.SetContainer(item.FullPath);
             }
             else
             {
@@ -204,7 +141,6 @@ namespace Kex.Model.ItemProvider
             }
         }
 
-        private bool _shellError;
         private BackgroundWorker _currentWorker;
     }
 

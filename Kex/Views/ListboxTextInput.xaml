@@ -39,9 +39,6 @@
 
             <Style TargetType="{x:Type ListBoxItem}">
                 <Style.Resources>
-                    <!--
-                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="LightBlue" Opacity=".4"/>
-                    -->
                     <LinearGradientBrush  x:Key="{x:Static SystemColors.ControlBrushKey}" StartPoint="0,0" EndPoint="1,1">
                         <GradientStop Color="#FFFFFF" Offset="1" />
                         <GradientStop Color="#FFFFFF" Offset="0.7" />

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 using Kex.Common;
 
@@ -30,13 +31,13 @@ namespace Kex.Controller.PopupHandler
             switch (item)
             {
                 case FullView:
-                    MessageHost.ViewHandler.SetView("fullView");
+                    ListerManager.Instance.CommandManager.SetView("fullView");
                     break;
                 case SimpleView:
-                    MessageHost.ViewHandler.SetView("simpleView");
+                    ListerManager.Instance.CommandManager.SetView("simpleView");
                     break;
                 case ThumbView:
-                    MessageHost.ViewHandler.SetView("thumbView");
+                    ListerManager.Instance.CommandManager.SetView("thumbView");
                     break;
                 default:
                     break;
@@ -49,6 +50,11 @@ namespace Kex.Controller.PopupHandler
 
         public void TextChanged(string text)
         {
+        }
+
+        public Func<string, string, bool> Filter
+        {
+            get { return null; }
         }
     }
 }

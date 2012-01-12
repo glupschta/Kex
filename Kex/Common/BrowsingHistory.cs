@@ -4,10 +4,10 @@ namespace Kex.Common
 {
     public class BrowsingHistory
     {
-        private readonly List<string> _locations = new List<string>();
+        private readonly List<HistoryItem> _locations = new List<HistoryItem>();
         private int _currentIndex = -1;
 
-        public string Current
+        public HistoryItem Current
         {
             get
             {
@@ -15,7 +15,7 @@ namespace Kex.Common
             }
         }
 
-        public string Previous
+        public HistoryItem Previous
         {
             get
             {
@@ -25,7 +25,7 @@ namespace Kex.Common
             }
         }
 
-        public string Next
+        public HistoryItem Next
         {
             get 
             { 
@@ -35,17 +35,29 @@ namespace Kex.Common
             }
         }
 
-        public void Push(string newLocation, string oldLocation)
+        public void Push(string newLocation, string oldLocation, string selectedItem)
         {
-            if (_currentIndex > -1 && newLocation == _locations[_currentIndex]) return;
+            if (_currentIndex > -1 && newLocation == _locations[_currentIndex].FullPath) return;
             _currentIndex++;
-            _locations.Add(newLocation);
+            _locations.Add(new HistoryItem(newLocation, selectedItem));
         }
 
-        public List<string> Locations
+        public List<HistoryItem> Locations
         {
             get { return _locations; }
         }
 
+    }
+
+    public class HistoryItem
+    {
+        public HistoryItem(string fullpath, string selectedPath)
+        {
+            FullPath = fullpath;
+            SelectedPath = selectedPath;
+        }
+
+        public string FullPath { get; set; }
+        public string SelectedPath { get; set; }
     }
 }

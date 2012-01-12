@@ -9,7 +9,7 @@ using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Kex.Modell
 {
-    public class FileItem : IItem, IVirtualizedPropertyProvider<FileProperties>
+    public class FileItem : IItem<FileProperties>
     {
         private readonly IItemProvider<FileProperties> itemProvider;
 
@@ -25,15 +25,26 @@ namespace Kex.Modell
         {
             var ind = FullPath.LastIndexOf("\\");
             Name = FullPath.Substring(ind != -1 ? ind+1 : 0);
+            if (Name == "..")
+            {
+                var backDir = FullPath.LastIndexOf('\\', ind-1);
+                if (backDir > 2)
+                    FullPath = FullPath.Substring(0, backDir);
+                else
+                {
+                    FullPath = FullPath.Substring(0, 3);
+                }
+            }
         }
 
         public string FullPath { get; set; }
         public string Name { get; set; }
         public ItemType ItemType { get; set; }
-        public DateTime? LastModified { get { return Properties.LastModified; } }
-        public long Length { get { return Properties.Length; } }
-        public ShellObject ShellObject { get { return Properties.ShellObject; } }
-        public BitmapSource Thumbnail { get { return Properties.Thumbnail; } }
+        public DateTime? LastModified { get { return Properties == null ? null : Properties.LastModified; } }
+        public DateTime? Created { get { return Properties == null ? null : Properties.Created; } }
+        public long Length { get { return Properties == null ? 0 : Properties.Length; } }
+        public ShellObject ShellObject { get { return Properties == null ? null : Properties.ShellObject; } }
+        public BitmapSource Thumbnail { get { return Properties == null ? null : Properties.Thumbnail; } }
 
         private string _resolvedPath;
         public string ResolvedPath
@@ -43,7 +54,6 @@ namespace Kex.Modell
                 return _resolvedPath ?? (_resolvedPath = PathResolver.Resolve(Properties.ShellObject, FullPath)); 
             }
         }
-
         
         public bool IsSelected
         {
@@ -51,10 +61,9 @@ namespace Kex.Modell
             set
             {
                 _isSelected = value;
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("IsSelected"));
-                }
+                OnNotifyPropertyChanged("IsSelected");
+                //Microsoft.WindowsAPICodePack.Shell.ShellObject s = null;
+                //s.Properties.System.ItemClassType.Value
             }
         }       
 
@@ -71,15 +80,26 @@ namespace Kex.Modell
         {
             get
             {
+                return _properties;
                 if (_properties == null)
                 {
-                    _properties = itemProvider.Fetch(this);
+                    _properties = itemProvider.FetchDetails(this);
+
                 }
                 return _properties;
             }
+            set { _properties = value; }
         }
 
-        public bool Loaded { get; set; }
+        public void PropertiesChanged()
+        {
+            OnNotifyPropertyChanged("LastModified");
+            OnNotifyPropertyChanged("Created");
+            OnNotifyPropertyChanged("Length");
+            OnNotifyPropertyChanged("ShellObject");
+            OnNotifyPropertyChanged("Thumbnail");
+            OnNotifyPropertyChanged("Properties");
+        }
 
         private FileProperties _properties;
         private bool _isSelected;

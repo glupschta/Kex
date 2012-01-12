@@ -15,15 +15,15 @@ namespace Kex.Views
     /// </summary>
     public partial class ListerView : UserControl
     {
-        private readonly CommandKeyHandler keyHandler;
         public ListerView()
         {
             InitializeComponent();
             this.View.SelectionMode = SelectionMode.Single;
-            keyHandler = new CommandKeyHandler();
+            this.DragDropHandler = new DragDropHandler(this);
         }
 
         public ILister<FileProperties> Lister { get;  set;}
+        protected DragDropHandler DragDropHandler { get; set; }
 
         private void ListViewKeyDown(object sender, KeyEventArgs e)
         {
@@ -38,9 +38,8 @@ namespace Kex.Views
         private void ViewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (TryFindParent<GridViewColumnHeader>(e.OriginalSource as DependencyObject) == null)
-                MessageHost.ViewHandler.DoDefaultAction();
+                ListerManager.Instance.CommandManager.DoDefaultAction();
         }
-
 
         public static T TryFindParent<T>(DependencyObject current) where T : class
         {
@@ -55,7 +54,7 @@ namespace Kex.Views
         {
             if (e.ChangedButton == MouseButton.Right)
             {
-                MessageHost.ViewHandler.ShowContextMenu();
+                ListerManager.Instance.CommandManager.ShowContextMenu();
                 e.Handled = true;
             }
             else if (e.ChangedButton == MouseButton.Middle)
@@ -65,72 +64,7 @@ namespace Kex.Views
             }
         }
 
-        private void DropList_DragEnter(object sender, DragEventArgs e)
-        {
-            if (!e.Data.GetDataPresent(dragFormat) ||
-                sender == e.Source)
-            {
-                e.Effects = DragDropEffects.None;
-            }
-        }
 
-        private void DropList_Drop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(dragFormat))
-            {
-
-            }
-        }
-
-        private void List_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            // Store the mouse position
-            dragStart = e.GetPosition(null);
-        }
-
-        private void List_MouseMove(object sender, MouseEventArgs e)
-        {
-            // Get the current mouse position
-            Point mousePos = e.GetPosition(null);
-            Vector diff = dragStart - mousePos;
-
-            if (e.LeftButton == MouseButtonState.Pressed &&
-                (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
-                Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
-            {
-                // Get the dragged ListViewItem
-                ListView listView = sender as ListView;
-                ListViewItem listViewItem = FindAnchestor<ListViewItem>((DependencyObject)e.OriginalSource);
-
-                if (listViewItem != null)
-                {
-                    // Find the data behind the ListViewItem
-                    IItem item = (IItem) listView.ItemContainerGenerator.ItemFromContainer(listViewItem);
-
-                    // Initialize the drag & drop operation
-                    
-                    DataObject dragData = new DataObject(dragFormat, item.FullPath);
-                    DragDrop.DoDragDrop(listViewItem, dragData, DragDropEffects.Move);
-                }
-            }
-        }
-
-        private static T FindAnchestor<T>(DependencyObject current) where T : DependencyObject
-        {
-            do
-            {
-                if (current is T)
-                {
-                    return (T)current;
-                }
-                current = VisualTreeHelper.GetParent(current);
-            }
-            while (current != null);
-            return null;
-        }
-
-        private Point dragStart;
-        readonly string dragFormat = DataFormats.FileDrop;
     }
 
 }

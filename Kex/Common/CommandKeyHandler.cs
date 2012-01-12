@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using Kex.Controller;
 using Kex.Model;
 
 namespace Kex.Common
@@ -10,115 +11,124 @@ namespace Kex.Common
             switch(k)
             {
                 case Key.Space:
-                    MessageHost.ViewHandler.MarkSelected();
+                    ListerManager.Instance.CommandManager.MarkSelected();
                     break;
                 case Key.Delete:
-                    MessageHost.ViewHandler.Delete();
+                    ListerManager.Instance.CommandManager.Delete();
                     break;
                 case Key.Escape:
-                    MessageHost.ViewHandler.ClosePopup();
+                    ListerManager.Instance.CommandManager.ClosePopup();
                     break;
                 case Key.U:
                     if (shift)
-                        MessageHost.ViewHandler.HistoryBack();
+                        ListerManager.Instance.CommandManager.HistoryBack();
                     else
-                        MessageHost.ViewHandler.DirectoryUp();
+                        ListerManager.Instance.CommandManager.DirectoryUp();
                     break;
                 case Key.A:
                     if (shift)
-                        MessageHost.ViewHandler.ClearSelection();
+                        ListerManager.Instance.CommandManager.ClearSelection();
                     else
-                        MessageHost.ViewHandler.SelectAll();
+                        ListerManager.Instance.CommandManager.SelectAll();
+                    break;
+                case Key.B:
+                    ListerManager.Instance.CommandManager.ShowShellPropertyPopup();
                     break;
                 case Key.C:
-                    MessageHost.ViewHandler.Copy();
+                    ListerManager.Instance.CommandManager.Copy();
                     break;
                 case Key.X:
-                    MessageHost.ViewHandler.Cut();
+                    ListerManager.Instance.CommandManager.Cut();
                     break;
                 case Key.V:
-                    MessageHost.ViewHandler.Paste();
+                    ListerManager.Instance.CommandManager.Paste();
                     break;
                 case Key.Return:
-                    MessageHost.ViewHandler.DoDefaultAction();
+                    ListerManager.Instance.CommandManager.DoDefaultAction();
                     break;
                 case Key.O:
-                    MessageHost.ViewHandler.ShowEnterUrlPopup();
+                    ListerManager.Instance.CommandManager.ShowEnterUrlPopup();
                     break;
                 case Key.I:
-                    MessageHost.ViewHandler.ShowBrowsingPopup();
+                    ListerManager.Instance.CommandManager.ShowBrowsingPopup();
                     break;
                 case Key.H:
-                    MessageHost.ViewHandler.GoLeft();
+                    ListerManager.Instance.CommandManager.GoLeft();
                     break;
                 case Key.L:
-                    MessageHost.ViewHandler.GoRight();
+                    ListerManager.Instance.CommandManager.GoRight();
                     break;
                 case Key.J:
                     if (shift)
                     {
-                        MessageHost.ViewHandler.MarkSelected();
-                        MessageHost.ViewHandler.GoDown();
+                        ListerManager.Instance.CommandManager.MarkSelected();
+                        ListerManager.Instance.CommandManager.GoDown();
                     }
                     else
-                        MessageHost.ViewHandler.GoDown();
+                        ListerManager.Instance.CommandManager.GoDown();
                     break;
                 case Key.K:
                     if (shift)
                     {
-                        MessageHost.ViewHandler.MarkSelected();
-                        MessageHost.ViewHandler.GoUp();
+                        ListerManager.Instance.CommandManager.MarkSelected();
+                        ListerManager.Instance.CommandManager.GoUp();
                     }
                     else
-                        MessageHost.ViewHandler.GoUp();
+                        ListerManager.Instance.CommandManager.GoUp();
                     break;
                 case Key.D:
-                    MessageHost.ViewHandler.ShowDrivesPopup();
+                    ListerManager.Instance.CommandManager.ShowDrivesPopup();
                     break;
                 case Key.Q:
-                        MessageHost.ViewHandler.FitWidthToListers();
+                        ListerManager.Instance.CommandManager.FitWidthToListers();
                     break;
                 case Key.E:
-                    WindowsFunctions.ShowFileProperties(MessageHost.ViewHandler.CurrentItem.FullPath);
+                    WindowsFunctions.ShowFileProperties(ListerManager.Instance.CommandManager.CurrentItem.FullPath);
                     break;
                 case Key.F:
-                        MessageHost.ViewHandler.ShowFavorites();
+                    ListerManager.Instance.CommandManager.ShowFavorites();
                     break;
                 case Key.G:
-                    MessageHost.ViewHandler.ShowViewPopup();
+                    if (shift)
+                        ListerManager.Instance.CommandManager.ClearGrouping();
+                    else
+                        ListerManager.Instance.CommandManager.GroupByName();
                     break;
                 case Key.M:
-                    MessageHost.ViewHandler.ShowSpecialFolderPopup();
+                    ListerManager.Instance.CommandManager.ShowViewPopup();
                     break;
                 case Key.P:
-                    MessageHost.ViewHandler.CloseCurrentLister();
+                    ListerManager.Instance.ListerViewManager.CloseCurrentLister();
                     break;
                 case Key.R:
-                    MessageHost.ViewHandler.ShowContextMenu();
+                    ListerManager.Instance.CommandManager.ShowContextMenu();
                     break;
                 case Key.S:
-                    MessageHost.ViewHandler.ShowSortPopup();
+                    if (shift)
+                        ListerManager.Instance.CommandManager.ClearSorting();
+                    else
+                        ListerManager.Instance.CommandManager.ShowSortPopup();
                     break;
                 case Key.Z:
                     if (shift)
-                        MessageHost.ViewHandler.SetFilter(null);
+                        ListerManager.Instance.CommandManager.SetFilter(null);
                     else
-                        MessageHost.ViewHandler.ShowFilterPopup();
+                        ListerManager.Instance.CommandManager.ShowFilterPopup();
                     break;
                 case Key.Tab:
                     if (shift)
-                        MessageHost.ViewHandler.CycleListers(-1);
+                        ListerManager.Instance.ListerViewManager.CycleListers(-1);
                     else
-                        MessageHost.ViewHandler.CycleListers(1);
+                        ListerManager.Instance.ListerViewManager.CycleListers(1);
                     break;
                 case Key.W:
-                    MessageHost.ViewHandler.ShowListers();
+                    ListerManager.Instance.CommandManager.ShowListers();
                     break;
                 case Key.Oem3:
-                    MessageHost.ViewHandler.OpenLister();
+                    ListerManager.Instance.ListerViewManager.OpenLister(ListerManager.Instance.CommandManager.CurrentItem.FullPath);
                     break;
                 case Key.Back:
-                    MessageHost.ViewHandler.DirectoryUp();
+                    ListerManager.Instance.CommandManager.DirectoryUp();
                     break;
                 default:
                     return false;

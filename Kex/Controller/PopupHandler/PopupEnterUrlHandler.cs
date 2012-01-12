@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 using Kex.Common;
+using System.Linq;
 
 namespace Kex.Controller.PopupHandler
 {
@@ -20,15 +22,15 @@ namespace Kex.Controller.PopupHandler
         {
             get
             {
-                var history= ListerManager.Manager.CurrentLister.NavigationHistory.Locations;
+                var history = ListerManager.Instance.CommandManager.CurrentView.Lister.NavigationHistory.Locations;
                 history.Reverse();
-                return history;
+                return history.Select(h => h.FullPath);
             }
         }
 
         public void ItemSelected(string item)
         {
-            ListerManager.Manager.SetDirectory(item);
+            ListerManager.Instance.CommandManager.SetContainer(item);
         }
 
         public void HandleKey(object sender, KeyEventArgs e)
@@ -37,6 +39,11 @@ namespace Kex.Controller.PopupHandler
 
         public void TextChanged(string text)
         {
+        }
+
+        public Func<string, string, bool> Filter
+        {
+            get { return null; }
         }
     }
 }

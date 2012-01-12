@@ -40,10 +40,7 @@
                 <TextBlock Padding="50,0,0,0" Text="Filter: "/>
                 <TextBlock  Padding="2,0,0,0" Text="{Binding Filter}"/>
             </WrapPanel>
-            <WrapPanel Visibility="{Binding Filter, Converter={StaticResource nullToVisibility}}">
-                <TextBlock Padding="50,0,0,0" Text="Filter: "/>
-                <TextBlock  Padding="2,0,0,0"  Text="{Binding Filter}"/>
-            </WrapPanel>
+
         </WrapPanel>
     </StatusBar>
 </UserControl>

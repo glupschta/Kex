@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Kex.Common;
 
@@ -20,7 +21,13 @@ namespace Kex.Controller.PopupHandler
 
         public IEnumerable<string> ListItems
         {
-            get { return new List<String> { "Name", "Created", "LastModified", "Length" }; }
+            get
+            {
+                var grid = ListerManager.Instance.ListerViewManager.CurrentListerView.View.View as GridView;
+                if (grid != null)
+                    return grid.Columns.Select(g => g.Header as string).Where(g => !string.IsNullOrEmpty(g)).ToArray();
+                return new List<String> {};
+            }
         }
 
         public void Close()
@@ -44,14 +51,19 @@ namespace Kex.Controller.PopupHandler
         {
             if (string.IsNullOrEmpty(property))
             {
-                MessageHost.ViewHandler.SetSorting(null, descending);
+                ListerManager.Instance.CommandManager.SetSorting(null, descending);
                 return;
             }
             if (property.Length == 0) return;
             var sortProperties = ListItems;
             var selectedColumn = sortProperties.Where(prop => prop.StartsWith(property, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
             if (selectedColumn == null) return;
-            MessageHost.ViewHandler.SetSorting(selectedColumn, descending);
+            ListerManager.Instance.CommandManager.SetSorting(selectedColumn, descending);
+        }
+
+        public Func<string, string, bool> Filter
+        {
+            get { return null; }
         }
     }
 }

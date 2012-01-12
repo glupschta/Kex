@@ -25,16 +25,16 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="22"/>
         </Grid.RowDefinitions>
-        <ListView Grid.Row="0" Name="View" Background="{StaticResource ResourceKey=backGradient}"
+        <ListView Grid.Row="0" Name="View" 
                 FocusVisualStyle="{x:Null}"
                 ItemsSource="{Binding Items}" KeyDown="ListViewKeyDown"
                 MouseUp="View_MouseUp" MouseDoubleClick="ViewMouseDoubleClick"
-                AllowDrop="True" Drop="DropList_Drop" DragEnter="DropList_DragEnter"
-                PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" 
-                PreviewMouseMove="List_MouseMove" Focusable="False"
+                AllowDrop="True" Focusable="False"
                 >
+
         </ListView>
-        <Views:ListerStatusbar x:Name="statusbar" Grid.Row="2"/>
+
+        <Views:ListerStatusbar x:Name="statusbar" Grid.Row="1"/>
     </Grid>
 
 </UserControl>

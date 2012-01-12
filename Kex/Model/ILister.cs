@@ -15,8 +15,8 @@ namespace Kex.Model
         ItemSelection SelectedItems { get; }
         string CurrentDirectory { get; set; }
 
-        string HistoryBack();
-        string HistoryForward();
+        HistoryItem HistoryBack();
+        HistoryItem HistoryForward();
         string DirectoryUp();
 
         void OnPropertyChanged(string property);

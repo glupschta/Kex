@@ -15,7 +15,8 @@ namespace Kex.Controller.PopupHandler
             var s = Enum.GetValues(typeof(Environment.SpecialFolder))
                 .Cast<Environment.SpecialFolder>().Distinct();
 
-            specialFolders = s.ToDictionary(sf => Enum.GetName(typeof(Environment.SpecialFolder), sf), Environment.GetFolderPath);
+            specialFolders = s.ToDictionary(sf => Enum.GetName(typeof(Environment.SpecialFolder), sf),
+                                            Environment.GetFolderPath);
         }
 
         public string Name
@@ -35,7 +36,7 @@ namespace Kex.Controller.PopupHandler
 
         public void ItemSelected(string item)
         {
-            ListerManager.Manager.SetDirectory(specialFolders[item]);
+            ListerManager.Instance.CommandManager.SetContainer(specialFolders[item]);
         }
 
         public void HandleKey(object sender, KeyEventArgs e)
@@ -44,6 +45,11 @@ namespace Kex.Controller.PopupHandler
 
         public void TextChanged(string text)
         {
+        }
+
+        public Func<string, string, bool> Filter
+        {
+            get { return null; }
         }
     }
 }

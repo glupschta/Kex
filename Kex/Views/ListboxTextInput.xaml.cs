@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Kex.Common;
+using Kex.Controller;
 using Kex.Controller.PopupHandler;
+using System.Windows.Controls.Primitives;
 
 namespace Kex.Views
 {
     /// <summary>
     /// Interaction logic for TextInput.xaml
     /// </summary>
-    public partial class ListboxTextInput : UserControl, INotifyPropertyChanged
+    public partial class ListboxTextInput : INotifyPropertyChanged
     {
         public ListboxTextInput()
         {
@@ -21,8 +24,16 @@ namespace Kex.Views
             DataContext = this;
             input.KeyDown += ListboxTextInput_KeyDown;
             input.TextChanged += input_TextChanged;
-            //popup.LostKeyboardFocus += popup_LostFocus;
             listView.PreviewGotKeyboardFocus += (sender, eventArgs) => eventArgs.Handled = true;
+            listView.SelectionChanged += listView_SelectionChanged;
+        }
+
+        void listView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ListSelectionChanged != null)
+            {
+                ListSelectionChanged(listView.SelectedItem as string);
+            }
         }
 
         public IPopupHandler Handler { get; set; }
@@ -33,6 +44,7 @@ namespace Kex.Views
             set
             {
                 listItems = value;
+                grid.RowDefinitions[1].Height = listItems != null && listItems.Any() ? new GridLength() : new GridLength(0);
                 OnPropertyChanged("ListItems");
             }
         }
@@ -51,12 +63,20 @@ namespace Kex.Views
         {
             popup.IsOpen = true;
             input.Focus();
+            Keyboard.Focus(input);
             Text = "";
+
             ListItems = Handler.ListItems;
-            filterMatchingItems();
-            grid.RowDefinitions[1].Height = ListItems != null && ListItems.Any() ? new GridLength() : new GridLength(0);
+            Filter = Handler.Filter ?? DefaultFilter;
+            filterMatchingItems();    
             Header = Handler.Name;
             listView.SelectedIndex = 0;
+
+            var currentListerView = ListerManager.Instance.ListerViewManager.CurrentListerView;
+            popup.PlacementTarget = currentListerView;
+            popup.Placement = PlacementMode.Relative;
+            popup.HorizontalOffset = (currentListerView.ActualWidth - popup.Child.RenderSize.Width) / 2;
+            popup.VerticalOffset = (currentListerView.ActualHeight - popup.Child.RenderSize.Height) / 2;
         }
 
         public void Close()
@@ -65,23 +85,17 @@ namespace Kex.Views
             SetFocusToView();
         }
 
-        void popup_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (ignoreLostFocus) return;
-            Close();
-        }
-
         void input_TextChanged(object sender, TextChangedEventArgs e)
         {
+            Handler.TextChanged(Text);
             setListSelection();
             filterMatchingItems();
-            Handler.TextChanged(Text);
             e.Handled = true;
         }
 
         private void filterMatchingItems()
         {
-            FilteredItems = ListItems == null ? ListItems : ListItems.Where(MatchesFilter);
+            FilteredItems = ListItems == null ? null : ListItems.Where(li => Filter(li, Text));
         }
 
         void ListboxTextInput_KeyDown(object sender, KeyEventArgs e)
@@ -127,6 +141,7 @@ namespace Kex.Views
                 ind--;
             }
             listView.SelectedIndex = ind;
+            listView.ScrollIntoView(listView.SelectedItem);
         }
 
         private void moveDownInList()
@@ -137,6 +152,7 @@ namespace Kex.Views
                 ind++;
             }
             listView.SelectedIndex= ind;
+            listView.ScrollIntoView(listView.SelectedItem);
         }
 
         private void closeAndHandleSelection()
@@ -155,7 +171,7 @@ namespace Kex.Views
 
         private static void SetFocusToView()
         {
-            MessageHost.ViewHandler.FocusView();
+            ListerManager.Instance.CommandManager.FocusView();
         }
 
         public string Header
@@ -179,9 +195,10 @@ namespace Kex.Views
         {
             if (ListItems == null || !ListItems.Any())
                 return;
+
             if (!string.IsNullOrEmpty(Text))
             {
-                listView.SelectedItem = ListItems.FirstOrDefault(MatchesFilter);
+                listView.SelectedItem = ListItems.FirstOrDefault(li => Filter(li, Text));
             }
             else
             {
@@ -190,7 +207,7 @@ namespace Kex.Views
         }
 
 
-        protected void OnPropertyChanged(string propertyName)
+        public void OnPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
             {
@@ -199,13 +216,15 @@ namespace Kex.Views
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public event Action<string> ListSelectionChanged;
 
-        private bool MatchesFilter(string source)
+        public Func<string, string, bool> Filter;
+
+        private bool DefaultFilter(string source, string text)
         {
-            if (string.IsNullOrEmpty(Text)) return true;
-            return Handler.MatchMode == MatchMode.StartsWith
-                       ? source.StartsWith(Text, StringComparison.OrdinalIgnoreCase)
-                       : source.IndexOf(Text, StringComparison.OrdinalIgnoreCase) > -1;
+            if (string.IsNullOrEmpty(source)) return true;
+            if (string.IsNullOrEmpty(text)) return true;
+            return source.IndexOf(text, StringComparison.OrdinalIgnoreCase) > -1;
         }
 
         private IEnumerable<string> listItems;

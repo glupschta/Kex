@@ -1,12 +1,12 @@
 ﻿using System;
 using Kex.Model;
+using Kex.Views;
 
 namespace Kex.Common
 {
-
-    public interface IListerViewHandler
+    public interface ICommandManager
     {
-        ILister CurrentLister { get; }
+        ListerView CurrentView { get; set; }
         IItem CurrentItem { get; set; }
         void DoDefaultAction();
 
@@ -19,11 +19,6 @@ namespace Kex.Common
         void HistoryForward();
         void DirectoryUp();
 
-        void OpenLister();
-        void OpenLister(string directory);
-        void CloseNotFocusedListers();
-        void CloseCurrentLister();
-        void CycleListers(int direction);
         void FitWidthToListers();
 
         void ShowFavorites();
@@ -41,7 +36,7 @@ namespace Kex.Common
         void Paste();
         void Delete();
 
-        void SetDirectory(string container);
+        void SetContainer(string container);
         void ShowSortPopup();
         void ShowViewPopup();
         void ShowFilterPopup();
@@ -53,7 +48,12 @@ namespace Kex.Common
         void FocusView();
         void SetView(string view);
         void SetSorting(string selectedColumn, bool descending);
+        void ClearSorting();
+        void GroupByName();
+        void ClearGrouping();
         void SetFilter(string filter);
         void ClosePopup();
+        void UpdateColumnWidth();
+        void ShowShellPropertyPopup();
     }
 }

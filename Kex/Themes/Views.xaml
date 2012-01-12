@@ -23,10 +23,10 @@
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
-        <GridViewColumn Header="Created" Width="142">
+        <GridViewColumn Header="Type" Width="Auto">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Created, Converter={StaticResource dateTimeConverter}}" TextAlignment="Right"/>
+                    <TextBlock Text="{Binding Properties.ShellObject.Properties.System.ItemTypeText.Value}" TextAlignment="Left"/>
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
@@ -37,6 +37,7 @@
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
+        
     </GridView>
 
     <Views:TileView x:Key="simpleView">
@@ -76,7 +77,7 @@
     </ItemsPanelTemplate>
 
     <ItemsPanelTemplate x:Key="tileVirtualizing">
-        <Views:VirtualizingWrapPanel/>
+        <WrapPanel Orientation="Horizontal" />
     </ItemsPanelTemplate>
-
+    
 </ResourceDictionary>
