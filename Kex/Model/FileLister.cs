@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using Kex.Common;
-using Kex.Controller;
 using Kex.Model;
 using Kex.Model.ItemProvider;
 

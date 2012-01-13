@@ -44,17 +44,6 @@ namespace Kex.Controller
             TabControl.SelectedItem = newTab;
         }
 
-        void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (e.OriginalSource is TabControl)
-            {
-                var tab = TabControl.Items[TabControl.SelectedIndex] as TabItem;
-                CurrentListerView = tab.Content as ListerView;
-                e.Handled = true;
-            }
-        }
-
-
         public void CloseCurrentLister()
         {
             if (TabControl.Items.Count == 1) return;

@@ -34,7 +34,6 @@ namespace Kex.Model.ItemProvider
         protected virtual IEnumerable<IItem<FileProperties>> GetItemsEnumerable()
         {
             var allItems = new List<IItem<FileProperties>>();
-            allItems.Add(new FileItem(CurrentContainer+"\\..",ItemType.Container, this));
             allItems.AddRange(Directory.EnumerateDirectories(CurrentContainer).Select(di => new FileItem(di, ItemType.Container, this)));
             allItems.AddRange(Directory.EnumerateFiles(CurrentContainer).Select(fi => new FileItem(fi, ItemType.Executable, this)));
             return allItems;
@@ -53,6 +52,10 @@ namespace Kex.Model.ItemProvider
                         FetchDetails(item);
                     }
                     FetchPropertiesAsync(allItems.Skip(preload));
+                }
+                else
+                {
+                    allItems = new List<FileItem> {new FileItem(CurrentContainer + "\\..", ItemType.Container, this)};
                 }
             }
             catch (Exception ex)
@@ -77,6 +80,11 @@ namespace Kex.Model.ItemProvider
                 props.Thumbnail = props.ShellObject.Thumbnail.MediumBitmapSource;
                 props.Thumbnail.Freeze();
                 item.Properties = props;
+                if (props.ShellObject != null && props.ShellObject.IsLink)
+                {
+                    item.FullPath = ((string)props.ShellObject.Properties.GetProperty("System.Link.TargetParsingPath").ValueAsObject);
+                    item.ItemType = Directory.Exists(item.FullPath) ? ItemType.Container : ItemType.Executable;
+                }
                 fi.PropertiesChanged();
             } catch (Exception ex)
             {
@@ -118,18 +126,18 @@ namespace Kex.Model.ItemProvider
 
         public virtual void DoAction(IItem item)
         {
-            var currentItem = ((IItem<FileProperties>)item).Properties;
-            if (currentItem == null) return;
-            if (currentItem.ShellObject != null && currentItem.ShellObject.IsLink)
-            {
-                var properties = currentItem.ShellObject.Properties;
-                var target = ((string)properties.GetProperty("System.Link.TargetParsingPath").ValueAsObject);
-                if (Directory.Exists(target))
-                {
-                    ListerManager.Instance.CommandManager.SetContainer(target);
-                    return;
-                }
-            }
+            //var currentItem = ((IItem<FileProperties>)item).Properties;
+            //if (currentItem == null) return;
+            //if (currentItem.ShellObject != null && currentItem.ShellObject.IsLink)
+            //{
+            //    var properties = currentItem.ShellObject.Properties;
+            //    var target = ((string)properties.GetProperty("System.Link.TargetParsingPath").ValueAsObject);
+            //    if (Directory.Exists(target))
+            //    {
+            //        ListerManager.Instance.CommandManager.SetContainer(target);
+            //        return;
+            //    }
+            //}
             if (item.ItemType == ItemType.Container)
             {
                 ListerManager.Instance.CommandManager.SetContainer(item.FullPath);
