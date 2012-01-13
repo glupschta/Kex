@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -35,11 +36,6 @@ namespace Kex.Modell
                 NavigationHistory.Push(value, _currentDirectory, value);
                 ItemProvider.CurrentContainer = value;
                 _currentDirectory = value;
-                if (value != null)
-                {
-                    _dirInfo = new DirectoryInfo(_currentDirectory);
-                    
-                }
                 Items = ItemProvider.GetItems();
             }
         }
@@ -81,7 +77,24 @@ namespace Kex.Modell
 
         public string DirectoryUp()
         {
-            return (_dirInfo.Parent != null) ? _dirInfo.Parent.FullName : null;
+            string parentDirectory = null;
+            try
+            {
+                var directory = new DirectoryInfo(CurrentDirectory);
+                if (CurrentDirectory.StartsWith(@"\\") && CurrentDirectory.Count(c => c == '\\') == 3)
+                {
+                    var index = CurrentDirectory.IndexOf("\\", 2);
+                    return index != -1 ? CurrentDirectory.Substring(0, index) : null;
+                }
+                else
+                {
+                    parentDirectory = directory.Parent != null ? directory.Parent.FullName : null;
+                }
+            } catch (Exception ex)
+            {
+                
+            }
+            return parentDirectory;
         }
 
         public HistoryItem HistoryBack()
@@ -102,7 +115,6 @@ namespace Kex.Modell
             }
         }
 
-        private DirectoryInfo _dirInfo;
         private string _currentDirectory;
         public event PropertyChangedEventHandler PropertyChanged;
     }

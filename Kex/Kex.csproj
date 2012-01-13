@@ -98,6 +98,7 @@
     <Compile Include="Common\PathPart.cs" />
     <Compile Include="Common\PathResolver.cs" />
     <Compile Include="Common\ShellContextMenu1.cs" />
+    <Compile Include="Model\NetWorkShare.cs" />
     <Compile Include="Views\ListboxTextInput.xaml.cs">
       <DependentUpon>ListboxTextInput.xaml</DependentUpon>
     </Compile>

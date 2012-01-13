@@ -34,8 +34,17 @@ namespace Kex.Model.ItemProvider
         protected virtual IEnumerable<IItem<FileProperties>> GetItemsEnumerable()
         {
             var allItems = new List<IItem<FileProperties>>();
-            allItems.AddRange(Directory.EnumerateDirectories(CurrentContainer).Select(di => new FileItem(di, ItemType.Container, this)));
-            allItems.AddRange(Directory.EnumerateFiles(CurrentContainer).Select(fi => new FileItem(fi, ItemType.Executable, this)));
+            if (CurrentContainer.StartsWith(@"\\") && CurrentContainer.IndexOf("\\", 3) == -1)
+            {
+                var share = new NetWorkShare();
+                var shares = share.GetShares(CurrentContainer.Substring(2));
+                allItems.AddRange(shares.Select(lo => new FileItem(CurrentContainer + "\\" + lo.shi1_netname, ItemType.Container, this)));
+            }
+            else
+            {
+                allItems.AddRange(Directory.EnumerateDirectories(CurrentContainer).Select(di => new FileItem(di, ItemType.Container, this)));
+                allItems.AddRange(Directory.EnumerateFiles(CurrentContainer).Select(fi => new FileItem(fi, ItemType.Executable, this)));
+            }
             return allItems;
         }
 
