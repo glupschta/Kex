@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Windows.Controls;
 using Kex.Common;
-using Kex.Model;
 using Kex.Model.ItemProvider;
+using Kex.Modell;
 
-namespace Kex.Modell
+namespace Kex.Model
 {
     public class FileLister : ILister<FileProperties>
     {
@@ -28,6 +29,12 @@ namespace Kex.Modell
             }
         }
 
+        public void SelectionChanged(ListView view, SelectionChangedEventArgs selectionChangedEventArgs)
+        {
+            SelectionCount = view.SelectedItems.Count;
+            SelectionSize = view.SelectedItems.OfType<FileItem>().Sum(i => i.Length);
+        }
+
         public string CurrentDirectory
         {
             get { return _currentDirectory; }
@@ -40,7 +47,34 @@ namespace Kex.Modell
             }
         }
 
-        public bool SortDescending { get; set; }
+        public string Filter
+        {
+            get { return _filter; }
+            set { 
+                _filter = value;
+                OnPropertyChanged("Filter");
+            }
+        }
+
+        public int SelectionCount
+        {
+            get { return _selectionCount; }
+            set
+            {
+                _selectionCount = value;
+                OnPropertyChanged("SelectionCount");
+            }
+        }
+
+        public long SelectionSize
+        {
+            get { return _selectionSize; }
+            set 
+            { 
+                _selectionSize = value;
+                OnPropertyChanged("SelectionSize");
+            }
+        }
 
         private IEnumerable<IItem> _items;
         public IEnumerable<IItem> Items
@@ -56,26 +90,12 @@ namespace Kex.Modell
             }
         }
 
-        public ItemSelection SelectedItems
-        {
-            get
-            {
-                var selection = Items.Where(it => it.IsSelected);
-                if (!selection.Any())
-                    return null;
-                return new ItemSelection
-                           {
-                               Selection = selection
-                           };
-            }
-        }
-
         public void Refresh()
         {
             Items = ItemProvider.GetItems();
         }
 
-        public string DirectoryUp()
+        public string ContainerUp()
         {
             string parentDirectory = null;
             try
@@ -116,6 +136,9 @@ namespace Kex.Modell
         }
 
         private string _currentDirectory;
+        private string _filter;
+        private int _selectionCount;
+        private long _selectionSize;
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

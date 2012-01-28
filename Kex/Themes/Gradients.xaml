@@ -3,8 +3,7 @@
     
     <LinearGradientBrush x:Key="selectionGradient" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="White" Offset="0" />
-        <GradientStop Color="#EEEEEE" Offset="0.3" />
-        <GradientStop Color="LightBlue" Offset="1" />
+        <GradientStop Color="#FFCD18" Offset="0.2" />
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="backGradient">

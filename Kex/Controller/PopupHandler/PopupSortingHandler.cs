@@ -36,7 +36,7 @@ namespace Kex.Controller.PopupHandler
 
         public void ItemSelected(string item)
         {
-            DoSort(item, true);
+            DoSort(item);
         }
 
         public void HandleKey(object sender, KeyEventArgs e)
@@ -47,18 +47,18 @@ namespace Kex.Controller.PopupHandler
         {
         }
 
-        private void DoSort(string property, bool descending)
+        private void DoSort(string property)
         {
             if (string.IsNullOrEmpty(property))
             {
-                ListerManager.Instance.CommandManager.SetSorting(null, descending);
+                ListerManager.Instance.CommandManager.SetSorting(null);
                 return;
             }
             if (property.Length == 0) return;
             var sortProperties = ListItems;
             var selectedColumn = sortProperties.Where(prop => prop.StartsWith(property, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
             if (selectedColumn == null) return;
-            ListerManager.Instance.CommandManager.SetSorting(selectedColumn, descending);
+            ListerManager.Instance.CommandManager.SetSorting(selectedColumn);
         }
 
         public Func<string, string, bool> Filter

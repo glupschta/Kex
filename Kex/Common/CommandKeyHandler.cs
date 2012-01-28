@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Collections.Generic;
+using System.Windows.Input;
 using Kex.Controller;
 using Kex.Model;
 
@@ -6,13 +7,22 @@ namespace Kex.Common
 {
     public class CommandKeyHandler
     {
-        public static bool HandleKey(Key k, bool shift, bool control, bool alt)
+        public static void HandleKey(KeyEventArgs e)
         {
+            HandleKey(e, false);
+        }
+
+        public static void HandleKey(KeyEventArgs e, bool ignoreCtrl)
+        {
+            var ignoredKeys = new List<Key> { Key.LeftAlt, Key.LeftCtrl, Key.LeftCtrl, Key.RightAlt, Key.RightCtrl, Key.RightShift };
+            if (ignoredKeys.Contains(e.Key)) return;
+            bool shift = ((e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift);
+            bool control = !ignoreCtrl && ((e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control);
+            bool alt = ((e.KeyboardDevice.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt);
+
+            var k = e.Key;
             switch(k)
             {
-                case Key.Space:
-                    ListerManager.Instance.CommandManager.MarkSelected();
-                    break;
                 case Key.Delete:
                     ListerManager.Instance.CommandManager.Delete();
                     break;
@@ -35,13 +45,16 @@ namespace Kex.Common
                     ListerManager.Instance.CommandManager.ShowShellPropertyPopup();
                     break;
                 case Key.C:
-                    ListerManager.Instance.CommandManager.Copy();
+                    if (control)
+                        ListerManager.Instance.CommandManager.Copy();
                     break;
                 case Key.X:
-                    ListerManager.Instance.CommandManager.Cut();
+                    if (control)
+                        ListerManager.Instance.CommandManager.Cut();
                     break;
                 case Key.V:
-                    ListerManager.Instance.CommandManager.Paste();
+                    if (control)
+                        ListerManager.Instance.CommandManager.Paste();
                     break;
                 case Key.Return:
                     ListerManager.Instance.CommandManager.DoDefaultAction();
@@ -50,7 +63,7 @@ namespace Kex.Common
                     ListerManager.Instance.CommandManager.ShowEnterUrlPopup();
                     break;
                 case Key.I:
-                    ListerManager.Instance.CommandManager.ShowBrowsingPopup();
+                    ListerManager.Instance.CommandManager.ShowBrowsingPopup(ignoreCtrl);
                     break;
                 case Key.H:
                     ListerManager.Instance.CommandManager.GoLeft();
@@ -59,25 +72,16 @@ namespace Kex.Common
                     ListerManager.Instance.CommandManager.GoRight();
                     break;
                 case Key.J:
-                    if (shift)
-                    {
-                        ListerManager.Instance.CommandManager.MarkSelected();
-                        ListerManager.Instance.CommandManager.GoDown();
-                    }
-                    else
                         ListerManager.Instance.CommandManager.GoDown();
                     break;
                 case Key.K:
-                    if (shift)
-                    {
-                        ListerManager.Instance.CommandManager.MarkSelected();
-                        ListerManager.Instance.CommandManager.GoUp();
-                    }
-                    else
                         ListerManager.Instance.CommandManager.GoUp();
                     break;
                 case Key.D:
-                    ListerManager.Instance.CommandManager.ShowDrivesPopup();
+                    if (shift)
+                        ListerManager.Instance.CommandManager.ShowNetWorkComputers();
+                    else
+                        ListerManager.Instance.CommandManager.ShowDrivesPopup();
                     break;
                 case Key.Q:
                         ListerManager.Instance.CommandManager.FitWidthToListers();
@@ -109,11 +113,11 @@ namespace Kex.Common
                     else
                         ListerManager.Instance.CommandManager.ShowSortPopup();
                     break;
-                case Key.Z:
+                case Key.W:
                     if (shift)
                         ListerManager.Instance.CommandManager.SetFilter(null);
                     else
-                        ListerManager.Instance.CommandManager.ShowFilterPopup();
+                        ListerManager.Instance.CommandManager.ShowFilterPopup(ignoreCtrl);
                     break;
                 case Key.Tab:
                     if (shift)
@@ -121,8 +125,6 @@ namespace Kex.Common
                     else
                         ListerManager.Instance.ListerViewManager.CycleListers(1);
                     break;
-                case Key.W:
-                    ListerManager.Instance.CommandManager.ShowListers();
                     break;
                 case Key.Oem3:
                     ListerManager.Instance.ListerViewManager.OpenLister(ListerManager.Instance.CommandManager.CurrentItem.FullPath);
@@ -131,9 +133,10 @@ namespace Kex.Common
                     ListerManager.Instance.CommandManager.DirectoryUp();
                     break;
                 default:
-                    return false;
+                    e.Handled = false;
+                    break;
             }
-            return true;
+            e.Handled = true;
         }
 
     }

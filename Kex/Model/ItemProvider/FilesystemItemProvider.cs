@@ -34,17 +34,26 @@ namespace Kex.Model.ItemProvider
         protected virtual IEnumerable<IItem<FileProperties>> GetItemsEnumerable()
         {
             var allItems = new List<IItem<FileProperties>>();
-            if (CurrentContainer.StartsWith(@"\\") && CurrentContainer.IndexOf("\\", 3) == -1)
-            {
-                var share = new NetWorkShare();
-                var shares = share.GetShares(CurrentContainer.Substring(2));
-                allItems.AddRange(shares.Select(lo => new FileItem(CurrentContainer + "\\" + lo.shi1_netname, ItemType.Container, this)));
-            }
-            else
+            if (Directory.Exists(CurrentContainer))
             {
                 allItems.AddRange(Directory.EnumerateDirectories(CurrentContainer).Select(di => new FileItem(di, ItemType.Container, this)));
                 allItems.AddRange(Directory.EnumerateFiles(CurrentContainer).Select(fi => new FileItem(fi, ItemType.Executable, this)));
             }
+            else
+            {
+                string serverName;
+                if (CurrentContainer.StartsWith(@"\\"))
+                    serverName = CurrentContainer.Substring(2);
+                else
+                {
+                    serverName = CurrentContainer;
+                    CurrentContainer = @"\\" + CurrentContainer;
+                }
+                var share = new NetWorkShare();
+                var shares = share.GetShares(serverName);
+                allItems.AddRange(shares.Select(lo => new FileItem(CurrentContainer + "\\" + lo.shi1_netname, ItemType.Container, this)));
+            }
+            
             return allItems;
         }
 
@@ -55,7 +64,7 @@ namespace Kex.Model.ItemProvider
             {
                 if (allItems.Any())
                 {
-                    const int preload = 1;
+                    const int preload = 20;
                     foreach(var item in allItems.Take(preload))
                     {
                         FetchDetails(item);

@@ -49,14 +49,11 @@ namespace Kex.Controller
 
         private void List_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // Store the mouse position
-            dragStart = e.GetPosition(null);
+            dragStart = e.GetPosition(listerView);
         }
 
         private void List_MouseMove(object sender, MouseEventArgs e)
         {
-            //comment test
-            // Get the current mouse position
             Point mousePos = e.GetPosition(null);
             Vector diff = dragStart - mousePos;
 
@@ -64,18 +61,14 @@ namespace Kex.Controller
                 (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
                 Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
             {
-                // Get the dragged ListViewItem
-                ListView listView = sender as ListView;
-                ListViewItem listViewItem = FindAnchestor<ListViewItem>((DependencyObject)e.OriginalSource);
+                var listView = sender as ListView;
+                var listViewItem = FindAnchestor<ListViewItem>((DependencyObject)e.OriginalSource);
 
                 if (listViewItem != null)
                 {
-                    // Find the data behind the ListViewItem
-                    IItem item = (IItem)listView.ItemContainerGenerator.ItemFromContainer(listViewItem);
+                    var item = (IItem)listView.ItemContainerGenerator.ItemFromContainer(listViewItem);
 
-                    // Initialize the drag & drop operation
-
-                    DataObject dragData = new DataObject(dragFormat, new []{item.FullPath});
+                    var dragData = new DataObject(dragFormat, new []{item.FullPath});
                     DragDrop.DoDragDrop(listViewItem, dragData, DragDropEffects.Move|DragDropEffects.Copy|DragDropEffects.Link);
                 }
             }
@@ -85,10 +78,7 @@ namespace Kex.Controller
         {
             do
             {
-                if (current is T)
-                {
-                    return (T)current;
-                }
+                if (current is T) return (T)current;
                 current = VisualTreeHelper.GetParent(current);
             }
             while (current != null);

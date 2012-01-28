@@ -37,13 +37,6 @@
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
-        <GridViewColumn Header="Attributes" Width="Auto">
-            <GridViewColumn.CellTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Properties.ShellObject.Properties.System.FileAttributes.Value}" TextAlignment="Right"/>
-                </DataTemplate>
-            </GridViewColumn.CellTemplate>
-        </GridViewColumn>
 
     </GridView>
 

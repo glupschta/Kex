@@ -53,19 +53,7 @@ namespace Kex.Modell
             {
                 return _resolvedPath ?? (_resolvedPath = PathResolver.Resolve(Properties.ShellObject, FullPath)); 
             }
-        }
-        
-        public bool IsSelected
-        {
-            get { return _isSelected; }
-            set
-            {
-                _isSelected = value;
-                OnNotifyPropertyChanged("IsSelected");
-                //Microsoft.WindowsAPICodePack.Shell.ShellObject s = null;
-                //s.Properties.System.ItemClassType.Value
-            }
-        }       
+        }   
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnNotifyPropertyChanged(string property)

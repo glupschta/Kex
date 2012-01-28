@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.WindowsAPICodePack.Net;
 
 namespace TestConsole
 {
@@ -11,13 +13,13 @@ namespace TestConsole
         static void Main(string[] args)
         {
             string path = @"\\poing\mp3";
-            var shares1 = new NetWorkShare().GetShares("poing");
-            ShellObject 
-            var shares = Directory.EnumerateDirectories(path);
+            var shares = NetworkListManager.GetNetworks(NetworkConnectivityLevels.All);
             foreach(var s in shares)
             {
-                Console.WriteLine(s);
+                Console.WriteLine(s.Name);
             }
+            ProcessStartInfo psi = new ProcessStartInfo("\\poing");
+            Process.Start(psi);
             Console.ReadLine();
         }
     }

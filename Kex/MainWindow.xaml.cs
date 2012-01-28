@@ -30,6 +30,14 @@ namespace Kex
             ListerManager.Initialize(comManager, tabManager);
             ListerManager.Instance.ListerViewManager.OpenLister(DriveInfo.GetDrives()[0].Name);
             Activated += MainView_Activated;
+            this.KeyDown += new KeyEventHandler(MainWindow_KeyDown);
+        }
+
+        void MainWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            //if ListView has no Items, Event gets here
+            if (e.OriginalSource is MainWindow)
+                CommandKeyHandler.HandleKey(e);
         }
 
         void MainView_Activated(object sender, EventArgs e)

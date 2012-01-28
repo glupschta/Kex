@@ -16,7 +16,7 @@ namespace Kex.Controller.PopupHandler
         public PopupBrowsingHandler(ListboxTextInput textinput)
         {
             this.textinput = textinput;
-            textinput.ListSelectionChanged += new Action<string>(textinput_ListSelectionChanged);
+            textinput.ListSelectionChanged += textinput_ListSelectionChanged;
         }
 
         void textinput_ListSelectionChanged(string name)
@@ -28,11 +28,6 @@ namespace Kex.Controller.PopupHandler
         public string Name
         {
             get { return "Select"; }
-        }
-
-        public MatchMode MatchMode
-        {
-            get { return MatchMode.StartsWith; }
         }
 
         public IEnumerable<string> ListItems
@@ -68,8 +63,9 @@ namespace Kex.Controller.PopupHandler
             var matchingStartsWith = items.Where(it => it.Name.StartsWith(text, StringComparison.OrdinalIgnoreCase));
             var matchingContains = items.Where(it => it.Name.ToLower().Contains(text.ToLower()));
             var selection = matchingStartsWith.FirstOrDefault() ?? matchingContains.FirstOrDefault();
-            currentListItems = matchingStartsWith.Union(matchingContains);
-            textinput.ListItems = currentListItems.Select(li => li.Name);
+            
+            textinput.ListItems = matchingStartsWith.Union(matchingContains)
+                .Select(li => li.Name);
             setSelection(selection);
         }
 

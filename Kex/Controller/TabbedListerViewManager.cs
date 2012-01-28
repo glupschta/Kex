@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using Kex.Common;
+using Kex.Model;
 using Kex.Model.ItemProvider;
 using Kex.Modell;
 using Kex.Views;
@@ -104,19 +105,15 @@ namespace Kex.Controller
 
         void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
         {
-            if (CurrentListerView.View.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
-            {
-                CurrentListerView.View.ItemContainerGenerator.StatusChanged -= ItemContainerGenerator_StatusChanged;
-                var index = CurrentListerView.View.SelectedIndex;
-                if (index < 0) index = 0;
-                SetFocusToIndex(index);
-            }
+            if (CurrentListerView.View.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated) return;
+            
+            CurrentListerView.View.ItemContainerGenerator.StatusChanged -= ItemContainerGenerator_StatusChanged;
+            SetFocusToIndex(CurrentListerView.View.SelectedIndex);
         }
 
         private void SetFocusToIndex(int index)
         {
-            if (index < 0)
-                index = 0;
+            index = Math.Max(index, 0);
             CurrentListerView.View.SelectedIndex = index;
             var item = CurrentListerView.View.ItemContainerGenerator.ContainerFromIndex(index) as ListViewItem;
             if (item != null)
@@ -141,10 +138,6 @@ namespace Kex.Controller
         {
             var listView = CurrentListerView.View;
             if (listView == null) { return; }
-            if (listView.SelectedIndex < 0)
-            {
-                listView.SelectedIndex = 0;
-            }
             SetFocusToIndex(listView.SelectedIndex);
         }
 

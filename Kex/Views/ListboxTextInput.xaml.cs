@@ -59,12 +59,16 @@ namespace Kex.Views
             }
         }
 
-        public void Show()
+        public void Show(bool keepText=false)
         {
             popup.IsOpen = true;
             input.Focus();
             Keyboard.Focus(input);
-            Text = "";
+            if (!keepText)
+            {
+                Text = "";
+            }
+            else {inputChanged();}
 
             ListItems = Handler.ListItems;
             Filter = Handler.Filter ?? DefaultFilter;
@@ -87,10 +91,15 @@ namespace Kex.Views
 
         void input_TextChanged(object sender, TextChangedEventArgs e)
         {
+            inputChanged();
+            e.Handled = true;
+        }
+
+        void inputChanged()
+        {
             Handler.TextChanged(Text);
             setListSelection();
             filterMatchingItems();
-            e.Handled = true;
         }
 
         private void filterMatchingItems()
@@ -127,7 +136,15 @@ namespace Kex.Views
                     }
                     else
                     {
-                        e.Handled = false;
+                        var ignoredKeys = new List<Key> { Key.LeftAlt, Key.LeftCtrl, Key.LeftCtrl, Key.RightAlt, Key.RightCtrl, Key.RightShift };
+                        if (!ignoredKeys.Contains(e.Key))
+                        {
+                            if (ctrl)
+                            {
+                                CommandKeyHandler.HandleKey(e, true);
+                            }
+                            e.Handled = false;
+                        }
                     }
                     break;
             }

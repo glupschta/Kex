@@ -29,7 +29,6 @@ namespace Kex.Common
 
         void SelectAll();
         void ClearSelection();
-        void MarkSelected();
 
         void Copy();
         void Cut();
@@ -39,15 +38,16 @@ namespace Kex.Common
         void SetContainer(string container);
         void ShowSortPopup();
         void ShowViewPopup();
-        void ShowFilterPopup();
-        void ShowBrowsingPopup();
+        void ShowFilterPopup(bool keepText = false);
+        void ShowBrowsingPopup(bool keepText = false);
         void ShowDrivesPopup();
         void ShowSpecialFolderPopup();
         void ShowEnterUrlPopup();
+        void ShowNetWorkComputers();
 
         void FocusView();
         void SetView(string view);
-        void SetSorting(string selectedColumn, bool descending);
+        void SetSorting(string selectedColumn);
         void ClearSorting();
         void GroupByName();
         void ClearGrouping();

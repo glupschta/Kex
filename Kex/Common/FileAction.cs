@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
+using System.Windows;
 using Kex.Controller;
 using Kex.Model;
 using Kex.Modell;
@@ -10,31 +13,43 @@ namespace Kex.Common
 
     public class FileAction
     {
-        public static string Do(ItemSelection selection, string targetLocation)
+        public static FileActionType ActionType { get; set; }
+
+        public static void SetSelection()
         {
-            if (selection == null || targetLocation== null)
+            var selection = ListerManager.Instance.ListerViewManager.CurrentListerView
+                .View.SelectedItems.Cast<IItem>().Select(s => s.FullPath).ToArray();
+            var files = new StringCollection();
+            files.AddRange(selection);
+            Clipboard.SetFileDropList(files);
+        }
+
+        public static string Paste(string targetLocation)
+        {
+            if (targetLocation== null)
             {
                 return null;
             }
+            var selection = Clipboard.GetFileDropList();
             string target = null;
-            foreach(var item in selection.Selection)
+            foreach(var filePath in selection)
             {
-                target = getTargetLocation(targetLocation, item);
+                target = getTargetLocation(targetLocation, filePath);
                 try
                 {
-                    if (item.ItemType == ItemType.Container)
+                    if (Directory.Exists(filePath))
                     {
-                        if (selection.FileAction == FileActionType.Copy)
-                            FileSystem.CopyDirectory(item.FullPath, target);
-                        else if (selection.FileAction == FileActionType.Move)
-                            FileSystem.MoveDirectory(item.FullPath, target);
+                        if (ActionType == FileActionType.Copy)
+                            FileSystem.CopyDirectory(filePath, target);
+                        else if (ActionType == FileActionType.Move)
+                            FileSystem.MoveDirectory(filePath, target);
                     }
-                    else if (item.ItemType == ItemType.Executable)
+                    else if (File.Exists(filePath))
                     {
-                        if (selection.FileAction == FileActionType.Copy)
-                            File.Copy(item.FullPath, target);
-                        else if (selection.FileAction == FileActionType.Move)
-                            File.Move(item.FullPath, target);
+                        if (ActionType == FileActionType.Copy)
+                            File.Copy(filePath, target);
+                        else if (ActionType == FileActionType.Move)
+                            File.Move(filePath, target);
                     }
                 }
                 catch (Exception ex)
@@ -45,9 +60,9 @@ namespace Kex.Common
             return target;
         }
 
-        private static string getTargetLocation(string targetLocation, IItem item)
+        private static string getTargetLocation(string targetLocation, string fileName)
         {
-            var temp = Path.Combine(targetLocation, item.Name);
+            var temp = Path.Combine(targetLocation, fileName);
             var target = temp;
             int i = 1;
             while (File.Exists(target))
@@ -59,9 +74,11 @@ namespace Kex.Common
             return target;
         }
 
-        public static void Delete(ItemSelection selection)
+        public static void Delete()
         {
-            foreach (var item in selection.Selection)
+            var selection = ListerManager.Instance.ListerViewManager.CurrentListerView
+                .View.SelectedItems.Cast<IItem>();
+            foreach (var item in selection)
             {
                 try
                 {
@@ -81,7 +98,6 @@ namespace Kex.Common
                 }
             }
         }
-
 
     }
 

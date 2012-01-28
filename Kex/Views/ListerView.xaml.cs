@@ -18,8 +18,13 @@ namespace Kex.Views
         public ListerView()
         {
             InitializeComponent();
-            this.View.SelectionMode = SelectionMode.Single;
-            this.DragDropHandler = new DragDropHandler(this);
+            DragDropHandler = new DragDropHandler(this);
+            View.SelectionChanged += View_SelectionChanged;
+        }
+
+        void View_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Lister.SelectionChanged(this.View, e);
         }
 
         public ILister<FileProperties> Lister { get;  set;}
@@ -27,12 +32,7 @@ namespace Kex.Views
 
         private void ListViewKeyDown(object sender, KeyEventArgs e)
         {
-            var ignoredKeys = new List<Key> {Key.LeftAlt, Key.LeftCtrl, Key.LeftCtrl, Key.RightAlt, Key.RightCtrl, Key.RightShift};
-            if (ignoredKeys.Contains(e.Key)) return;
-            bool shift = ((e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift);
-            bool control = ((e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control);
-            bool alt = ((e.KeyboardDevice.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt);
-            e.Handled = CommandKeyHandler.HandleKey(e.Key, shift, control, alt);
+            CommandKeyHandler.HandleKey(e);
         }
 
         private void ViewMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -59,7 +59,7 @@ namespace Kex.Views
             }
             else if (e.ChangedButton == MouseButton.Middle)
             {
-                Lister.DirectoryUp();
+                Lister.ContainerUp();
                 e.Handled = true;
             }
         }

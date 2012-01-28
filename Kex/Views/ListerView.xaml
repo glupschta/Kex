@@ -7,11 +7,6 @@
 
     <UserControl.Resources>
         <Style TargetType="{x:Type ListViewItem}">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                    <Setter Property="Background" Value="{StaticResource ResourceKey=selectionGradient}" />
-                </DataTrigger>
-            </Style.Triggers>
             <Style.Resources>
                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="LightBlue" Opacity=".8"/>
                 <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Orange" Opacity=".4"/>
@@ -25,13 +20,12 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="22"/>
         </Grid.RowDefinitions>
-        <ListView Grid.Row="0" Name="View" 
+        <ListView Grid.Row="0" Name="View" Background="Transparent" BorderThickness="0"
                 FocusVisualStyle="{x:Null}"
                 ItemsSource="{Binding Items}" KeyDown="ListViewKeyDown"
                 MouseUp="View_MouseUp" MouseDoubleClick="ViewMouseDoubleClick"
-                AllowDrop="True" Focusable="False"
+                AllowDrop="True" Focusable="False" SelectionMode="Extended" VirtualizingStackPanel.VirtualizationMode="Recycling"
                 >
-
         </ListView>
 
         <Views:ListerStatusbar x:Name="statusbar" Grid.Row="1"/>

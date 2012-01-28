@@ -9,7 +9,7 @@ namespace Kex.Views.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return String.IsNullOrEmpty((string)value) ? Visibility.Hidden : Visibility.Visible;
+            return String.IsNullOrEmpty((string)value) ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

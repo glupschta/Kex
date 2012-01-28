@@ -25,22 +25,18 @@
             </Grid.RowDefinitions>
         </Grid>
         <WrapPanel Grid.Column="0">
-            <WrapPanel>
-                <TextBlock Padding="2,0,0,0" Text="{Binding Items.Count}"/>
-                <TextBlock Text=" Item(s)" />
-                <TextBlock x:Name="debug" />
-            </WrapPanel>
-            <WrapPanel Visibility="{Binding SelectedItems, Converter={StaticResource anyToVisibility}}">
+            <TextBlock Padding="2,0,0,0" Text="{Binding Items.Count}"/>
+            <TextBlock Text=" Item(s)" />
+            <StackPanel Orientation="Horizontal" Visibility="{Binding SelectedItems, Converter={StaticResource anyToVisibility}}">
                 <TextBlock Text=", " />
-                <TextBlock Padding="2,0,0,0"  Text="{Binding SelectedItems.ItemCount}"/>
+                <TextBlock Padding="2,0,0,0"  Text="{Binding SelectionCount}"/>
                 <TextBlock Text=" Item(s) Selected, Size: " />
-                <TextBlock Padding="2,0,0,0"  Text="{Binding SelectedItems.ItemSize}"/>
-            </WrapPanel>
-            <WrapPanel Visibility="{Binding Filter, Converter={StaticResource nullToVisibility}}">
-                <TextBlock Padding="50,0,0,0" Text="Filter: "/>
-                <TextBlock  Padding="2,0,0,0" Text="{Binding Filter}"/>
-            </WrapPanel>
-
+                <TextBlock Padding="2,0,0,0"  Text="{Binding SelectionSize}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Visibility="{Binding Filter, Converter={StaticResource nullToVisibility}}">
+                <TextBlock Text=", Filter:" />
+                <TextBlock Padding="2,0,0,0" Text="{Binding Filter}" />
+            </StackPanel>
         </WrapPanel>
     </StatusBar>
 </UserControl>

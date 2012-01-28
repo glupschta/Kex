@@ -13,7 +13,7 @@ namespace Kex.Views.Converters
             var enumerable = value as IEnumerable;
             return (enumerable != null && enumerable.GetEnumerator().MoveNext()) 
                 ? Visibility.Visible 
-                : Visibility.Hidden;
+                : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
