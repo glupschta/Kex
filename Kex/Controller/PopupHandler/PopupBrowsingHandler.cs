@@ -72,8 +72,9 @@ namespace Kex.Controller.PopupHandler
         private void setSelection(IItem selection)
         {
             if (selection == null) return;
-            ListerManager.Instance.CommandManager.CurrentView.View.SelectedItem = selection;
-            ListerManager.Instance.CommandManager.CurrentView.View.ScrollIntoView(selection);
+            ListerManager.Instance.CommandManager.CurrentItem = selection;
+            //ListerManager.Instance.CommandManager.CurrentView.View.SelectedItem = selection;
+            //ListerManager.Instance.CommandManager.CurrentView.View.ScrollIntoView(selection);
             Keyboard.Focus(textinput.input);
         }
 

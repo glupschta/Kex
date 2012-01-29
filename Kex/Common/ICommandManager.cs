@@ -17,7 +17,7 @@ namespace Kex.Common
         void GoRight();
         void HistoryBack();
         void HistoryForward();
-        void DirectoryUp();
+        void ContainerUp();
 
         void FitWidthToListers();
 

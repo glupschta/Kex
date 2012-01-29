@@ -31,9 +31,9 @@ namespace Kex.Common
                     break;
                 case Key.U:
                     if (shift)
-                        ListerManager.Instance.CommandManager.HistoryBack();
+                        ListerManager.Instance.CommandManager.ContainerUp();
                     else
-                        ListerManager.Instance.CommandManager.DirectoryUp();
+                        ListerManager.Instance.CommandManager.HistoryBack();
                     break;
                 case Key.A:
                     if (shift)
@@ -130,7 +130,7 @@ namespace Kex.Common
                     ListerManager.Instance.ListerViewManager.OpenLister(ListerManager.Instance.CommandManager.CurrentItem.FullPath);
                     break;
                 case Key.Back:
-                    ListerManager.Instance.CommandManager.DirectoryUp();
+                    ListerManager.Instance.CommandManager.ContainerUp();
                     break;
                 default:
                     e.Handled = false;

@@ -77,7 +77,7 @@
     </ItemsPanelTemplate>
 
     <ItemsPanelTemplate x:Key="tileVirtualizing">
-        <WrapPanel Orientation="Horizontal" />
+        <WrapPanel Orientation="Horizontal" MaxWidth="{Binding ActualWidth, ElementName=View}" />
     </ItemsPanelTemplate>
     
 </ResourceDictionary>

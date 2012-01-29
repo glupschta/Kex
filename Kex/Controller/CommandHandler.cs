@@ -123,14 +123,7 @@ namespace Kex.Controller
 
         public void SetView(string view)
         {
-            var xamlView = CurrentView.FindResource(view) as ViewBase;
-            if (xamlView == null)
-            {
-                throw new Exception("View not found: "+view);
-            }
-            CurrentView.View.View = xamlView;
-            var itemsPanel = (ItemsPanelTemplate)CurrentView.FindResource(view == "fullView" ? "gridVirtualizing" : "tileVirtualizing");
-            CurrentView.View.ItemsPanel = itemsPanel;
+            CurrentView.ViewHandler.SetView(view);
             EnsureFocusOnItemChange();
         }
 
@@ -247,7 +240,8 @@ namespace Kex.Controller
 
         public void ClearGrouping()
         {
-            CurrentView.View.Items.GroupDescriptions.Clear();
+            if (CurrentView.View.Items.GroupDescriptions != null)
+                CurrentView.View.Items.GroupDescriptions.Clear();
         }
 
         public void Select(IItem item)
@@ -287,7 +281,7 @@ namespace Kex.Controller
         {
             var historyItem = CurrentView.Lister.HistoryBack();
             SetContainer(historyItem.FullPath);
-            var selected = CurrentView.Lister.Items.FirstOrDefault(i => i.FullPath == historyItem.FullPath);
+            var selected = CurrentView.Lister.Items.FirstOrDefault(i => i.FullPath == historyItem.SelectedPath);
             SetFocusToItem(selected);
         }
 
@@ -297,7 +291,7 @@ namespace Kex.Controller
             SetContainer(historyItem.FullPath);
         }
 
-        public void DirectoryUp()
+        public void ContainerUp()
         {
             var dup = CurrentView.Lister.ContainerUp();
             if (dup == null) return;

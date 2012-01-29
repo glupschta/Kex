@@ -40,10 +40,10 @@ namespace Kex.Model
             get { return _currentDirectory; }
             set
             {
-                NavigationHistory.Push(value, _currentDirectory, value);
-                ItemProvider.CurrentContainer = value;
                 _currentDirectory = value;
-                Items = ItemProvider.GetItems();
+                ItemProvider.CurrentContainer = value;
+                Refresh();
+                NavigationHistory.Push(value);
             }
         }
 

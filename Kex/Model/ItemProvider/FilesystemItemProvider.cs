@@ -138,9 +138,9 @@ namespace Kex.Model.ItemProvider
             }
         }
 
-        protected ShellThumbnailFormatOption ThumbnailFormatOption { get; set; }
+        public ShellThumbnailFormatOption ThumbnailFormatOption { get; set; }
 
-        protected ShellThumbnailRetrievalOption ThumbnailRetrievalOption { get; set; }
+        public ShellThumbnailRetrievalOption ThumbnailRetrievalOption { get; set; }
 
         public virtual void DoAction(IItem item)
         {

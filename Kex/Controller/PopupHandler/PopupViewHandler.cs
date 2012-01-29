@@ -7,9 +7,6 @@ namespace Kex.Controller.PopupHandler
 {
     public class PopupViewHandler : IPopupHandler
     {
-        private const string FullView = "Full";
-        private const string SimpleView = "Simple";
-        private const string ThumbView = "Thumbs";
 
         public string Name
         {
@@ -23,20 +20,20 @@ namespace Kex.Controller.PopupHandler
 
         public IEnumerable<string> ListItems
         {
-            get { return new List<string> { FullView, SimpleView, ThumbView }; }
+            get { return new List<string> { ViewHandler.FullView, ViewHandler.SimpleView, ViewHandler.ThumbView }; }
         }
 
         public void ItemSelected(string item)
         {
             switch (item)
             {
-                case FullView:
+                case ViewHandler.FullView:
                     ListerManager.Instance.CommandManager.SetView("fullView");
                     break;
-                case SimpleView:
+                case ViewHandler.SimpleView:
                     ListerManager.Instance.CommandManager.SetView("simpleView");
                     break;
-                case ThumbView:
+                case ViewHandler.ThumbView:
                     ListerManager.Instance.CommandManager.SetView("thumbView");
                     break;
                 default:

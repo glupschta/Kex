@@ -90,9 +90,9 @@
     <Compile Include="Controller\PopupHandler\PopupNetworkComputersHandler.cs" />
     <Compile Include="Controller\PopupHandler\ShellPropertyPopupHandler.cs" />
     <Compile Include="Controller\TabbedListerViewManager.cs" />
+    <Compile Include="Controller\ViewHandler.cs" />
     <Compile Include="Model\FileProperties.cs" />
     <Compile Include="Model\FileItem.cs" />
-    <Compile Include="Model\ItemSelection.cs" />
     <Compile Include="Model\ItemType.cs" />
     <Compile Include="Model\FileLister.cs" />
     <Compile Include="Common\MatchMode.cs" />

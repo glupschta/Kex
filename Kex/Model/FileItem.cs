@@ -90,7 +90,6 @@ namespace Kex.Modell
         }
 
         private FileProperties _properties;
-        private bool _isSelected;
 
     }
 }

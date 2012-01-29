@@ -19,6 +19,7 @@ namespace Kex.Views
         {
             InitializeComponent();
             DragDropHandler = new DragDropHandler(this);
+            ViewHandler = new ViewHandler(this);
             View.SelectionChanged += View_SelectionChanged;
         }
 
@@ -29,6 +30,7 @@ namespace Kex.Views
 
         public ILister<FileProperties> Lister { get;  set;}
         protected DragDropHandler DragDropHandler { get; set; }
+        public ViewHandler ViewHandler { get; protected set; }
 
         private void ListViewKeyDown(object sender, KeyEventArgs e)
         {

@@ -10,9 +10,10 @@ namespace Kex.Model
     /// </summary>
     public class NetWorkShare
     {
-        #region External Calls
+
         [DllImport("Netapi32.dll", SetLastError = true)]
         static extern int NetApiBufferFree(IntPtr Buffer);
+
         [DllImport("Netapi32.dll", CharSet = CharSet.Unicode)]
         private static extern int NetShareEnum(
              StringBuilder ServerName,
@@ -23,8 +24,7 @@ namespace Kex.Model
              ref int totalentries,
              ref int resume_handle
              );
-        #endregion
-        #region External Structures
+
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct ShareInfo
         {
@@ -33,16 +33,15 @@ namespace Kex.Model
             public string shi1_remark;
             public ShareInfo(string sharename, uint sharetype, string remark)
             {
-                this.shi1_netname = sharename;
-                this.shi1_type = sharetype;
-                this.shi1_remark = remark;
+                shi1_netname = sharename;
+                shi1_type = sharetype;
+                shi1_remark = remark;
             }
             public override string ToString()
             {
                 return shi1_netname;
             }
         }
-        #endregion
 
         const uint MAX_PREFERRED_LENGTH = 0xFFFFFFFF;
         const int NERR_Success = 0;
@@ -65,27 +64,27 @@ namespace Kex.Model
             STYPE_SPECIAL = 0x80000000,
         }
 
-        public ShareInfo[] GetShares(string Server)
+        public ShareInfo[] GetShares(string serverName)
         {
-            var ShareInfos = new List<ShareInfo>();
+            var shareInfos = new List<ShareInfo>();
             int entriesread = 0;
             int totalentries = 0;
-            int resume_handle = 0;
+            int resumeHandle = 0;
             int nStructSize = Marshal.SizeOf(typeof(ShareInfo));
             var bufPtr = IntPtr.Zero;
-            var server = new StringBuilder(Server);
-            int ret = NetShareEnum(server, 1, ref bufPtr, MAX_PREFERRED_LENGTH, ref entriesread, ref totalentries, ref resume_handle);
+            var server = new StringBuilder(serverName);
+            int ret = NetShareEnum(server, 1, ref bufPtr, MAX_PREFERRED_LENGTH, ref entriesread, ref totalentries, ref resumeHandle);
             if (ret == NERR_Success)
             {
                 var currentPtr = bufPtr;
                 for (int i = 0; i < entriesread; i++)
                 {
                     var shi1 = (ShareInfo)Marshal.PtrToStructure(currentPtr, typeof(ShareInfo));
-                    ShareInfos.Add(shi1);
+                    shareInfos.Add(shi1);
                     currentPtr = new IntPtr(currentPtr.ToInt32() + nStructSize);
                 }
                 NetApiBufferFree(bufPtr);
-                return ShareInfos.ToArray();
+                return shareInfos.ToArray();
             }
             throw new Exception("Error while retrieving Network Share: " + ret);
         }

@@ -112,6 +112,8 @@ namespace Kex.Views
             Handler.HandleKey(sender, e);
             if (e.Handled) return;
             var ctrl = (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
+            var shift = (e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
+            
             switch (e.Key)
             {
                 case Key.Oem102:
@@ -124,12 +126,12 @@ namespace Kex.Views
                     e.Handled = true;
                     break;
                 default:
-                    if (e.Key == Key.J && ctrl)
+                    if (e.Key == Key.Tab && !shift)
                     {
                         moveDownInList();
                         e.Handled = true;
                     }
-                    else if (e.Key == Key.K && ctrl)
+                    else if (e.Key == Key.Tab && shift)
                     {
                         moveUpInList();
                         e.Handled = true;

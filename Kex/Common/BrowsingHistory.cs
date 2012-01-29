@@ -11,7 +11,7 @@ namespace Kex.Common
         {
             get
             {
-                return _locations[_currentIndex];
+                return _currentIndex < 0 ? null : _locations[_currentIndex];
             }
         }
 
@@ -35,11 +35,15 @@ namespace Kex.Common
             }
         }
 
-        public void Push(string newLocation, string oldLocation, string selectedItem)
+        public void Push(string newLocation)
         {
-            if (_currentIndex > -1 && newLocation == _locations[_currentIndex].FullPath) return;
+            if (_currentIndex > -1 && newLocation == _locations[_currentIndex].FullPath) 
+                return;
+            if (Current != null) 
+                Current.SelectedPath = newLocation;
+
             _currentIndex++;
-            _locations.Add(new HistoryItem(newLocation, selectedItem));
+            _locations.Add(new HistoryItem(newLocation));
         }
 
         public List<HistoryItem> Locations
@@ -51,10 +55,10 @@ namespace Kex.Common
 
     public class HistoryItem
     {
-        public HistoryItem(string fullpath, string selectedPath)
+        public HistoryItem(string fullpath)
         {
             FullPath = fullpath;
-            SelectedPath = selectedPath;
+            SelectedPath = null;
         }
 
         public string FullPath { get; set; }
