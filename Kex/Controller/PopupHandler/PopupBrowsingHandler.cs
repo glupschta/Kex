@@ -63,18 +63,19 @@ namespace Kex.Controller.PopupHandler
             var matchingStartsWith = items.Where(it => it.Name.StartsWith(text, StringComparison.OrdinalIgnoreCase));
             var matchingContains = items.Where(it => it.Name.ToLower().Contains(text.ToLower()));
             var selection = matchingStartsWith.FirstOrDefault() ?? matchingContains.FirstOrDefault();
-            
-            textinput.ListItems = matchingStartsWith.Union(matchingContains)
-                .Select(li => li.Name);
+            currentListItems = matchingStartsWith.Union(matchingContains);
+            textinput.ListItems = currentListItems.Select(li => li.Name);
             setSelection(selection);
         }
 
         private void setSelection(IItem selection)
         {
-            if (selection == null) return;
-            ListerManager.Instance.CommandManager.CurrentItem = selection;
-            //ListerManager.Instance.CommandManager.CurrentView.View.SelectedItem = selection;
-            //ListerManager.Instance.CommandManager.CurrentView.View.ScrollIntoView(selection);
+            if (selection == null)
+            {
+                return;
+            }
+            ListerManager.Instance.CommandManager.CurrentView.View.SelectedItem = selection;
+            ListerManager.Instance.CommandManager.CurrentView.View.ScrollIntoView(selection);
             Keyboard.Focus(textinput.input);
         }
 

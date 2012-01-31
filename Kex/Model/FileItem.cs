@@ -11,13 +11,13 @@ namespace Kex.Modell
 {
     public class FileItem : IItem<FileProperties>
     {
-        private readonly IItemProvider<FileProperties> itemProvider;
+        private readonly IItemProvider<FileProperties> _itemProvider;
 
         public FileItem(string fullPath, ItemType type, IItemProvider<FileProperties> provider)
         { 
             FullPath = fullPath;  
             ItemType = type;
-            itemProvider = provider;
+            _itemProvider = provider;
             SetNameFromFullPath();
         }
 
@@ -25,16 +25,10 @@ namespace Kex.Modell
         {
             var ind = FullPath.LastIndexOf("\\");
             Name = FullPath.Substring(ind != -1 ? ind+1 : 0);
-            if (Name == "..")
-            {
-                var backDir = FullPath.LastIndexOf('\\', ind-1);
-                if (backDir > 2)
-                    FullPath = FullPath.Substring(0, backDir);
-                else
-                {
-                    FullPath = FullPath.Substring(0, 3);
-                }
-            }
+            if (Name != "..") return;
+
+            var backDir = FullPath.LastIndexOf('\\', ind-1);
+            FullPath = FullPath.Substring(0, backDir > 2 ? backDir : 3);
         }
 
         public string FullPath { get; set; }
@@ -63,21 +57,8 @@ namespace Kex.Modell
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
             }
         }
-   
-        public FileProperties Properties
-        {
-            get
-            {
-                return _properties;
-                if (_properties == null)
-                {
-                    _properties = itemProvider.FetchDetails(this);
 
-                }
-                return _properties;
-            }
-            set { _properties = value; }
-        }
+        public FileProperties Properties { get; set; }
 
         public void PropertiesChanged()
         {
@@ -88,8 +69,6 @@ namespace Kex.Modell
             OnNotifyPropertyChanged("Thumbnail");
             OnNotifyPropertyChanged("Properties");
         }
-
-        private FileProperties _properties;
 
     }
 }

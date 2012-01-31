@@ -24,7 +24,7 @@ namespace Kex.Controller.PopupHandler
             {
                 var history = ListerManager.Instance.CommandManager.CurrentView.Lister.NavigationHistory.Locations;
                 history.Reverse();
-                return history.Select(h => h.FullPath);
+                return history.Select(h => h.Value.FullPath);
             }
         }
 

@@ -159,6 +159,10 @@ namespace Kex.Views
             {
                 ind--;
             }
+            else
+            {
+                ind = listView.Items.Count - 1;
+            }
             listView.SelectedIndex = ind;
             listView.ScrollIntoView(listView.SelectedItem);
         }
@@ -169,6 +173,10 @@ namespace Kex.Views
             if (ind < listView.Items.Count - 1)
             {
                 ind++;
+            }
+            else
+            {
+                ind = 0;
             }
             listView.SelectedIndex= ind;
             listView.ScrollIntoView(listView.SelectedItem);

@@ -424,8 +424,17 @@ namespace Kex.Controller
 
         public void SetFocusToItem(IItem iitem)
         {
-            var index = CurrentView.View.Items.IndexOf(iitem);
-            SetFocusToIndex(index);
+            var item = CurrentView.View.ItemContainerGenerator.ContainerFromItem(iitem) as ListViewItem;
+            if (item != null)
+            {
+                Keyboard.Focus(item);
+                item.Focus();
+                CurrentView.View.ScrollIntoView(item);
+            }
+            else
+            {
+                EnsureFocusOnItemChange();
+            }
         }
 
         private void SetFocusToIndex(int index)

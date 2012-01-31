@@ -51,6 +51,7 @@ namespace Kex.Controller
             if (itemsPanel == null)
                 throw new Exception("ItemPanelTemplate not found for view: "+view);
             listerView.View.ItemsPanel = itemsPanel;
+            listerView.Lister.Refresh();
         }
 
         private readonly ListerView listerView;

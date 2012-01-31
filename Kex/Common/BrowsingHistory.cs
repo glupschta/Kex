@@ -4,8 +4,9 @@ namespace Kex.Common
 {
     public class BrowsingHistory
     {
-        private readonly List<HistoryItem> _locations = new List<HistoryItem>();
+        private readonly Dictionary<int, HistoryItem> _locations = new Dictionary<int, HistoryItem>(20);
         private int _currentIndex = -1;
+        private int _maxIndex = -1;
 
         public HistoryItem Current
         {
@@ -29,7 +30,7 @@ namespace Kex.Common
         {
             get 
             { 
-                if (_currentIndex < _locations.Count-1)
+                if (_currentIndex < _locations.Count-1 && _currentIndex<= _maxIndex)
                     _currentIndex++;
                 return Current;
             }
@@ -43,10 +44,11 @@ namespace Kex.Common
                 Current.SelectedPath = newLocation;
 
             _currentIndex++;
-            _locations.Add(new HistoryItem(newLocation));
+            _maxIndex = _currentIndex;
+            _locations[_currentIndex] = new HistoryItem(newLocation);
         }
 
-        public List<HistoryItem> Locations
+        public Dictionary<int, HistoryItem> Locations
         {
             get { return _locations; }
         }

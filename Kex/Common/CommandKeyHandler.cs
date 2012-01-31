@@ -31,6 +31,8 @@ namespace Kex.Common
                     break;
                 case Key.U:
                     if (shift)
+                        ListerManager.Instance.CommandManager.HistoryForward();
+                    else if (control)
                         ListerManager.Instance.CommandManager.ContainerUp();
                     else
                         ListerManager.Instance.CommandManager.HistoryBack();
