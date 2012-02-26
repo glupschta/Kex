@@ -6,7 +6,7 @@ using Kex.Common;
 
 namespace Kex.Controller.PopupHandler
 {
-    public class PopupSpecialFolderHandler : IPopupHandler
+    public class PopupSpecialFolderHandler : IPopupHandler<string>
     {
         private readonly Dictionary<string, string> specialFolders;
 
@@ -45,6 +45,11 @@ namespace Kex.Controller.PopupHandler
 
         public void TextChanged(string text)
         {
+        }
+
+        public bool SetSelectionInListView
+        {
+            get { return true; }
         }
 
         public Func<string, string, bool> Filter

@@ -235,7 +235,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="0" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="300" />
         </Grid.RowDefinitions>
         <TabControl Focusable="False" Name="tabControl" Grid.Row="0" />
         <UI:ListboxTextInput x:Name="listPopup" Grid.Row="1" />

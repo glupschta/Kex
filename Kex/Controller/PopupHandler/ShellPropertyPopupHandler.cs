@@ -8,7 +8,7 @@ using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
 namespace Kex.Controller.PopupHandler
 {
-    public class ShellPropertyPopupHandler : IPopupHandler
+    public class ShellPropertyPopupHandler : IPopupHandler<string>
     {
         public string Name
         {
@@ -39,6 +39,11 @@ namespace Kex.Controller.PopupHandler
 
         public void TextChanged(string text)
         {
+        }
+
+        public bool SetSelectionInListView
+        {
+            get { return true; }
         }
     }
 }

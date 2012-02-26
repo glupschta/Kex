@@ -7,7 +7,7 @@ using Kex.Model;
 
 namespace Kex.Controller.PopupHandler
 {
-    public class PopupNetworkComputersHandler : IPopupHandler
+    public class PopupNetworkComputersHandler : IPopupHandler<string>
     {
         public string Name
         {
@@ -30,6 +30,7 @@ namespace Kex.Controller.PopupHandler
 
         public void ItemSelected(string item)
         {
+            ListerManager.Instance.CommandManager.SetContainer(@"\\"+item);
         }
 
         public void HandleKey(object sender, KeyEventArgs e)
@@ -38,6 +39,11 @@ namespace Kex.Controller.PopupHandler
 
         public void TextChanged(string text)
         {
+        }
+
+        public bool SetSelectionInListView
+        {
+            get { return true; }
         }
     }
 }

@@ -7,7 +7,7 @@ using Kex.Common;
 
 namespace Kex.Controller.PopupHandler
 {
-    public class PopupSortingHandler : IPopupHandler
+    public class PopupSortingHandler : IPopupHandler<string>
     {
         public string Name
         {
@@ -45,6 +45,11 @@ namespace Kex.Controller.PopupHandler
 
         public void TextChanged(string text)
         {
+        }
+
+        public bool SetSelectionInListView
+        {
+            get { return true; }
         }
 
         private void DoSort(string property)

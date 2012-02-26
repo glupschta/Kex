@@ -35,7 +35,10 @@ namespace Kex.Controller
         }
 
         public IItem CurrentItem {
-            get { return CurrentView.View.SelectedItem as IItem; }
+            get
+            {
+                return CurrentView.View.SelectedItem as IItem;
+            }
             set
             {
                 CurrentView.View.SelectedItem = value;
@@ -61,7 +64,9 @@ namespace Kex.Controller
             CurrentView.Lister.CurrentDirectory = directory;
             SetFilter(null);
             CurrentView.View.Items.SortDescriptions.Clear();
-            SetFocusToIndex(0);
+            CurrentView.View.SelectedIndex = 0;
+            UpdateColumnWidth();
+            FocusView();
         }
 
         public void ShowSortPopup()
@@ -78,7 +83,7 @@ namespace Kex.Controller
 
         public void ShowFilterPopup(bool keepText = false)
         {
-            _listInput.Handler = new PopupFilterHandler();
+            _listInput.Handler = new PopupFilterHandler(_listInput);
             _listInput.Show(keepText);
         }
 
@@ -118,29 +123,26 @@ namespace Kex.Controller
 
         public void FocusView()
         {
-            SetFocusToIndex(CurrentView.View.SelectedIndex);
+            CurrentItem = CurrentView.View.SelectedItem as IItem;
         }
 
         public void SetView(string view)
         {
+            selectedBeforeViewChange = CurrentItem;
             CurrentView.ViewHandler.SetView(view);
-            EnsureFocusOnItemChange();
-        }
-
-        public void EnsureFocusOnItemChange()
-        {
             CurrentView.View.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
         }
 
+        private IItem selectedBeforeViewChange;
+
         void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
         {
-            if (_listInput.popup.IsOpen
-                || CurrentView.View.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated
+            if (_listInput.popup.IsOpen || CurrentView.View.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated
             ) return;
             
             CurrentView.View.ItemContainerGenerator.StatusChanged -= ItemContainerGenerator_StatusChanged;
-            var index = CurrentView.View.SelectedIndex;
-            SetFocusToIndex(Math.Max(index,0));
+            CurrentItem = CurrentView.View.Items.OfType<IItem>().First(i => i.FullPath == selectedBeforeViewChange.FullPath)
+            ;
         }
 
         public void SetSorting(string selectedColumn)
@@ -156,9 +158,8 @@ namespace Kex.Controller
             }
             var selectedItem = CurrentItem;
             ClearSorting();
-            
-            SetFocusToItem(selectedItem);
             CurrentView.View.Items.SortDescriptions.Add(new SortDescription(selectedColumn, direction));
+            CurrentItem = selectedItem;
         }
 
         public void ClearSorting()
@@ -174,8 +175,7 @@ namespace Kex.Controller
             var firstItem = items.Count == 0 ? null : items[0] as IItem;
             if (firstItem != null)
             {
-                SetFocusToItem(firstItem);
-                FocusView();
+                CurrentItem = firstItem;
             }
         }
 
@@ -207,7 +207,7 @@ namespace Kex.Controller
             {
                 CurrentView.Lister.Filter = null;
                 CurrentView.View.Items.Filter = null;
-                EnsureFocusOnItemChange();
+                FocusView();
             }
             else
             {
@@ -244,12 +244,6 @@ namespace Kex.Controller
                 CurrentView.View.Items.GroupDescriptions.Clear();
         }
 
-        public void Select(IItem item)
-        {
-            CurrentView.View.SelectedItem = item;
-            SetFocusToItem(item);
-        }
-
         public void GoUp()
         {
             DoTraverse(FocusNavigationDirection.Up);
@@ -281,8 +275,7 @@ namespace Kex.Controller
         {
             var historyItem = CurrentView.Lister.HistoryBack();
             SetContainer(historyItem.FullPath);
-            var selected = CurrentView.Lister.Items.FirstOrDefault(i => i.FullPath == historyItem.SelectedPath);
-            SetFocusToItem(selected);
+            CurrentItem = CurrentView.Lister.Items.FirstOrDefault(i => i.FullPath == historyItem.SelectedPath);
         }
 
         public void HistoryForward()
@@ -424,34 +417,16 @@ namespace Kex.Controller
 
         public void SetFocusToItem(IItem iitem)
         {
-            var item = CurrentView.View.ItemContainerGenerator.ContainerFromItem(iitem) as ListViewItem;
-            if (item != null)
+            var listViewItem = CurrentView.View.ItemContainerGenerator.ContainerFromItem(iitem) as ListViewItem;
+            if (listViewItem == null)
             {
-                Keyboard.Focus(item);
-                item.Focus();
-                CurrentView.View.ScrollIntoView(item);
+                CurrentView.View.ScrollIntoView(iitem);
+                listViewItem = CurrentView.View.ItemContainerGenerator.ContainerFromItem(iitem) as ListViewItem;
             }
-            else
+            if (listViewItem != null)
             {
-                EnsureFocusOnItemChange();
-            }
-        }
-
-        private void SetFocusToIndex(int index)
-        {
-            if (index < 0)
-                index = 0;
-            CurrentView.View.SelectedIndex = index;
-            var item = CurrentView.View.ItemContainerGenerator.ContainerFromIndex(index) as ListViewItem;
-            if (item != null)
-            {
-                Keyboard.Focus(item);
-                item.Focus();
-                CurrentView.View.ScrollIntoView(item);
-            } 
-            else
-            {
-                EnsureFocusOnItemChange();
+                listViewItem.Focus(); 
+                Keyboard.Focus(listViewItem);
             }
         }
 

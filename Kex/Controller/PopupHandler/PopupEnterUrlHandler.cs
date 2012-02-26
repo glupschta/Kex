@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Kex.Controller.PopupHandler
 {
-    public class PopupEnterUrlHandler : IPopupHandler
+    public class PopupEnterUrlHandler : IPopupHandler<string>
     {
         public string Name
         {
@@ -39,6 +39,11 @@ namespace Kex.Controller.PopupHandler
 
         public void TextChanged(string text)
         {
+        }
+
+        public bool SetSelectionInListView
+        {
+            get { return true; }
         }
 
         public Func<string, string, bool> Filter

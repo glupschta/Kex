@@ -12,7 +12,7 @@ using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Kex.Model.ItemProvider
 {
-    public class FilesystemItemProvider : IItemProvider<FileProperties>
+    public class FilesystemItemProvider : IItemProvider<FileProperties>, IDisposable
     {
         public FilesystemItemProvider()
         {
@@ -31,13 +31,15 @@ namespace Kex.Model.ItemProvider
             get; set; 
         }
 
+        protected IEnumerable<IItem<FileProperties>> currentItems;
+
         protected virtual IEnumerable<IItem<FileProperties>> GetItemsEnumerable()
         {
-            var allItems = new List<IItem<FileProperties>>();
+            var items = new List<IItem<FileProperties>>();
             if (Directory.Exists(CurrentContainer))
             {
-                allItems.AddRange(Directory.EnumerateDirectories(CurrentContainer).Select(di => new FileItem(di, ItemType.Container, this)));
-                allItems.AddRange(Directory.EnumerateFiles(CurrentContainer).Select(fi => new FileItem(fi, ItemType.Executable, this)));
+                items.AddRange(Directory.EnumerateDirectories(CurrentContainer).Select(di => new FileItem(di, ItemType.Container, this)));
+                items.AddRange(Directory.EnumerateFiles(CurrentContainer).Select(fi => new FileItem(fi, ItemType.Executable, this)));
             }
             else
             {
@@ -51,36 +53,41 @@ namespace Kex.Model.ItemProvider
                 }
                 var share = new NetWorkShare();
                 var shares = share.GetShares(serverName);
-                allItems.AddRange(shares.Select(lo => new FileItem(CurrentContainer + "\\" + lo.shi1_netname, ItemType.Container, this)));
+                items.AddRange(shares.Select(lo => new FileItem(CurrentContainer + "\\" + lo.shi1_netname, ItemType.Container, this)));
             }
             
-            return allItems;
+            return items;
         }
 
         public IEnumerable<IItem<FileProperties>> GetItems()
         {
-            var allItems = GetItemsEnumerable();
+            if (currentItems != null)
+            {
+                Dispose();
+            }
+            var items = GetItemsEnumerable();
             try
             {
-                if (allItems.Any())
+                if (items.Any())
                 {
                     const int preload = 20;
-                    foreach(var item in allItems.Take(preload))
+                    foreach(var item in items.Take(preload))
                     {
                         FetchDetails(item);
                     }
-                    FetchPropertiesAsync(allItems.Skip(preload));
+                    FetchPropertiesAsync(items.Skip(preload));
                 }
                 else
                 {
-                    allItems = new List<FileItem> {new FileItem(CurrentContainer + "\\..", ItemType.Container, this)};
+                    items = new List<FileItem> {new FileItem(CurrentContainer + "\\..", ItemType.Container, this)};
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
             }
-            return allItems;
+            currentItems = items;
+            return items;
         }
 
         public FileProperties FetchDetails(IItem<FileProperties> item)
@@ -95,7 +102,7 @@ namespace Kex.Model.ItemProvider
                 props.Length = (long) (props.ShellObject.Properties.System.Size.Value ?? 0);
                 props.Created = props.ShellObject.Properties.System.DateCreated.Value;
                 props.LastModified = props.ShellObject.Properties.System.DateCreated.Value;
-                props.Thumbnail = props.ShellObject.Thumbnail.MediumBitmapSource;
+                props.Thumbnail = props.ShellObject.Thumbnail.SmallBitmapSource;
                 props.Thumbnail.Freeze();
                 item.Properties = props;
                 if (props.ShellObject != null && props.ShellObject.IsLink)
@@ -168,6 +175,14 @@ namespace Kex.Model.ItemProvider
         }
 
         private BackgroundWorker _currentWorker;
+        public void Dispose()
+        {
+            foreach(var item in currentItems)
+            {
+                if (item != null && item.Properties != null)
+                    item.Properties.Dispose();
+            }
+        }
     }
 
 }

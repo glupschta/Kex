@@ -25,10 +25,19 @@ namespace Kex.Views
             input.KeyDown += ListboxTextInput_KeyDown;
             input.TextChanged += input_TextChanged;
             listView.PreviewGotKeyboardFocus += (sender, eventArgs) => eventArgs.Handled = true;
-            listView.SelectionChanged += listView_SelectionChanged;
+            listView.SelectionChanged += new SelectionChangedEventHandler(listView_SelectionChanged);
+            listView.SelectionChanged += ListViewSelectionChanged;
         }
 
         void listView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            input.TextChanged -= input_TextChanged;
+            input.Text = listView.SelectedValue as string;
+            input.CaretIndex = int.MaxValue;
+            input.TextChanged += input_TextChanged;
+        }
+
+        void ListViewSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ListSelectionChanged != null)
             {
@@ -36,25 +45,25 @@ namespace Kex.Views
             }
         }
 
-        public IPopupHandler Handler { get; set; }
+        public IPopupHandler<string> Handler { get; set; }
 
         public IEnumerable<string> ListItems
         {
-            get { return listItems; }
+            get { return _listItems; }
             set
             {
-                listItems = value;
-                grid.RowDefinitions[1].Height = listItems != null && listItems.Any() ? new GridLength() : new GridLength(0);
+                _listItems = value;
+                grid.RowDefinitions[1].Height = _listItems != null && _listItems.Any() ? new GridLength() : new GridLength(0);
                 OnPropertyChanged("ListItems");
             }
         }
 
         public IEnumerable<string> FilteredItems
         {
-            get { return filteredItems; }
+            get { return _filteredItems; }
             set
             {
-                filteredItems = value;
+                _filteredItems = value;
                 OnPropertyChanged("FilteredItems");
             }
         }
@@ -70,11 +79,11 @@ namespace Kex.Views
             }
             else {inputChanged();}
 
+            Header = Handler.Name;
             ListItems = Handler.ListItems;
             Filter = Handler.Filter ?? DefaultFilter;
             filterMatchingItems();    
-            Header = Handler.Name;
-            listView.SelectedIndex = 0;
+            listView.SelectedIndex = -1;
 
             var currentListerView = ListerManager.Instance.ListerViewManager.CurrentListerView;
             popup.PlacementTarget = currentListerView;
@@ -98,7 +107,7 @@ namespace Kex.Views
         void inputChanged()
         {
             Handler.TextChanged(Text);
-            setListSelection();
+            SetListSelection();
             filterMatchingItems();
         }
 
@@ -118,22 +127,22 @@ namespace Kex.Views
             {
                 case Key.Oem102:
                 case Key.Escape:
-                    closePopup();
+                    ClosePopup();
                     e.Handled = true;
                     break;
                 case Key.Return:
-                    closeAndHandleSelection();
+                    CloseAndHandleSelection();
                     e.Handled = true;
                     break;
                 default:
                     if (e.Key == Key.Tab && !shift)
                     {
-                        moveDownInList();
+                        MoveDownInList();
                         e.Handled = true;
                     }
                     else if (e.Key == Key.Tab && shift)
                     {
-                        moveUpInList();
+                        MoveUpInList();
                         e.Handled = true;
                     }
                     else
@@ -152,7 +161,7 @@ namespace Kex.Views
             }
         }
 
-        private void moveUpInList()
+        private void MoveUpInList()
         {
             var ind = listView.SelectedIndex;
             if (ind > 0)
@@ -167,7 +176,7 @@ namespace Kex.Views
             listView.ScrollIntoView(listView.SelectedItem);
         }
 
-        private void moveDownInList()
+        private void MoveDownInList()
         {
             var ind = listView.SelectedIndex;
             if (ind < listView.Items.Count - 1)
@@ -182,7 +191,7 @@ namespace Kex.Views
             listView.ScrollIntoView(listView.SelectedItem);
         }
 
-        private void closeAndHandleSelection()
+        private void CloseAndHandleSelection()
         {
             Close();
             var selection = listView.SelectedItem as string ?? Text;
@@ -190,7 +199,7 @@ namespace Kex.Views
             SetFocusToView();
         }
 
-        private void closePopup()
+        private void ClosePopup()
         {
             Close();
             SetFocusToView();
@@ -213,19 +222,21 @@ namespace Kex.Views
             set
             {
                 input.Text = value;
-                setListSelection();
+                SetListSelection();
                 OnPropertyChanged("Text");
             }
         }
 
-        private void setListSelection()
+        private void SetListSelection()
         {
             if (ListItems == null || !ListItems.Any())
                 return;
 
-            if (!string.IsNullOrEmpty(Text))
+            if (!string.IsNullOrEmpty(Text) && Handler.SetSelectionInListView)
             {
-                listView.SelectedItem = ListItems.FirstOrDefault(li => Filter(li, Text));
+                
+                var selection = ListItems.FirstOrDefault(li => Filter(li, Text));
+                listView.SelectedItem = selection;
             }
             else
             {
@@ -254,9 +265,9 @@ namespace Kex.Views
             return source.IndexOf(text, StringComparison.OrdinalIgnoreCase) > -1;
         }
 
-        private IEnumerable<string> listItems;
-        private IEnumerable<string> filteredItems;
-        internal bool ignoreLostFocus;
+        private IEnumerable<string> _listItems;
+        private IEnumerable<string> _filteredItems;
+        internal bool IgnoreLostFocus;
 
     }
 }

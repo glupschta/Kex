@@ -10,19 +10,19 @@ using Kex.Views;
 
 namespace Kex.Controller.PopupHandler
 {
-    public class PopupBrowsingHandler : IPopupHandler
+    public class PopupBrowsingHandler : IPopupHandler<string>
     {
         private readonly ListboxTextInput textinput;
         public PopupBrowsingHandler(ListboxTextInput textinput)
         {
             this.textinput = textinput;
-            textinput.ListSelectionChanged += textinput_ListSelectionChanged;
+            textinput.ListSelectionChanged += TextinputListSelectionChanged;
         }
 
-        void textinput_ListSelectionChanged(string name)
+        void TextinputListSelectionChanged(string name)
         {
             if (currentListItems == null) return;
-            setSelection(currentListItems.Where(it => it.Name == name).FirstOrDefault());
+                setSelection(currentListItems.Where(it => it.Name == name).FirstOrDefault());
         }
 
         public string Name
@@ -47,12 +47,12 @@ namespace Kex.Controller.PopupHandler
         {
             if (e.Key == Key.Return || e.Key == Key.Enter)
             {
-                textinput.ignoreLostFocus = true;
+                textinput.IgnoreLostFocus = true;
                 ListerManager.Instance.CommandManager.DoDefaultAction();
                 textinput.Text = "";
                 Keyboard.Focus(textinput.input);
                 e.Handled = true;
-                textinput.ignoreLostFocus = false;
+                textinput.IgnoreLostFocus = false;
             }
         }
 
@@ -68,12 +68,14 @@ namespace Kex.Controller.PopupHandler
             setSelection(selection);
         }
 
+        public bool SetSelectionInListView
+        {
+            get { return false; }
+        }
+
         private void setSelection(IItem selection)
         {
-            if (selection == null)
-            {
-                return;
-            }
+            if (selection == null) return;
             ListerManager.Instance.CommandManager.CurrentView.View.SelectedItem = selection;
             ListerManager.Instance.CommandManager.CurrentView.View.ScrollIntoView(selection);
             Keyboard.Focus(textinput.input);

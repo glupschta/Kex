@@ -12,15 +12,33 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
+            ShowFiles();
+            Console.ReadLine();
+        }
+
+        static void ShowShares()
+        {
             string path = @"\\poing\mp3";
             var shares = NetworkListManager.GetNetworks(NetworkConnectivityLevels.All);
-            foreach(var s in shares)
+            foreach (var s in shares)
             {
                 Console.WriteLine(s.Name);
             }
             ProcessStartInfo psi = new ProcessStartInfo("\\poing");
             Process.Start(psi);
-            Console.ReadLine();
+        }
+
+        static void ShowFiles()
+        {
+            var path = @"C:\Windows\System32\drivers\";
+            foreach (var fi in Directory.GetDirectories(path))
+            {
+                Console.WriteLine(fi);
+            }
+            foreach(var fi in Directory.EnumerateFiles(path))
+            {
+                Console.WriteLine(fi);
+            }
         }
     }
 }

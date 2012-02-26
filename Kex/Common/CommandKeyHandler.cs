@@ -22,7 +22,7 @@ namespace Kex.Common
 
             var k = e.Key;
             switch(k)
-            {
+            { 
                 case Key.Delete:
                     ListerManager.Instance.CommandManager.Delete();
                     break;

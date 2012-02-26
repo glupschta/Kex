@@ -24,7 +24,7 @@
                 FocusVisualStyle="{x:Null}"
                 ItemsSource="{Binding Items}" KeyDown="ListViewKeyDown"
                 MouseUp="View_MouseUp" MouseDoubleClick="ViewMouseDoubleClick"
-                AllowDrop="True" Focusable="False" SelectionMode="Extended" VirtualizingStackPanel.VirtualizationMode="Recycling"
+                AllowDrop="True" Focusable="False" SelectionMode="Extended" VirtualizingStackPanel.VirtualizationMode="Standard"
                 >
         </ListView>
 

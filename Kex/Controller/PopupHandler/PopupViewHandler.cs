@@ -5,7 +5,7 @@ using Kex.Common;
 
 namespace Kex.Controller.PopupHandler
 {
-    public class PopupViewHandler : IPopupHandler
+    public class PopupViewHandler : IPopupHandler<string>
     {
 
         public string Name
@@ -47,6 +47,11 @@ namespace Kex.Controller.PopupHandler
 
         public void TextChanged(string text)
         {
+        }
+
+        public bool SetSelectionInListView
+        {
+            get { return true; }
         }
 
         public Func<string, string, bool> Filter

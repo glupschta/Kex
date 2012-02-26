@@ -9,7 +9,7 @@ using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Kex.Modell
 {
-    public class FileItem : IItem<FileProperties>
+    public class FileItem : IItem<FileProperties>, IDisposable
     {
         private readonly IItemProvider<FileProperties> _itemProvider;
 
@@ -70,5 +70,9 @@ namespace Kex.Modell
             OnNotifyPropertyChanged("Properties");
         }
 
+        public void Dispose()
+        {
+            Properties.Dispose();
+        }
     }
 }

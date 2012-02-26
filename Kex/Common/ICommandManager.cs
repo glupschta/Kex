@@ -10,7 +10,6 @@ namespace Kex.Common
         IItem CurrentItem { get; set; }
         void DoDefaultAction();
 
-        void Select(IItem item);
         void GoUp();
         void GoDown();
         void GoLeft();

@@ -7,7 +7,7 @@ using Kex.Common;
 
 namespace Kex.Controller.PopupHandler
 {
-    public class PopupDrivesHandler : IPopupHandler
+    public class PopupDrivesHandler : IPopupHandler<string>
     {
         private static Dictionary<string, string> drives;
         private static Dictionary<string, string> Drives
@@ -60,6 +60,11 @@ namespace Kex.Controller.PopupHandler
 
         public void TextChanged(string text)
         {
+        }
+
+        public bool SetSelectionInListView
+        {
+            get { return true; }
         }
     }
 }
