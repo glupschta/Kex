@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:Views="clr-namespace:Kex.Views" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300" >
+             xmlns:Views="clr-namespace:Kex.Views" xmlns:Drawing="clr-namespace:System.Drawing;assembly=System.Drawing" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300" >
 
     <UserControl.Resources>
         <Style TargetType="{x:Type ListViewItem}">
@@ -20,7 +20,8 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="22"/>
         </Grid.RowDefinitions>
-        <ListView Grid.Row="0" Name="View" Background="Transparent" BorderThickness="0"
+        <ListView Grid.Row="0" Name="View" 
+                Background="Transparent" BorderThickness="0"
                 FocusVisualStyle="{x:Null}"
                 ItemsSource="{Binding Items}" KeyDown="ListViewKeyDown"
                 MouseUp="View_MouseUp" MouseDoubleClick="ViewMouseDoubleClick"

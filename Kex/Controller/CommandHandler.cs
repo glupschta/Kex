@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -10,31 +9,36 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using System.Windows.Forms;
 using System.Windows.Input;
 using Kex.Common;
-using Kex.Controller.PopupHandler;
+using Kex.Controller.Popups;
 using Kex.Model;
-using Kex.Model.ItemProvider;
-using Kex.Modell;
+using Kex.Model;
 using Kex.Views;
+using Microsoft.WindowsAPICodePack.Shell;
+using Application = System.Windows.Application;
+using ListViewItem = System.Windows.Controls.ListViewItem;
+using MessageBox = System.Windows.MessageBox;
 
 namespace Kex.Controller
 {
-    public class CommandManager : ICommandManager
+    public class CommandManager
     {
-
-        public CommandManager(ListboxTextInput listInput)
+        public CommandManager(IPopupInput popupInput, IListerViewManager viewManager)
         {
-            _listInput = listInput;
+            _PopupInput = popupInput;
+            _ListerViewManager = viewManager;
         }
 
         public ListerView CurrentView
         {
-            get { return ListerManager.Instance.ListerViewManager.CurrentListerView; }
-            set { ListerManager.Instance.ListerViewManager.CurrentListerView = value; }
+            get { return _ListerViewManager.CurrentListerView; }
+            set { _ListerViewManager.CurrentListerView = value; }
         }
 
-        public IItem CurrentItem {
+        public IItem CurrentItem
+        {
             get
             {
                 return CurrentView.View.SelectedItem as IItem;
@@ -45,6 +49,145 @@ namespace Kex.Controller
                 SetFocusToItem(value);
             }
         }
+
+        public void ExecuteByCommandName(string commandName, string argument = null)
+        {
+            switch (commandName.ToLower())
+            {
+                case "windowadjustsize":
+                    WindowAdjustSize();
+                    break;
+                case "windowmaximize":
+                    WindowMaximize();
+                    break;
+                case "windowminimize":
+                    WindowMinimize();
+                    break;
+                case "windowrestore":
+                    WindowRestore();
+                    break;
+                case "windowdockleft":
+                    WindowDockLeft();
+                    break;
+                case "windowdockright":
+                    WindowDockRight();
+                    break;
+                case "windowclose":
+                    _ListerViewManager.CloseCurrentLister();
+                    break;
+                case "savetabs":
+                    SaveTabs();
+                    break;
+                case "clearreadonly":
+                    ClearReadonly();
+                    break;
+                case "executeexternal":
+                    ExecuteExternal(argument);
+                    break;
+                case "sendmail":
+                    SendWithMail();
+                    break;
+                case "addtofavorites":
+                    AddToFavorites();
+                    break;
+            }
+        }
+
+        private void AddToFavorites()
+        {
+            var current = CurrentItem;
+            var favoriteLocation = Environment.GetFolderPath(Environment.SpecialFolder.Favorites);
+            var linkPath = Path.Combine(favoriteLocation, current.Name + ".lnk");
+            var targetPath = current.FullPath;
+
+            if (current.ItemType == ItemType.Container)
+            {
+                   SymbolicLink.CreateDirectoryLink(linkPath, targetPath);
+            }
+            else
+            {
+                 SymbolicLink.CreateFileLink(linkPath, targetPath);
+            }
+        }
+
+        private void SendWithMail()
+        {
+            var selectedfiles = ListerManager.Instance.ListerViewManager.CurrentListerView
+                .GetSelection().Select(s => s.FullPath);
+
+            var message = new MapiMailMessage("", "");
+            foreach (var file in selectedfiles)
+            {
+                message.Files.Add(file);
+            }
+            message.ShowDialog();
+        }
+
+        private void ExecuteExternal(string executableLocation)
+        {
+            var selectedfiles = ListerManager.Instance.ListerViewManager.CurrentListerView
+                .View.SelectedItems.Cast<IItem>().Select(s => "\""+ s.FullPath+"\"");
+            var psi = new ProcessStartInfo(executableLocation);
+            psi.Arguments =string.Join(" ", selectedfiles);
+            Process.Start(psi);
+        }
+
+        public void SaveTabs()
+        {
+            var diag = new SaveFileDialog();
+            if (diag.ShowDialog() == DialogResult.OK)
+            {
+                SaveTabs(diag.FileName);
+            }
+        }
+
+        public void SaveTabs(string filename)
+        {
+            File.WriteAllLines(filename, _ListerViewManager.Listers.Select(li => li.CurrentDirectory));
+        }
+
+        public void WindowAdjustSize()
+        {
+            FitWidthToListers();
+            FitWidthToListers();
+        }
+
+        public void WindowMaximize()
+        {
+            Application.Current.MainWindow.WindowState = WindowState.Maximized;
+        }
+
+        public void WindowMinimize()
+        {
+            Application.Current.MainWindow.WindowState = WindowState.Minimized;
+            
+        }
+
+        public void WindowRestore()
+        {
+            Application.Current.MainWindow.WindowState = WindowState.Normal;
+        }
+
+        public void WindowDockLeft()
+        {
+            var screenWidth = SystemParameters.PrimaryScreenWidth;
+            var screenHeight = SystemParameters.PrimaryScreenHeight;
+            Application.Current.MainWindow.Top = 0;
+            Application.Current.MainWindow.Left = 0;
+            Application.Current.MainWindow.Width = screenWidth/2;
+            Application.Current.MainWindow.Height = screenHeight;
+        }
+
+        public void WindowDockRight()
+        {
+            var screenWidth = SystemParameters.PrimaryScreenWidth;
+            var screenHeight = SystemParameters.PrimaryScreenHeight;
+            Application.Current.MainWindow.Top = 0;
+            Application.Current.MainWindow.Left = screenWidth-screenWidth/2;
+            Application.Current.MainWindow.Width = screenWidth -Application.Current.MainWindow.Left;
+            Application.Current.MainWindow.Height = screenHeight;            
+        }
+
 
         public void DoDefaultAction()
         {
@@ -59,8 +202,7 @@ namespace Kex.Controller
 
         public void SetContainer(string directory)
         {
-            ListerManager.Instance.ListerViewManager.SetHeader(directory);
-            ListerManager.Instance.ListerViewManager.TextInput.ListItems = null;
+            _ListerViewManager.SetHeader(directory);
             CurrentView.Lister.CurrentDirectory = directory;
             SetFilter(null);
             CurrentView.View.Items.SortDescriptions.Clear();
@@ -69,56 +211,62 @@ namespace Kex.Controller
             FocusView();
         }
 
+        public void Rename()
+        {
+            var grid = ListerManager.Instance.ListerViewManager.CurrentListerView.View.View as GridView;
+        }
+
         public void ShowSortPopup()
         {
-            _listInput.Handler = new PopupSortingHandler();
-            _listInput.Show();
+            new SortPopup(_PopupInput).Show();
         }
 
         public void ShowViewPopup()
         {
-            _listInput.Handler = new PopupViewHandler();
-            _listInput.Show();
+            new ViewPopup(_PopupInput).Show();
         }
 
         public void ShowFilterPopup(bool keepText = false)
         {
-            _listInput.Handler = new PopupFilterHandler(_listInput);
-            _listInput.Show(keepText);
+            new FilterPopup(_PopupInput).Show();
         }
 
         public void ShowBrowsingPopup(bool keepText = false)
         {
-            if (keepText)
-            {
-                SetFilter(null);
-            }
-            _listInput.Handler = new PopupBrowsingHandler(_listInput);
-            _listInput.Show(keepText);
+            new BrowsingPopup(_PopupInput).Show();
         }
 
         public void ShowDrivesPopup()
         {
-            _listInput.Handler = new PopupDrivesHandler();
-            _listInput.Show();
-        }
-
-        public void ShowSpecialFolderPopup()
-        {
-            _listInput.Handler = new PopupSpecialFolderHandler();
-            _listInput.Show();
-        }
-
-        public void ShowEnterUrlPopup()
-        {
-            _listInput.Handler = new PopupEnterUrlHandler();
-            _listInput.Show();
+            new DrivesPopup(_PopupInput).Show();
         }
 
         public void ShowNetWorkComputers()
         {
-            _listInput.Handler = new PopupNetworkComputersHandler();
-            _listInput.Show();
+            new NetworkComputersPopup(_PopupInput).Show();
+        }
+
+        public void ShowMenu()
+        {
+            new MenuPopup(_PopupInput, "MainMenu").Show();
+        }
+
+        public void ShowSpecialFolderPopup()
+        {
+            //_PopupInput.Handler = new PopupSpecialFolderHandler();
+            //_PopupInput.Show();
+        }
+
+        public void ShowEnterUrlPopup()
+        {
+            //_PopupInput.Handler = new PopupEnterUrlHandler();
+            //_PopupInput.Show();
+        }
+
+        public void ShowShellPropertyPopup()
+        {
+            //_PopupInput.Handler = new ShellPropertyPopupHandler();
+            //_PopupInput.Show();
         }
 
         public void FocusView()
@@ -137,12 +285,13 @@ namespace Kex.Controller
 
         void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
         {
-            if (_listInput.popup.IsOpen || CurrentView.View.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated
-            ) return;
+            if (_PopupInput.IsOpen 
+                || CurrentView.View.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
+                return;
             
             CurrentView.View.ItemContainerGenerator.StatusChanged -= ItemContainerGenerator_StatusChanged;
-            CurrentItem = CurrentView.View.Items.OfType<IItem>().First(i => i.FullPath == selectedBeforeViewChange.FullPath)
-            ;
+            var lastSelection = selectedBeforeViewChange != null ? selectedBeforeViewChange.FullPath : null;
+            CurrentItem = CurrentView.View.Items.OfType<IItem>().First(i => i.FullPath == lastSelection);
         }
 
         public void SetSorting(string selectedColumn)
@@ -165,6 +314,7 @@ namespace Kex.Controller
         public void ClearSorting()
         {
             CurrentView.View.Items.SortDescriptions.Clear();
+            FocusView();
         }
 
         public void GroupByName()
@@ -218,7 +368,7 @@ namespace Kex.Controller
 
         public void ClosePopup()
         {
-            _listInput.Close();
+            _PopupInput.Hide();
         }
 
         public void UpdateColumnWidth()
@@ -230,12 +380,6 @@ namespace Kex.Controller
                 column.Width = column.ActualWidth;
                 column.Width = double.NaN;
             }
-        }
-
-        public void ShowShellPropertyPopup()
-        {
-            _listInput.Handler = new ShellPropertyPopupHandler();
-            _listInput.Show();
         }
 
         public void ClearGrouping()
@@ -274,8 +418,11 @@ namespace Kex.Controller
         public void HistoryBack()
         {
             var historyItem = CurrentView.Lister.HistoryBack();
-            SetContainer(historyItem.FullPath);
-            CurrentItem = CurrentView.Lister.Items.FirstOrDefault(i => i.FullPath == historyItem.SelectedPath);
+            if (historyItem.FullPath != CurrentView.Lister.CurrentDirectory)
+            {
+                SetContainer(historyItem.FullPath);
+                CurrentItem = CurrentView.Lister.Items.FirstOrDefault(i => i.FullPath == historyItem.SelectedPath);
+            }
         }
 
         public void HistoryForward()
@@ -331,7 +478,6 @@ namespace Kex.Controller
 
         public void HandleException(Exception ex)
         {
-            UpdateColumnWidth();
             MessageBox.Show(ex.ToString(), "Error");
         }
 
@@ -415,7 +561,16 @@ namespace Kex.Controller
             SetContainer(favoriteLocation);
         }
 
-        public void SetFocusToItem(IItem iitem)
+        public void ClearReadonly()
+        {
+            var path = CurrentItem.FullPath;
+            var attr = File.GetAttributes(CurrentItem.FullPath);
+
+            if ((attr & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                File.SetAttributes(path, (attr ^ FileAttributes.ReadOnly));
+        }
+
+        private void SetFocusToItem(IItem iitem)
         {
             var listViewItem = CurrentView.View.ItemContainerGenerator.ContainerFromItem(iitem) as ListViewItem;
             if (listViewItem == null)
@@ -430,7 +585,8 @@ namespace Kex.Controller
             }
         }
 
-        internal readonly ListboxTextInput _listInput;
+        internal readonly IPopupInput _PopupInput;
+        private readonly IListerViewManager _ListerViewManager;
         private readonly List<ListerView> _views = new List<ListerView>();
     }
 }

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Windows;
 using Kex.Common;
 using Kex.Controller;
-using Kex.Modell;
+using Kex.Model;
 using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Kex.Model.ItemProvider
@@ -102,7 +102,7 @@ namespace Kex.Model.ItemProvider
                 props.Length = (long) (props.ShellObject.Properties.System.Size.Value ?? 0);
                 props.Created = props.ShellObject.Properties.System.DateCreated.Value;
                 props.LastModified = props.ShellObject.Properties.System.DateCreated.Value;
-                props.Thumbnail = props.ShellObject.Thumbnail.SmallBitmapSource;
+                props.Thumbnail = props.ShellObject.Thumbnail.MediumBitmapSource;
                 props.Thumbnail.Freeze();
                 item.Properties = props;
                 if (props.ShellObject != null && props.ShellObject.IsLink)
@@ -183,6 +183,24 @@ namespace Kex.Model.ItemProvider
                     item.Properties.Dispose();
             }
         }
+
+        public Dictionary<string, string> Columns
+        {
+            get
+            {
+                if (columns == null)
+                {   
+                    columns =  new Dictionary<string, string>();
+                    columns.Add("Name", "Name");
+                    columns.Add("LastModified", "LastModified");
+                    columns.Add("Type", "Properties.ShellObject.Properties.System.ItemTypeText.Value");
+                    columns.Add("Length", "Length");
+                }
+                return columns;
+            }
+        }
+
+        private Dictionary<string, string> columns;
     }
 
 }

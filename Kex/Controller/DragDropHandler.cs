@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -43,7 +44,24 @@ namespace Kex.Controller
             if (e.Data.GetDataPresent(dragFormat))
             {
                 var dirNames = (string[])e.Data.GetData(DataFormats.FileDrop);
-                MessageBox.Show(string.Join(Environment.NewLine, dirNames), "Drop");
+                var firstName = dirNames.First();
+                string destination = null;
+
+                var listViewItem = FindAnchestor<ListViewItem>(e.OriginalSource);
+                if (listViewItem == null)
+                {
+                    var listerView = FindAnchestor<ListerView>(e.OriginalSource);
+                    destination = listerView.Lister.CurrentDirectory;
+                }
+                else
+                {
+                    var item = ((IItem) listViewItem.Content);
+                    destination = item.FullPath;
+                }
+                if (firstName != destination)
+                {
+                    MessageBox.Show("Dropping " + firstName + " to " + destination);
+                }
             }
         }
 
@@ -68,14 +86,15 @@ namespace Kex.Controller
                 {
                     var item = (IItem)listView.ItemContainerGenerator.ItemFromContainer(listViewItem);
 
-                    var dragData = new DataObject(dragFormat, new []{item.FullPath});
-                    DragDrop.DoDragDrop(listViewItem, dragData, DragDropEffects.Move|DragDropEffects.Copy|DragDropEffects.Link);
+                    var dragData = new DataObject(dragFormat, new[] { item.FullPath });
+                    DragDrop.DoDragDrop(listViewItem, dragData, DragDropEffects.Move | DragDropEffects.Copy | DragDropEffects.Link);
                 }
             }
         }
 
-        private static T FindAnchestor<T>(DependencyObject current) where T : DependencyObject
+        private static T FindAnchestor<T>(object obj) where T : DependencyObject
         {
+            var current = obj as DependencyObject;
             do
             {
                 if (current is T) return (T)current;

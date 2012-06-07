@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Menus>
+
+  <MenuItem Text="MainMenu">
+    
+    <MenuItem Text="Window">
+      <MenuItem Text="Adjust Width" Command="WindowAdjustSize" />
+      <MenuItem Text="Maximize" Command="WindowMaximize" />
+      <MenuItem Text="Minimize" Command="WindowMinimize" />
+      <MenuItem Text="Restore" Command="WindowRestore" />
+      <MenuItem Text="Dock Left" Command="WindowDockLeft" />
+      <MenuItem Text="Dock Right" Command="WindowDockRight" />
+      <MenuItem Text="Close" Command="WindowClose" />
+    </MenuItem>
+    
+    <MenuItem Text="File">
+      <MenuItem Text="Save Tabs" Command="SaveTabs" />
+      <MenuItem Text="Clear Readonly Flag" Command="ClearReadonly" />
+    </MenuItem>
+    
+    <MenuItem Text="Adjust Width" Command="WindowAdjustSize" />
+    <MenuItem Text="Clear Readonly Flag" Command="ClearReadonly" />
+    <MenuItem Text="Send As Mail" Command="SendMail" />
+    <MenuItem Text="Notepad++" Command="ExecuteExternal" Argument="C:\Program Files (x86)\Notepad++\notepad++.exe" />
+    <MenuItem Text="Add To Favorites" Command="AddToFavorites" />
+    
+  </MenuItem>
+  
+</Menus>

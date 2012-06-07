@@ -14,5 +14,5 @@ namespace Kex.Controller.PopupHandler
         void HandleKey(object sender, KeyEventArgs e);
         void TextChanged(string text);
         bool SetSelectionInListView { get; }
-    }
+    } 
 }

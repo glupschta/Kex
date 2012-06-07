@@ -1,12 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Media.Imaging;
-using Kex.Modell;
+using Kex.Common;
+using Kex.Model;
 using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Kex.Model
 {
-    public interface IItem : INotifyPropertyChanged
+    public interface IItem : INotifyPropertyChanged, IPopupItem
     {
         string FullPath { get; set; }
         string Name { get; set; }

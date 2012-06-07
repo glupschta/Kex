@@ -1,4 +1,4 @@
-﻿namespace Kex.Modell
+﻿namespace Kex.Model
 {
     public enum ItemType
     {

@@ -15,5 +15,6 @@ namespace Kex.Common
         void CloseCurrentLister();
         void CycleListers(int direction);
         void SetHeader(string directory);
+        List<ILister> Listers { get;  }
     }
 }

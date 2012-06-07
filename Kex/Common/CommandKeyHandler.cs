@@ -29,10 +29,8 @@ namespace Kex.Common
                 case Key.Escape:
                     ListerManager.Instance.CommandManager.ClosePopup();
                     break;
-                case Key.U:
+                case Key.H:
                     if (shift)
-                        ListerManager.Instance.CommandManager.HistoryForward();
-                    else if (control)
                         ListerManager.Instance.CommandManager.ContainerUp();
                     else
                         ListerManager.Instance.CommandManager.HistoryBack();
@@ -67,11 +65,14 @@ namespace Kex.Common
                 case Key.I:
                     ListerManager.Instance.CommandManager.ShowBrowsingPopup(ignoreCtrl);
                     break;
-                case Key.H:
-                    ListerManager.Instance.CommandManager.GoLeft();
-                    break;
                 case Key.L:
-                    ListerManager.Instance.CommandManager.GoRight();
+                    ListerManager.Instance.CommandManager.HistoryForward();
+                    break;
+                case Key.M:
+                    ListerManager.Instance.CommandManager.ShowMenu();
+                    break;
+                case Key.N:
+                    ListerManager.Instance.CommandManager.ShowViewPopup();
                     break;
                 case Key.J:
                         ListerManager.Instance.CommandManager.GoDown();
@@ -100,9 +101,7 @@ namespace Kex.Common
                     else
                         ListerManager.Instance.CommandManager.GroupByName();
                     break;
-                case Key.M:
-                    ListerManager.Instance.CommandManager.ShowViewPopup();
-                    break;
+
                 case Key.P:
                     ListerManager.Instance.ListerViewManager.CloseCurrentLister();
                     break;
@@ -115,12 +114,16 @@ namespace Kex.Common
                     else
                         ListerManager.Instance.CommandManager.ShowSortPopup();
                     break;
+                case Key.T:
+                    ListerManager.Instance.CommandManager.Rename();
+                    break;
                 case Key.W:
                     if (shift)
                         ListerManager.Instance.CommandManager.SetFilter(null);
                     else
                         ListerManager.Instance.CommandManager.ShowFilterPopup(ignoreCtrl);
                     break;
+
                 case Key.Tab:
                     if (shift)
                         ListerManager.Instance.ListerViewManager.CycleListers(-1);

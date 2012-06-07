@@ -5,9 +5,10 @@ using Kex.Common;
 using Kex.Controller;
 using Kex.Model;
 using Kex.Model.ItemProvider;
+using Kex.Model;
 using Microsoft.WindowsAPICodePack.Shell;
 
-namespace Kex.Modell
+namespace Kex.Model
 {
     public class FileItem : IItem<FileProperties>, IDisposable
     {
@@ -38,16 +39,7 @@ namespace Kex.Modell
         public DateTime? Created { get { return Properties == null ? null : Properties.Created; } }
         public long Length { get { return Properties == null ? 0 : Properties.Length; } }
         public ShellObject ShellObject { get { return Properties == null ? null : Properties.ShellObject; } }
-        public BitmapSource Thumbnail { get { return Properties == null ? null : Properties.Thumbnail; } }
-
-        private string _resolvedPath;
-        public string ResolvedPath
-        {
-            get
-            {
-                return _resolvedPath ?? (_resolvedPath = PathResolver.Resolve(Properties.ShellObject, FullPath)); 
-            }
-        }   
+        public BitmapSource Thumbnail { get { return Properties == null ? null : Properties.Thumbnail; } } 
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnNotifyPropertyChanged(string property)
@@ -73,6 +65,16 @@ namespace Kex.Modell
         public void Dispose()
         {
             Properties.Dispose();
+        }
+
+        public string DisplayName
+        {
+            get { return Name; }
+        }
+
+        public string FilterString
+        {
+            get { return Name; }
         }
     }
 }

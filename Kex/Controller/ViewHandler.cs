@@ -17,19 +17,20 @@ namespace Kex.Controller
 
         public ViewHandler(ListerView listerView)
         {
-            this.listerView = listerView;
+            _listerView = listerView;
+
         }
 
         public void SetView(string view)
         {
-            var xamlView = listerView.FindResource(view) as ViewBase;
+            var xamlView = _listerView.FindResource(view) as ViewBase;
             if (xamlView == null)
                 throw new Exception("View not found: " + view);
             
-            listerView.View.View = xamlView;
+            _listerView.View.View = xamlView;
 
             string itemTemplateName;
-            var fileItemProvider = listerView.Lister.ItemProvider as FilesystemItemProvider;
+            var fileItemProvider = _listerView.Lister.ItemProvider as FilesystemItemProvider;
             if (view == "fullView")
             {
                 itemTemplateName = "gridVirtualizing";
@@ -47,13 +48,13 @@ namespace Kex.Controller
                 }
             }
 
-            var itemsPanel = (ItemsPanelTemplate)listerView.FindResource(itemTemplateName);
+            var itemsPanel = (ItemsPanelTemplate)_listerView.FindResource(itemTemplateName);
             if (itemsPanel == null)
                 throw new Exception("ItemPanelTemplate not found for view: "+view);
-            listerView.View.ItemsPanel = itemsPanel;
-            listerView.Lister.Refresh();
+            _listerView.View.ItemsPanel = itemsPanel;
+            _listerView.Lister.Refresh();
         }
 
-        private readonly ListerView listerView;
+        private readonly ListerView _listerView;
     }
 }

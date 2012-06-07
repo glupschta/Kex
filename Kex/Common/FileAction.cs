@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows;
 using Kex.Controller;
 using Kex.Model;
-using Kex.Modell;
+using Kex.Model;
 using Microsoft.VisualBasic.FileIO;
 
 namespace Kex.Common
@@ -82,13 +82,17 @@ namespace Kex.Common
             {
                 try
                 {
+                    var fi = item as FileItem;
+                    if (fi == null) continue;
+
+                    var pathToDelete = fi.ShellObject.IsLink ? fi.ShellObject.Properties.System.ParsingPath.Value : fi.FullPath;
                     switch (item.ItemType)
                     {
                         case ItemType.Container:
-                            FileSystem.DeleteDirectory(item.FullPath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                            FileSystem.DeleteDirectory(pathToDelete, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
                             break;
                         case ItemType.Executable:
-                            File.Delete(item.FullPath);
+                            File.Delete(pathToDelete);
                             break;
                     }
                 }

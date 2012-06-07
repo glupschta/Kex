@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using Kex.Common;
 
 namespace Kex.Views
 {
@@ -10,6 +11,9 @@ namespace Kex.Views
         public ListerStatusbar()
         {
             InitializeComponent();
+            Panel.FontFamily = Options.FontFamily;
+            Panel.FontSize = Options.FontSize;
+            Panel.Height = Options.FontSize*2;
         }
     }
 }

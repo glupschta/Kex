@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -50,6 +51,11 @@ namespace Kex.Views
             if (parent == null) return null;
             if (parent is T) return parent as T;
             return TryFindParent<T>(parent);
+        }
+
+        public IEnumerable<IItem> GetSelection()
+        {
+            return View.SelectedItems.Cast<IItem>();
         }
 
         private void View_MouseUp(object sender, MouseButtonEventArgs e)

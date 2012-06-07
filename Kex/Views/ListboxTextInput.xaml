@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Converters1="clr-namespace:Kex.Views.Converters" mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Popup x:Name="popup" PopupAnimation="Fade" AllowsTransparency="True"
+    <Popup x:Name="popup" PopupAnimation="Slide" AllowsTransparency="True" Opacity="20"
            StaysOpen="False" HorizontalOffset="0">
         <Popup.Resources>
             <LinearGradientBrush x:Key="headerGradient" StartPoint="0,0" EndPoint="0,1">
@@ -33,47 +33,52 @@
 
             <DataTemplate x:Key="listboxTemplate">
                 <Border x:Name="border">
-                    <TextBlock Text="{Binding}" />
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding Thumbnail}" Width="14"/>
+                        <TextBlock Text=" " /> 
+                        <TextBlock Text="{Binding DisplayName}" />
+                    </StackPanel>
                 </Border>
             </DataTemplate>
 
             <Style TargetType="{x:Type ListBoxItem}">
-                <Style.Resources>
-                    <LinearGradientBrush  x:Key="{x:Static SystemColors.ControlBrushKey}" StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#FFFFFF" Offset="1" />
-                        <GradientStop Color="#FFFFFF" Offset="0.7" />
+                <Style.Resources> 
+                    <LinearGradientBrush  x:Key="{x:Static SystemColors.ControlBrushKey}" StartPoint="0,0" EndPoint="0,1">
                         <GradientStop Color="LightBlue" Offset="0" />
+                        <GradientStop Color="LightBlue" Offset="1" />
                     </LinearGradientBrush>
                 </Style.Resources>
             </Style>
 
         </Popup.Resources>
-        <Border Padding="0" Margin="4" BorderBrush="{StaticResource headerBorderGradient}" BorderThickness="1" CornerRadius="4" Background="White">
+        <Border Padding="0" Margin="4" BorderBrush="LightGray" BorderThickness="2" CornerRadius="6" Background="Transparent">
+
             <Border.BitmapEffect>
-                <DropShadowBitmapEffect Direction="315" Color="Black" Opacity="0.6" Softness="0.3"/>
+                <DropShadowBitmapEffect Direction="180" Color="LightGray" Opacity="0.3" Softness="0.3"/>
             </Border.BitmapEffect>
-            <Grid x:Name="grid">
+
+            <Grid x:Name="grid" Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="250" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="30"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Border BorderThickness="1" BorderBrush="{StaticResource headerBorderGradient1}" Grid.Column="0" Grid.Row="0">
-                    <Label x:Name="head" FontSize="15" Background="{StaticResource headerGradient}"  VerticalContentAlignment="Center"/>
+                <Border CornerRadius="4" BorderThickness="2" Grid.Column="0" Grid.Row="0">
+                    <Label x:Name="head" FontWeight="Bold" Background="{StaticResource inputFieldGradient}" VerticalContentAlignment="Center" />
                 </Border>
-                <Border BorderThickness="1" BorderBrush="{StaticResource headerBorderGradient1}" Grid.Column="1" Grid.Row="0">
-                    <TextBox x:Name="input" FontSize="15" Background="{StaticResource inputFieldGradient}" VerticalAlignment="Center" />
+                <Border CornerRadius="4" BorderThickness="2" Grid.Column="1" Grid.Row="0">
+                    <TextBox x:Name="input" Background="{StaticResource inputFieldGradient}" VerticalAlignment="Center"  Padding="3" />
                 </Border>
-                <Border Padding="4" Margin="4" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Background="White"
+                <Border Padding="4" Margin="4" BorderBrush="White" BorderThickness="1" CornerRadius="4" Background="White"
                         Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Visibility="{Binding ListItems, Converter={StaticResource anyToVisibility}}">
                     <Border.BitmapEffect>
-                        <DropShadowBitmapEffect Direction="315" Color="Gray" Opacity="0.4" Softness="0.5"/>
+                        <DropShadowBitmapEffect Direction="270" Color="LightGray" Opacity="0.4" Softness="0.5" />
                     </Border.BitmapEffect>
-                    <ListBox x:Name="listView" ItemsSource="{Binding FilteredItems}" Focusable="False" MaxHeight="200" FontSize="15"
-                          BorderBrush="{StaticResource inputFieldGradient}" SelectionMode="Single" Width="Auto" ItemTemplate="{StaticResource listboxTemplate}">
+                    <ListBox x:Name="listView" ItemsSource="{Binding ListItems}" Focusable="False" MaxWidth="400"
+                           SelectionMode="Single" Width="Auto" ItemTemplate="{StaticResource listboxTemplate}" BorderBrush="White">
                     </ListBox>
                 </Border>
             </Grid>

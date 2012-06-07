@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Forms;
 using System.Windows.Input;
 using Kex.Common;
 using Kex.Model;
 using Kex.Model.ItemProvider;
-using Kex.Modell;
+using Kex.Model;
 using Kex.Views;
+using ListViewItem = System.Windows.Controls.ListViewItem;
+using TabControl = System.Windows.Controls.TabControl;
 
 namespace Kex.Controller
 {
@@ -19,7 +23,7 @@ namespace Kex.Controller
     {
         public TabbedListerViewManager(TabControl tabControl, ListboxTextInput textInput)
         {
-            TabControl = tabControl;
+            _tabControl = tabControl;
             TextInput = textInput;
         }
 
@@ -34,7 +38,7 @@ namespace Kex.Controller
             var newTab = new TabItem();
             newTab.Header = directory;
             newTab.Content = listerView;
-            TabControl.Items.Add(newTab);
+            _tabControl.Items.Add(newTab);
 
             CurrentListerView = listerView;
             SetView("fullView");
@@ -42,46 +46,57 @@ namespace Kex.Controller
             listerView.GotFocus += ListerViewGotFocus;
             listerView.View.Loaded += SetFocus;
             listerView.Lister.PropertyChanged += ListerPropertyChanged;
-            TabControl.SelectedItem = newTab;
+            _tabControl.SelectedItem = newTab;
         }
 
         public void CloseCurrentLister()
         {
-            if (TabControl.Items.Count == 1) return;
-            var ind = TabControl.SelectedIndex;
-            TabControl.Items.Remove(TabControl.SelectedItem);
-            if (ind > TabControl.Items.Count -1)
+            if (_tabControl.Items.Count == 1) return;
+            var ind = _tabControl.SelectedIndex;
+            _tabControl.Items.Remove(_tabControl.SelectedItem);
+            if (ind > _tabControl.Items.Count -1)
             {
-                ind = TabControl.Items.Count - 1;
+                ind = _tabControl.Items.Count - 1;
             }
-            CurrentListerView = ((TabItem) TabControl.Items[ind]).Content as ListerView;
+            CurrentListerView = ((TabItem) _tabControl.Items[ind]).Content as ListerView;
             SetFocus(null, null);
         }
 
         public void CycleListers(int direction)
         {
-            var ind = TabControl.SelectedIndex;
+            var ind = _tabControl.SelectedIndex;
             ind += direction;
             if (ind < 0)
             {
-                ind = TabControl.Items.Count - 1;
+                ind = _tabControl.Items.Count - 1;
             }
-            else if (ind > TabControl.Items.Count - 1)
+            else if (ind > _tabControl.Items.Count - 1)
             {
                 ind = 0;
             }
-            TabControl.SelectedIndex = ind;
-            CurrentListerView = ((TabItem)TabControl.Items[ind]).Content as ListerView; ;
+            _tabControl.SelectedIndex = ind;
+            CurrentListerView = ((TabItem)_tabControl.Items[ind]).Content as ListerView; ;
             if (CurrentListerView == null) return;
             SetFocus(null, null);
         }
 
         public void SetHeader(string header)
         {
-            var currentTab = TabControl.SelectedItem as TabItem;
+            var currentTab = _tabControl.SelectedItem as TabItem;
             if (currentTab != null)
             {
                 currentTab.Header = header;
+            }
+        }
+
+        public List<ILister> Listers
+        {
+            get
+            {
+                return _tabControl.Items.Cast<TabItem>()
+                    .Select(ti => ((ListerView) ti.Content).Lister)
+                    .Cast<ILister>()
+                    .ToList();
             }
         }
 
@@ -155,7 +170,7 @@ namespace Kex.Controller
             }
         }
 
-        private readonly TabControl TabControl;
+        private readonly TabControl _tabControl;
         public ListboxTextInput TextInput { get; private set; }
     }
 }

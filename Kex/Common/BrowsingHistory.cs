@@ -45,7 +45,7 @@ namespace Kex.Common
 
             _currentIndex++;
             _maxIndex = _currentIndex;
-            _locations[_currentIndex] = new HistoryItem(newLocation);
+            _locations[_currentIndex] = new HistoryItem(newLocation, _currentIndex);
         }
 
         public Dictionary<int, HistoryItem> Locations
@@ -57,13 +57,15 @@ namespace Kex.Common
 
     public class HistoryItem
     {
-        public HistoryItem(string fullpath)
+        public HistoryItem(string fullpath, int index)
         {
             FullPath = fullpath;
             SelectedPath = null;
+            Index = index;
         }
 
         public string FullPath { get; set; }
         public string SelectedPath { get; set; }
+        public int Index { get; set; }
     }
 }

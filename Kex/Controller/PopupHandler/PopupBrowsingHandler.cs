@@ -10,7 +10,7 @@ using Kex.Views;
 
 namespace Kex.Controller.PopupHandler
 {
-    public class PopupBrowsingHandler : IPopupHandler<string>
+    public class PopupBrowsingHandler : IPopupHandler<IPopupItem>
     {
         private readonly ListboxTextInput textinput;
         public PopupBrowsingHandler(ListboxTextInput textinput)
@@ -30,7 +30,7 @@ namespace Kex.Controller.PopupHandler
             get { return "Select"; }
         }
 
-        public IEnumerable<string> ListItems
+        public IEnumerable<IPopupItem> ListItems
         {
             get
             {
@@ -39,7 +39,7 @@ namespace Kex.Controller.PopupHandler
             }
         }
 
-        public void ItemSelected(string item)
+        public void ItemSelected(IPopupItem item)
         {
         }
 
@@ -64,8 +64,7 @@ namespace Kex.Controller.PopupHandler
             var matchingContains = items.Where(it => it.Name.ToLower().Contains(text.ToLower()));
             var selection = matchingStartsWith.FirstOrDefault() ?? matchingContains.FirstOrDefault();
             currentListItems = matchingStartsWith.Union(matchingContains);
-            textinput.ListItems = currentListItems.Select(li => li.Name);
-            setSelection(selection);
+            ListItems = currentListItems.Select(li => li.Name)
         }
 
         public bool SetSelectionInListView

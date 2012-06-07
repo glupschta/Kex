@@ -4,7 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Kex.Model;
 using Microsoft.WindowsAPICodePack.Net;
+using Microsoft.WindowsAPICodePack.Shell;
 
 namespace TestConsole
 {
@@ -12,20 +14,75 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
-            ShowFiles();
+            TestWatcher();
             Console.ReadLine();
+        }
+
+        private static void TestWatcher()
+        {
+            ShellObject so = ShellObject.FromParsingName("C:");
+            ShellObjectWatcher sw = new ShellObjectWatcher(so, true);
+            sw.ItemCreated += new EventHandler<ShellObjectChangedEventArgs>(watcher_ItemCreated);
+            sw.ItemDeleted += new EventHandler<ShellObjectChangedEventArgs>(sw_ItemDeleted);
+            sw.ItemRenamed += new EventHandler<ShellObjectRenamedEventArgs>(sw_ItemRenamed);
+            sw.DirectoryCreated += new EventHandler<ShellObjectChangedEventArgs>(sw_DirectoryCreated);
+            sw.DirectoryDeleted += new EventHandler<ShellObjectChangedEventArgs>(sw_DirectoryDeleted);
+            sw.DirectoryRenamed += new EventHandler<ShellObjectRenamedEventArgs>(sw_DirectoryRenamed);
+            sw.DirectoryUpdated += new EventHandler<ShellObjectChangedEventArgs>(sw_DirectoryUpdated);
+            sw.Start();
+            Console.ReadLine();
+            sw.Stop();
+            Console.WriteLine("End");
+        }
+
+        static void sw_DirectoryUpdated(object sender, ShellObjectChangedEventArgs e)
+        {
+            Console.WriteLine(e.ChangeType+" _ "+e.Path);
+        }
+
+        static void sw_DirectoryRenamed(object sender, ShellObjectRenamedEventArgs e)
+        {
+            Console.WriteLine(e.ChangeType + " _ " + e.Path + e.NewPath);
+
+        }
+
+        static void sw_DirectoryDeleted(object sender, ShellObjectChangedEventArgs e)
+        {
+            Console.WriteLine(e.ChangeType + " _ " + e.Path);
+
+        }
+
+        static void sw_DirectoryCreated(object sender, ShellObjectChangedEventArgs e)
+        {
+            Console.WriteLine(e.ChangeType + " _ " + e.Path);
+
+        }
+
+        static void sw_ItemRenamed(object sender, ShellObjectRenamedEventArgs e)
+        {
+            Console.WriteLine(e.ChangeType + " _ " + e.Path);
+
+        }
+
+        static void sw_ItemDeleted(object sender, ShellObjectChangedEventArgs e)
+        {
+            Console.WriteLine(e.ChangeType + " _ " + e.Path);
+
+        }
+
+        static void watcher_ItemCreated(object sender, ShellObjectChangedEventArgs e)
+        {
+           Console.WriteLine("Created "+e.Path); 
         }
 
         static void ShowShares()
         {
-            string path = @"\\poing\mp3";
-            var shares = NetworkListManager.GetNetworks(NetworkConnectivityLevels.All);
+            var nws = new NetworkBrowser();
+            var shares = nws.GetNetworkComputers();
             foreach (var s in shares)
             {
-                Console.WriteLine(s.Name);
+                Console.WriteLine(s);
             }
-            ProcessStartInfo psi = new ProcessStartInfo("\\poing");
-            Process.Start(psi);
         }
 
         static void ShowFiles()

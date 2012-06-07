@@ -2,7 +2,7 @@
 
 namespace Kex.Model.ItemProvider
 {
-    public interface IItemProvider<T>
+    public interface IItemProvider<T> : IColumnProvider
     {
         string CurrentContainer { get; set; }
         void DoAction(IItem item);

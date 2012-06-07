@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -6,9 +7,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using Kex.Common;
 using Kex.Controller;
-using Kex.Controller.PopupHandler;
 using System.Windows.Controls.Primitives;
 
 namespace Kex.Views
@@ -16,198 +17,28 @@ namespace Kex.Views
     /// <summary>
     /// Interaction logic for TextInput.xaml
     /// </summary>
-    public partial class ListboxTextInput : INotifyPropertyChanged
+    public partial class ListboxTextInput : IPopupInput
     {
         public ListboxTextInput()
         {
             InitializeComponent();
-            DataContext = this;
-            input.KeyDown += ListboxTextInput_KeyDown;
-            input.TextChanged += input_TextChanged;
+            popup.Placement = PlacementMode.Right;
+            popup.Height = listView.ActualHeight;
             listView.PreviewGotKeyboardFocus += (sender, eventArgs) => eventArgs.Handled = true;
-            listView.SelectionChanged += new SelectionChangedEventHandler(listView_SelectionChanged);
-            listView.SelectionChanged += ListViewSelectionChanged;
+            popup.Closed += popup_Closed;
+            input.FontFamily = Options.FontFamily;
+            input.FontSize = Options.FontSize;
+            FontFamily = Options.FontFamily;
+            FontSize = Options.FontSize;
+            input.Height = Options.FontSize*2;
         }
 
-        void listView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        void popup_Closed(object sender, EventArgs e)
         {
-            input.TextChanged -= input_TextChanged;
-            input.Text = listView.SelectedValue as string;
-            input.CaretIndex = int.MaxValue;
-            input.TextChanged += input_TextChanged;
-        }
-
-        void ListViewSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (ListSelectionChanged != null)
+            if (Closed != null)
             {
-                ListSelectionChanged(listView.SelectedItem as string);
+                Closed(this, EventArgs.Empty);
             }
-        }
-
-        public IPopupHandler<string> Handler { get; set; }
-
-        public IEnumerable<string> ListItems
-        {
-            get { return _listItems; }
-            set
-            {
-                _listItems = value;
-                grid.RowDefinitions[1].Height = _listItems != null && _listItems.Any() ? new GridLength() : new GridLength(0);
-                OnPropertyChanged("ListItems");
-            }
-        }
-
-        public IEnumerable<string> FilteredItems
-        {
-            get { return _filteredItems; }
-            set
-            {
-                _filteredItems = value;
-                OnPropertyChanged("FilteredItems");
-            }
-        }
-
-        public void Show(bool keepText=false)
-        {
-            popup.IsOpen = true;
-            input.Focus();
-            Keyboard.Focus(input);
-            if (!keepText)
-            {
-                Text = "";
-            }
-            else {inputChanged();}
-
-            Header = Handler.Name;
-            ListItems = Handler.ListItems;
-            Filter = Handler.Filter ?? DefaultFilter;
-            filterMatchingItems();    
-            listView.SelectedIndex = -1;
-
-            var currentListerView = ListerManager.Instance.ListerViewManager.CurrentListerView;
-            popup.PlacementTarget = currentListerView;
-            popup.Placement = PlacementMode.Relative;
-            popup.HorizontalOffset = (currentListerView.ActualWidth - popup.Child.RenderSize.Width) / 2;
-            popup.VerticalOffset = (currentListerView.ActualHeight - popup.Child.RenderSize.Height) / 2;
-        }
-
-        public void Close()
-        {
-            popup.IsOpen = false;
-            SetFocusToView();
-        }
-
-        void input_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            inputChanged();
-            e.Handled = true;
-        }
-
-        void inputChanged()
-        {
-            Handler.TextChanged(Text);
-            SetListSelection();
-            filterMatchingItems();
-        }
-
-        private void filterMatchingItems()
-        {
-            FilteredItems = ListItems == null ? null : ListItems.Where(li => Filter(li, Text));
-        }
-
-        void ListboxTextInput_KeyDown(object sender, KeyEventArgs e)
-        {
-            Handler.HandleKey(sender, e);
-            if (e.Handled) return;
-            var ctrl = (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
-            var shift = (e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
-            
-            switch (e.Key)
-            {
-                case Key.Oem102:
-                case Key.Escape:
-                    ClosePopup();
-                    e.Handled = true;
-                    break;
-                case Key.Return:
-                    CloseAndHandleSelection();
-                    e.Handled = true;
-                    break;
-                default:
-                    if (e.Key == Key.Tab && !shift)
-                    {
-                        MoveDownInList();
-                        e.Handled = true;
-                    }
-                    else if (e.Key == Key.Tab && shift)
-                    {
-                        MoveUpInList();
-                        e.Handled = true;
-                    }
-                    else
-                    {
-                        var ignoredKeys = new List<Key> { Key.LeftAlt, Key.LeftCtrl, Key.LeftCtrl, Key.RightAlt, Key.RightCtrl, Key.RightShift };
-                        if (!ignoredKeys.Contains(e.Key))
-                        {
-                            if (ctrl)
-                            {
-                                CommandKeyHandler.HandleKey(e, true);
-                            }
-                            e.Handled = false;
-                        }
-                    }
-                    break;
-            }
-        }
-
-        private void MoveUpInList()
-        {
-            var ind = listView.SelectedIndex;
-            if (ind > 0)
-            {
-                ind--;
-            }
-            else
-            {
-                ind = listView.Items.Count - 1;
-            }
-            listView.SelectedIndex = ind;
-            listView.ScrollIntoView(listView.SelectedItem);
-        }
-
-        private void MoveDownInList()
-        {
-            var ind = listView.SelectedIndex;
-            if (ind < listView.Items.Count - 1)
-            {
-                ind++;
-            }
-            else
-            {
-                ind = 0;
-            }
-            listView.SelectedIndex= ind;
-            listView.ScrollIntoView(listView.SelectedItem);
-        }
-
-        private void CloseAndHandleSelection()
-        {
-            Close();
-            var selection = listView.SelectedItem as string ?? Text;
-            Handler.ItemSelected(selection);
-            SetFocusToView();
-        }
-
-        private void ClosePopup()
-        {
-            Close();
-            SetFocusToView();
-        }
-
-        private static void SetFocusToView()
-        {
-            ListerManager.Instance.CommandManager.FocusView();
         }
 
         public string Header
@@ -216,58 +47,40 @@ namespace Kex.Views
             set { head.Content = value; }
         }
 
-        public string Text
+        public TextBox TextBox
         {
-            get { return input.Text; }
-            set
-            {
-                input.Text = value;
-                SetListSelection();
-                OnPropertyChanged("Text");
-            }
+            get { return input; }
         }
 
-        private void SetListSelection()
+        public ListBox ListBox
         {
-            if (ListItems == null || !ListItems.Any())
-                return;
-
-            if (!string.IsNullOrEmpty(Text) && Handler.SetSelectionInListView)
-            {
-                
-                var selection = ListItems.FirstOrDefault(li => Filter(li, Text));
-                listView.SelectedItem = selection;
-            }
-            else
-            {
-                listView.SelectedIndex = -1;
-            }
+            get { return listView; }
         }
 
-
-        public void OnPropertyChanged(string propertyName)
+        public void Show()
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            popup.IsOpen = true;
+            var currentListerView = ListerManager.Instance.ListerViewManager.CurrentListerView;
+            popup.Placement = PlacementMode.Right;
+            popup.Height = currentListerView.ActualHeight;
+            popup.HorizontalOffset = currentListerView.ActualWidth;
+            popup.PlacementTarget = currentListerView;
+            //popup.Placement = PlacementMode.Relative;
+            //popup.HorizontalOffset = (currentListerView.ActualWidth - popup.Child.RenderSize.Width) / 2;
+            //popup.VerticalOffset = (currentListerView.ActualHeight - popup.Child.RenderSize.Height) / 2;
+
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public event Action<string> ListSelectionChanged;
-
-        public Func<string, string, bool> Filter;
-
-        private bool DefaultFilter(string source, string text)
+        public void Hide()
         {
-            if (string.IsNullOrEmpty(source)) return true;
-            if (string.IsNullOrEmpty(text)) return true;
-            return source.IndexOf(text, StringComparison.OrdinalIgnoreCase) > -1;
+            popup.IsOpen = false;
         }
 
-        private IEnumerable<string> _listItems;
-        private IEnumerable<string> _filteredItems;
-        internal bool IgnoreLostFocus;
+        public bool IsOpen
+        {
+            get { return popup.IsOpen; }
+        }
 
+        public event EventHandler Closed;
     }
 }

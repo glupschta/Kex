@@ -10,18 +10,18 @@ namespace Kex.Controller
     {
         public static ListerManager Instance { get; private set; }
 
-        public static void Initialize(ICommandManager commandManager, IListerViewManager listerViewManager)
+        public static void Initialize(CommandManager commandManager, IListerViewManager listerViewManager)
         {
             Instance = new ListerManager(commandManager, listerViewManager);
         }
 
-        private ListerManager(ICommandManager commandManager, IListerViewManager listerViewManager)
+        private ListerManager(CommandManager commandManager, IListerViewManager listerViewManager)
         {
             CommandManager = commandManager;
             ListerViewManager = listerViewManager;
         }
 
-        public ICommandManager CommandManager { get; private set; }
+        public CommandManager CommandManager { get; private set; }
         public IListerViewManager ListerViewManager { get; private set; }
     }
 }

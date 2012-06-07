@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows.Controls;
 using Kex.Common;
 using Kex.Model.ItemProvider;
-using Kex.Modell;
+using Kex.Model;
 
 namespace Kex.Model
 {

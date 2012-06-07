@@ -6,9 +6,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Kex.Common;
 using Kex.Controller;
-using Kex.Controller.PopupHandler;
 using Kex.Model.ItemProvider;
-using Kex.Modell;
+using Kex.Model;
 using Kex.Views;
 using CommandManager = Kex.Controller.CommandManager;
 
@@ -19,25 +18,15 @@ namespace Kex
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static MainWindow Main;
         public MainWindow()
         {
-            Main = this;
             InitializeComponent();
-            tabControl.Items.Clear();
-            var comManager = new CommandManager(listPopup);
             var tabManager = new TabbedListerViewManager(tabControl, listPopup);
+            var comManager = new CommandManager(listPopup, tabManager);
+            
             ListerManager.Initialize(comManager, tabManager);
-            ListerManager.Instance.ListerViewManager.OpenLister(DriveInfo.GetDrives()[0].Name);
             Activated += MainView_Activated;
-            this.KeyDown += new KeyEventHandler(MainWindow_KeyDown);
-        }
-
-        void MainWindow_KeyDown(object sender, KeyEventArgs e)
-        {
-            //if ListView has no Items, Event gets here
-            if (e.OriginalSource is MainWindow)
-                CommandKeyHandler.HandleKey(e);
+            OpenLister();
         }
 
         void MainView_Activated(object sender, EventArgs e)
@@ -45,10 +34,29 @@ namespace Kex
             ListerManager.Instance.CommandManager.FocusView();
         }
 
+        public void OpenLister()
+        {
+            var arguments = ((string[])App.Current.Properties["StartupArguments"]);
+            var filename = arguments.Length > 0 ? arguments[0] : null;
+            if (filename == null)
+                ListerManager.Instance.ListerViewManager.OpenLister(DriveInfo.GetDrives()[0].Name);
+            else
+            {
+                var locations = File.ReadAllLines(filename);
+                foreach (var location in locations)
+                {
+                    ListerManager.Instance.ListerViewManager.OpenLister(location);
+                }
+            }
+        }
+
         public static void Debug(params object[] entries)
         {
+            var main = ((MainWindow) App.Current.MainWindow);
+            if (main.DebugBox.ActualHeight == 0) return;
+
             foreach(var text in entries)
-                Main.DebugBox.Text = text+Environment.NewLine+Main.DebugBox.Text; 
+                main.DebugBox.Text = text+Environment.NewLine+main.DebugBox.Text; 
         }
 
     }
