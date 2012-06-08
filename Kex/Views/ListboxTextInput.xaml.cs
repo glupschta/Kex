@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,7 +31,11 @@ namespace Kex.Views
             input.FontSize = Options.FontSize;
             FontFamily = Options.FontFamily;
             FontSize = Options.FontSize;
-            input.Height = Options.FontSize*2;
+
+            var typeFace = new Typeface(Options.FontFamily.ToString());
+            var ft = new FormattedText(" ", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeFace, Options.FontSize, Brushes.Black);
+            input.Height = ft.Height+6;
+            head.Height = ft.Height + 6;
         }
 
         void popup_Closed(object sender, EventArgs e)

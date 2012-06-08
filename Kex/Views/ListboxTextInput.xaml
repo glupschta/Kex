@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Converters1="clr-namespace:Kex.Views.Converters" mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Popup x:Name="popup" PopupAnimation="Slide" AllowsTransparency="True" Opacity="20"
+    <Popup x:Name="popup" PopupAnimation="Slide" AllowsTransparency="True" Opacity="50"
            StaysOpen="False" HorizontalOffset="0">
         <Popup.Resources>
             <LinearGradientBrush x:Key="headerGradient" StartPoint="0,0" EndPoint="0,1">
@@ -35,8 +35,7 @@
                 <Border x:Name="border">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{Binding Thumbnail}" Width="14"/>
-                        <TextBlock Text=" " /> 
-                        <TextBlock Text="{Binding DisplayName}" />
+                        <TextBlock Text="{Binding DisplayName}" Margin="10 0 0 0" />
                     </StackPanel>
                 </Border>
             </DataTemplate>
@@ -52,27 +51,27 @@
 
         </Popup.Resources>
         <Border Padding="0" Margin="4" BorderBrush="LightGray" BorderThickness="2" CornerRadius="6" Background="Transparent">
-
+            <!--
             <Border.BitmapEffect>
                 <DropShadowBitmapEffect Direction="180" Color="LightGray" Opacity="0.3" Softness="0.3"/>
             </Border.BitmapEffect>
-
+            -->
             <Grid x:Name="grid" Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="250" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="35"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Border CornerRadius="4" BorderThickness="2" Grid.Column="0" Grid.Row="0">
                     <Label x:Name="head" FontWeight="Bold" Background="{StaticResource inputFieldGradient}" VerticalContentAlignment="Center" />
                 </Border>
-                <Border CornerRadius="4" BorderThickness="2" Grid.Column="1" Grid.Row="0">
-                    <TextBox x:Name="input" Background="{StaticResource inputFieldGradient}" VerticalAlignment="Center"  Padding="3" />
+                <Border  Grid.Column="1" Grid.Row="0" Margin="0 0 4 0">
+                    <TextBox x:Name="input" Background="{StaticResource inputFieldGradient}" VerticalAlignment="Center" />
                 </Border>
-                <Border Padding="4" Margin="4" BorderBrush="White" BorderThickness="1" CornerRadius="4" Background="White"
+                <Border Padding="4" Margin="4 0 4 0" BorderBrush="White" BorderThickness="1" CornerRadius="4" Background="White"
                         Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Visibility="{Binding ListItems, Converter={StaticResource anyToVisibility}}">
                     <Border.BitmapEffect>
                         <DropShadowBitmapEffect Direction="270" Color="LightGray" Opacity="0.4" Softness="0.5" />
