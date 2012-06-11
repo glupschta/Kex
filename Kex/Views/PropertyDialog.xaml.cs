@@ -57,8 +57,8 @@ namespace Kex.Views
             PropertyList.ItemsSource = items;
             Title = fi.Name + " " + "Properties";
             PropertyList.SelectedIndex = 0;
+            this.PropertyList.Focus();            
             Keyboard.Focus(PropertyList.ItemContainerGenerator.ContainerFromItem(PropertyList.SelectedItem) as IInputElement);
-            this.PropertyList.Focus();
             ShowDialog();
         }
     }
