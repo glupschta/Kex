@@ -1,0 +1,21 @@
+﻿<Window x:Class="Kex.Views.PropertyDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Properties" Height="800" Width="600">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+        <ListView x:Name="PropertyList" Grid.Row="0">
+            <ListView.View>
+                <GridView >
+                    <GridViewColumn Header="DisplayName" DisplayMemberBinding="{Binding Description.DisplayName}" Width="Auto"/>
+                    <GridViewColumn Header="ValueAsObject" DisplayMemberBinding="{Binding ValueAsObject}" Width="Auto"/>
+                    <GridViewColumn Header="CanonicalName" DisplayMemberBinding="{Binding CanonicalName}" Width="Auto"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Grid.Row="1" IsDefault="True" x:Name="OkButton">Ok</Button>
+    </Grid>
+</Window>

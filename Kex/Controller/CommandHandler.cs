@@ -530,6 +530,12 @@ namespace Kex.Controller
             }
         }
 
+        public void ShowProperties()
+        {
+            var dialog = new PropertyDialog();
+            dialog.Show(CurrentItem as FileItem);
+        }
+
         public void ShowContextMenu()
         {
             var sel = CurrentItem;

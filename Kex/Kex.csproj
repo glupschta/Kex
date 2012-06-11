@@ -195,6 +195,9 @@
     <Compile Include="Views\ListerView.xaml.cs">
       <DependentUpon>ListerView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PropertyDialog.xaml.cs">
+      <DependentUpon>PropertyDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RenamePopup.xaml.cs">
       <DependentUpon>RenamePopup.xaml</DependentUpon>
     </Compile>
@@ -245,6 +248,10 @@
     <Page Include="Views\ListerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PropertyDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RenamePopup.xaml">
       <SubType>Designer</SubType>

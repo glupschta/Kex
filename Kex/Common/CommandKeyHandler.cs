@@ -48,6 +48,12 @@ namespace Kex.Common
                     if (control)
                         ListerManager.Instance.CommandManager.Copy();
                     break;
+                case Key.E:
+                    if (shift)
+                        WindowsFunctions.ShowFileProperties(ListerManager.Instance.CommandManager.CurrentItem.FullPath);
+                    else
+                        ListerManager.Instance.CommandManager.ShowProperties();
+                    break;
                 case Key.X:
                     if (control)
                         ListerManager.Instance.CommandManager.Cut();
@@ -95,9 +101,7 @@ namespace Kex.Common
                 case Key.Q:
                         ListerManager.Instance.CommandManager.FitWidthToListers();
                     break;
-                case Key.E:
-                    WindowsFunctions.ShowFileProperties(ListerManager.Instance.CommandManager.CurrentItem.FullPath);
-                    break;
+
                 case Key.F:
                     ListerManager.Instance.CommandManager.ShowFavorites();
                     break;
