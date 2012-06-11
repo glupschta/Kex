@@ -1,11 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-                    xmlns:Views="clr-namespace:Kex.Views" xmlns:Converters1="clr-namespace:Kex.Views.Converters">
+                    xmlns:Views="clr-namespace:Kex.Views" 
+                    xmlns:Converters2="clr-namespace:Kex.Views.Converters">
 
-    <Converters1:StringNullOrEmptyToVisibilityConverter x:Key="nullToVisibility" />
-    <Converters1:DateTimeConverter x:Key="dateTimeConverter" />
-    <Converters1:LengthConverter x:Key="lengthConverter" />
-    <Converters1:ThumbnailConverter x:Key="thumbConverter" />
+    <Converters2:StringNullOrEmptyToVisibilityConverter x:Key="nullToVisibility" />
+    <Converters2:DateTimeConverter x:Key="dateTimeConverter" />
+    <Converters2:LengthConverter x:Key="lengthConverter" />
+    <Converters2:ThumbnailConverter x:Key="thumbConverter" />
 
     <GridView x:Key="fullView" x:Shared="False">
         <GridViewColumn Width="28">

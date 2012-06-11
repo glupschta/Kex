@@ -213,7 +213,8 @@ namespace Kex.Controller
 
         public void Rename()
         {
-            var grid = ListerManager.Instance.ListerViewManager.CurrentListerView.View.View as GridView;
+            var view = ListerManager.Instance.ListerViewManager.CurrentListerView;
+            view.renamePopup.Show(view);
         }
 
         public void ShowSortPopup()

@@ -47,7 +47,7 @@ namespace Kex.Controller.Popups
             get { return "Sorting"; }
         }
 
-        private Dictionary<string, string> _allColumns;
-        private IEnumerable<StringPopupItem> _allKeys;
+        private readonly Dictionary<string, string> _allColumns;
+        private readonly IEnumerable<StringPopupItem> _allKeys;
     }
 }

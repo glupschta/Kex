@@ -47,7 +47,7 @@
                         <GradientStop Color="LightBlue" Offset="1" />
                     </LinearGradientBrush>
                 </Style.Resources>
-            </Style>
+            </Style> 
 
         </Popup.Resources>
         <Border Padding="0" Margin="4" BorderBrush="LightGray" BorderThickness="2" CornerRadius="6" Background="Transparent">

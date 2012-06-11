@@ -5,16 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Views="clr-namespace:Kex.Views" xmlns:Drawing="clr-namespace:System.Drawing;assembly=System.Drawing" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300" >
 
-    <UserControl.Resources>
-        <Style TargetType="{x:Type ListViewItem}">
-            <Style.Resources>
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="LightBlue" Opacity=".8"/>
-                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Orange" Opacity=".4"/>
-            </Style.Resources>
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-        </Style>
-    </UserControl.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -22,7 +12,6 @@
         </Grid.RowDefinitions>
         <ListView Grid.Row="0" Name="View" 
                 Background="Transparent" BorderThickness="0"
-                FocusVisualStyle="{x:Null}"
                 ItemsSource="{Binding Items}" KeyDown="ListViewKeyDown"
                 MouseUp="View_MouseUp" MouseDoubleClick="ViewMouseDoubleClick"
                 AllowDrop="True" Focusable="False" SelectionMode="Extended" VirtualizingStackPanel.VirtualizationMode="Standard"
@@ -30,6 +19,7 @@
         </ListView>
 
         <Views:ListerStatusbar x:Name="statusbar" Grid.Row="1" />
+        <Views:RenamePopup x:Name="renamePopup" />
     </Grid>
 
 </UserControl>

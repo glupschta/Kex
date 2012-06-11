@@ -145,9 +145,9 @@ namespace Kex.Common
         public void ShowDialog()
         {
             // Create the mail message in an STA thread
-            Thread t = new Thread(new ThreadStart(_ShowMail));
+            var t = new Thread(new ThreadStart(_ShowMail));
             t.IsBackground = true;
-            t.ApartmentState = ApartmentState.STA;
+            t.SetApartmentState(ApartmentState.STA);
             t.Start();
 
             // only return when the new thread has built it's interop representation

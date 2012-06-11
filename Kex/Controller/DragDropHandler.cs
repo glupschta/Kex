@@ -92,7 +92,7 @@ namespace Kex.Controller
             }
         }
 
-        private static T FindAnchestor<T>(object obj) where T : DependencyObject
+        public static T FindAnchestor<T>(object obj) where T : DependencyObject
         {
             var current = obj as DependencyObject;
             do

@@ -35,7 +35,6 @@ namespace Kex.Views
             var typeFace = new Typeface(Options.FontFamily.ToString());
             var ft = new FormattedText(" ", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeFace, Options.FontSize, Brushes.Black);
             input.Height = ft.Height+6;
-            head.Height = ft.Height + 6;
         }
 
         void popup_Closed(object sender, EventArgs e)

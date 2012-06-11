@@ -101,10 +101,6 @@ namespace Kex.Common
                     else
                         ListerManager.Instance.CommandManager.GroupByName();
                     break;
-
-                case Key.P:
-                    ListerManager.Instance.ListerViewManager.CloseCurrentLister();
-                    break;
                 case Key.R:
                     ListerManager.Instance.CommandManager.ShowContextMenu();
                     break;
@@ -132,6 +128,9 @@ namespace Kex.Common
                     break;
                     break;
                 case Key.Oem3:
+                    if (shift)
+                        ListerManager.Instance.ListerViewManager.CloseCurrentLister();
+                else
                     ListerManager.Instance.ListerViewManager.OpenLister(ListerManager.Instance.CommandManager.CurrentItem.FullPath);
                     break;
                 case Key.Back:
