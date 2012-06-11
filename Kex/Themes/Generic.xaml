@@ -84,7 +84,7 @@
 
     <Style TargetType="TabItem">
         <Setter Property="BorderThickness" Value="2"/>
-        <Setter Property="BorderBrush" Value="White"/>
+        <Setter Property="BorderBrush" Value="DarkGray"/>
         <Setter Property="Background" Value="{StaticResource lightBlueGradient}"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>

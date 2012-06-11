@@ -252,12 +252,6 @@ namespace Kex.Controller
             new MenuPopup(_PopupInput, "MainMenu").Show();
         }
 
-        public void ShowSpecialFolderPopup()
-        {
-            //_PopupInput.Handler = new PopupSpecialFolderHandler();
-            //_PopupInput.Show();
-        }
-
         public void ShowEnterUrlPopup()
         {
             //_PopupInput.Handler = new PopupEnterUrlHandler();
@@ -268,6 +262,11 @@ namespace Kex.Controller
         {
             //_PopupInput.Handler = new ShellPropertyPopupHandler();
             //_PopupInput.Show();
+        }
+
+        public void ShowCreateFileDirectoryPopup()
+        {
+            new CreateFileDirectoryPopup(_PopupInput).Show();
         }
 
         public void FocusView()
@@ -513,12 +512,22 @@ namespace Kex.Controller
 
         public void Delete()
         {
-            var list = CurrentView.Lister.Items.ToList();
-            int minIndex = list.Min(item =>list.IndexOf(item));
-            var focusedAfterDelete = list[Math.Max(0, minIndex - 1)];
-            FileAction.Delete();
-            CurrentView.Lister.Refresh();
-            CurrentItem = focusedAfterDelete;
+            var confirm = MessageBox.Show("Delete?");
+            if (confirm == MessageBoxResult.OK)
+            {
+                var selection = ListerManager.Instance.ListerViewManager.CurrentListerView.View.SelectedItem as IItem;
+                if (selection == null) return;
+
+                var itemContainer = CurrentView.View.ItemContainerGenerator;
+                var container = itemContainer.ContainerFromItem(selection);
+                var index = itemContainer.IndexFromContainer(container)-1;
+                var focusedContainer = itemContainer.ContainerFromIndex(Math.Max(0, index));
+                var focusedItem = itemContainer.ItemFromContainer(focusedContainer) as IItem;
+                var focusedPath = focusedItem.FullPath;
+                FileAction.Delete();
+                CurrentView.Lister.Refresh();
+                CurrentItem = CurrentView.Lister.Items.FirstOrDefault(i => i.FullPath == focusedPath);
+            }
         }
 
         public void ShowContextMenu()

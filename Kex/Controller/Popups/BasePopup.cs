@@ -67,17 +67,32 @@ namespace Kex.Controller.Popups
         protected virtual void RegisterHandlers()
         {
             Input.TextBox.KeyDown += TextBox_KeyDown;
+            Input.TextBox.PreviewKeyDown += TextBox_PreviewKeyDown;
             Input.TextBox.TextChanged += TextBox_TextChanged;
             Input.ListBox.SelectionChanged += ListBox_SelectionChanged;
-            MainWindow.Debug("Handler registered");
         }
 
         protected virtual void UnregisterHandlers()
         {
             Input.TextBox.KeyDown -= TextBox_KeyDown;
+            Input.TextBox.PreviewKeyDown -= TextBox_PreviewKeyDown;
             Input.TextBox.TextChanged -= TextBox_TextChanged;
             Input.ListBox.SelectionChanged -= ListBox_SelectionChanged;
-            MainWindow.Debug("Handlers unregistered");
+        }
+
+        void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Down:
+                    MoveDownInList();
+                    e.Handled = true;
+                    break;
+                case Key.Up:
+                    MoveUpInList();
+                    e.Handled = true;
+                    break;
+            }
         }
 
         protected virtual void ListBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

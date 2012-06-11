@@ -69,9 +69,15 @@ namespace Kex.Common
                     ListerManager.Instance.CommandManager.HistoryForward();
                     break;
                 case Key.M:
-                    ListerManager.Instance.CommandManager.ShowMenu();
+                    if (shift)
+                        ListerManager.Instance.CommandManager.ShowContextMenu();
+                    else
+                        ListerManager.Instance.CommandManager.ShowMenu();
                     break;
                 case Key.N:
+                        ListerManager.Instance.CommandManager.ShowCreateFileDirectoryPopup();
+                    break;
+                case Key.P:
                     ListerManager.Instance.CommandManager.ShowViewPopup();
                     break;
                 case Key.J:
@@ -102,7 +108,7 @@ namespace Kex.Common
                         ListerManager.Instance.CommandManager.GroupByName();
                     break;
                 case Key.R:
-                    ListerManager.Instance.CommandManager.ShowContextMenu();
+                    ListerManager.Instance.CommandManager.Rename();
                     break;
                 case Key.S:
                     if (shift)
@@ -111,7 +117,7 @@ namespace Kex.Common
                         ListerManager.Instance.CommandManager.ShowSortPopup();
                     break;
                 case Key.T:
-                    ListerManager.Instance.CommandManager.Rename();
+                    
                     break;
                 case Key.W:
                     if (shift)
