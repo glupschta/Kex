@@ -50,7 +50,17 @@ namespace Kex.Model
             }
         }
 
-        public FileProperties Properties { get; set; }
+        private FileProperties _properties;
+        public FileProperties Properties
+        {
+            get
+            {
+                if (_properties == null)
+                    _itemProvider.FetchDetails(this);
+                return _properties;
+            }
+            set { _properties = value; }
+        }
 
         public void PropertiesChanged()
         {

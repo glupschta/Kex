@@ -41,9 +41,6 @@ namespace Kex.Common
                     else
                         ListerManager.Instance.CommandManager.SelectAll();
                     break;
-                case Key.B:
-                    ListerManager.Instance.CommandManager.ShowShellPropertyPopup();
-                    break;
                 case Key.C:
                     if (control)
                         ListerManager.Instance.CommandManager.Copy();
@@ -66,7 +63,7 @@ namespace Kex.Common
                     ListerManager.Instance.CommandManager.DoDefaultAction();
                     break;
                 case Key.O:
-                    ListerManager.Instance.CommandManager.ShowEnterUrlPopup();
+                    ListerManager.Instance.CommandManager.ShowOpenLocationPopup(shift);
                     break;
                 case Key.I:
                     ListerManager.Instance.CommandManager.ShowBrowsingPopup(ignoreCtrl);

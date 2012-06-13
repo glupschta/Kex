@@ -17,6 +17,7 @@ namespace Kex.Model
         string Filter { get; set; }
         int SelectionCount { get; set; }
         long SelectionSize { get; set; }
+        IEnumerable<IItem> Selection { get; set; }
 
         HistoryItem HistoryBack();
         HistoryItem HistoryForward();
