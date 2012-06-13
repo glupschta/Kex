@@ -22,6 +22,12 @@
         <GradientStop Color="#FFFFFF" Offset="1" />
     </LinearGradientBrush>
 
+    <LinearGradientBrush x:Key="tabPanelGradient" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFFFF" Offset="0" />
+        <GradientStop Color="#EEEEEE" Offset="0.6" />
+        <GradientStop Color="#CCCCCC" Offset="1" />
+    </LinearGradientBrush>
+
     <LinearGradientBrush x:Key="tabItemGradientUnSelected" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="LightGray" Offset="0" />
         <GradientStop Color="#FFFFFF" Offset="0.7" />
@@ -71,7 +77,7 @@
                                 </Border>
                             </Border>
                         </Border>
-                        <TabPanel Grid.Row="0" IsItemsHost="true"/>
+                        <TabPanel Grid.Row="0" IsItemsHost="true" Background="{StaticResource ResourceKey=tabPanelGradient}"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

@@ -20,12 +20,19 @@ namespace Kex.Controller.Popups
 
         protected override void HandleSelection()
         {
-            ListerManager.Instance.CommandManager.DoDefaultAction();
+            if (Keyboard.Modifiers == ModifierKeys.Shift)
+            {
+                ListerManager.Instance.ListerViewManager.OpenLister(ListerManager.Instance.CommandManager.CurrentItem.FullPath);
+                Hide();
+            }
+            else
+            {
+                ListerManager.Instance.CommandManager.DoDefaultAction();
+            }
             //no Textchanged if Text="" after Clear
             if (string.IsNullOrEmpty(Text))
             {
                 updateItems();
-
             }
             else
             {
@@ -42,7 +49,7 @@ namespace Kex.Controller.Popups
         protected override void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             var itemsFound = updateItems();
-            if (!itemsFound)
+            if (!itemsFound && Text.Any())
             {
                 Text = Text.Substring(0, Text.Length - 1);
                 Input.TextBox.CaretIndex = Text.Length;

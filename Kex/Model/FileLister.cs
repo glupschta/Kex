@@ -43,7 +43,8 @@ namespace Kex.Model
             set
             {
                 _currentDirectory = value;
-                ItemProvider.CurrentContainer = value;
+                _itemProvider = new FilesystemItemProvider(value);
+                //ItemProvider.CurrentContainer = value;
                 Refresh();
                 NavigationHistory.Push(value);
             }

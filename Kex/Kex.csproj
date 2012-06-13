@@ -161,6 +161,16 @@
     <Compile Include="Common\Options.cs" />
     <Compile Include="Common\StringPopupItem.cs" />
     <Compile Include="Common\SymbolicLink.cs" />
+    <Compile Include="Controller\Commands\BaseCommand.cs" />
+    <Compile Include="Controller\Commands\MoveCursorDownCommand.cs" />
+    <Compile Include="Controller\Commands\MoveCursorUpCommand.cs" />
+    <Compile Include="Controller\Commands\UpdateColumnWidthCommand.cs" />
+    <Compile Include="Controller\Commands\Window\WindowAdjustSizeCommand.cs" />
+    <Compile Include="Controller\Commands\Window\WindowDockLeftCommand.cs" />
+    <Compile Include="Controller\Commands\Window\WindowDockRightCommand.cs" />
+    <Compile Include="Controller\Commands\Window\WindowMaximizeCommand.cs" />
+    <Compile Include="Controller\Commands\Window\WindowMinimizeCommand.cs" />
+    <Compile Include="Controller\Commands\Window\WindowRestoreCommand.cs" />
     <Compile Include="Controller\DragDropHandler.cs" />
     <Compile Include="Controller\ListerManager.cs" />
     <Compile Include="Controller\Popups\BasePopup.cs" />
@@ -320,6 +330,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -60,7 +60,18 @@ namespace Kex.Common
                         ListerManager.Instance.CommandManager.Paste();
                     break;
                 case Key.Return:
-                    ListerManager.Instance.CommandManager.DoDefaultAction();
+                    if (shift)
+                    {
+                        var item = ListerManager.Instance.CommandManager.CurrentItem;
+                        if (item.ItemType == ItemType.Container)
+                        {
+                            ListerManager.Instance.ListerViewManager.OpenLister(item.FullPath);
+                        }
+                        else
+                            ListerManager.Instance.CommandManager.DoDefaultAction();
+                    }
+                    else
+                        ListerManager.Instance.CommandManager.DoDefaultAction();
                     break;
                 case Key.O:
                     ListerManager.Instance.CommandManager.ShowOpenLocationPopup(shift);

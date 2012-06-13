@@ -57,6 +57,8 @@ namespace Kex.Views
                     var di = new DirectoryInfo(item.FullPath);
                     var parent = di.Parent ?? di.Root;
                     var dest = Path.Combine(parent.FullName, renameTextBox.Text);
+                    if (item.FullPath.Equals(dest, StringComparison.OrdinalIgnoreCase))
+                        return;
                     di.MoveTo(dest);
                     item.FullPath = dest;
                 }
@@ -65,6 +67,8 @@ namespace Kex.Views
                     var di = new FileInfo(item.FullPath);
                     var parent = di.Directory;
                     var dest = Path.Combine(parent.FullName, renameTextBox.Text);
+                    if (item.FullPath.Equals(dest, StringComparison.OrdinalIgnoreCase))
+                        return;
                     di.MoveTo(dest);
                     item.FullPath = dest;
                 }
