@@ -56,7 +56,7 @@ namespace Kex.Model.ItemProvider
                 items.AddRange(shares.Select(lo => new FileItem(CurrentContainer + "\\" + lo.shi1_netname, ItemType.Container, this)));
             }
             
-            return items;
+            return items;//.Where(i => i.FullPath != null);
         }
 
         public IEnumerable<IItem<FileProperties>> GetItems()
@@ -96,6 +96,10 @@ namespace Kex.Model.ItemProvider
             var props = new FileProperties();
             try
             {
+                if (item.FullPath == null)
+                {
+                    return props;
+                }
                 props.ShellObject = ShellObject.FromParsingName(item.FullPath);
                 props.ShellObject.Thumbnail.FormatOption = ThumbnailFormatOption;
                 props.ShellObject.Thumbnail.RetrievalOption = ThumbnailRetrievalOption;
@@ -105,11 +109,15 @@ namespace Kex.Model.ItemProvider
                 props.Thumbnail = props.ShellObject.Thumbnail.MediumBitmapSource;
                 props.Thumbnail.Freeze();
                 item.Properties = props;
-                if (props.ShellObject != null && props.ShellObject.IsLink)
-                {
-                    item.FullPath = ((string)props.ShellObject.Properties.GetProperty("System.Link.TargetParsingPath").ValueAsObject);
-                    item.ItemType = Directory.Exists(item.FullPath) ? ItemType.Container : ItemType.Executable;
-                }
+                //if (props.ShellObject != null && props.ShellObject.IsLink)
+                //{
+                //    item.FullPath = ((string)props.ShellObject.Properties.GetProperty("System.Link.TargetParsingPath").ValueAsObject);
+                //    if (item.FullPath == null)
+                //    {
+                //        item.FullPath = props.ShellObject.Properties.System.ParsingPath.Value;
+                //    }
+                //    item.ItemType = Directory.Exists(item.FullPath) ? ItemType.Container : ItemType.Executable;
+                //}
                 fi.PropertiesChanged();
             } catch (Exception ex)
             {
@@ -151,8 +159,8 @@ namespace Kex.Model.ItemProvider
 
         public virtual void DoAction(IItem item)
         {
-            //var currentItem = ((IItem<FileProperties>)item).Properties;
-            //if (currentItem == null) return;
+            var currentItem = ((IItem<FileProperties>)item).Properties;
+            if (currentItem == null) return;
             //if (currentItem.ShellObject != null && currentItem.ShellObject.IsLink)
             //{
             //    var properties = currentItem.ShellObject.Properties;
@@ -163,14 +171,32 @@ namespace Kex.Model.ItemProvider
             //        return;
             //    }
             //}
+
+            if (currentItem.ShellObject != null && currentItem.ShellObject.IsLink)
+            {
+                item.FullPath = ((string)currentItem.ShellObject.Properties.GetProperty("System.Link.TargetParsingPath").ValueAsObject);
+                if (item.FullPath == null)
+                {
+                    item.FullPath = currentItem.ShellObject.Properties.System.ParsingPath.Value;
+                }
+                item.ItemType = Directory.Exists(item.FullPath) ? ItemType.Container : ItemType.Executable;
+            }
+
+
             if (item.ItemType == ItemType.Container)
             {
                 ListerManager.Instance.CommandManager.SetContainer(item.FullPath);
             }
             else
             {
-                var start = new ProcessStartInfo(item.FullPath);
-                Process.Start(start);
+                try
+                {
+                    var start = new ProcessStartInfo(item.FullPath);
+                    Process.Start(start);
+                } catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
             }
         }
 
@@ -192,9 +218,9 @@ namespace Kex.Model.ItemProvider
                 {   
                     columns =  new Dictionary<string, string>();
                     columns.Add("Name", "Name");
-                    columns.Add("LastModified", "LastModified");
+                    columns.Add("LastModified", "Properties.LastModified");
                     columns.Add("Type", "Properties.ShellObject.Properties.System.ItemTypeText.Value");
-                    columns.Add("Length", "Length");
+                    columns.Add("Length", "Properties.Length");
                 }
                 return columns;
             }
