@@ -218,9 +218,9 @@ namespace Kex.Model.ItemProvider
                 {   
                     columns =  new Dictionary<string, string>();
                     columns.Add("Name", "Name");
-                    columns.Add("LastModified", "LastModified");
+                    columns.Add("LastModified", "Properties.LastModified");
                     columns.Add("Type", "Properties.ShellObject.Properties.System.ItemTypeText.Value");
-                    columns.Add("Length", "Length");
+                    columns.Add("Length", "Properties.Length");
                 }
                 return columns;
             }
