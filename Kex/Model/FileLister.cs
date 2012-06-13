@@ -32,7 +32,7 @@ namespace Kex.Model
         public void SelectionChanged(ListView view, SelectionChangedEventArgs selectionChangedEventArgs)
         {
             SelectionCount = view.SelectedItems.Count;
-            SelectionSize = view.SelectedItems.OfType<FileItem>().Sum(i => i.Length);
+            SelectionSize = view.SelectedItems.OfType<FileItem>().Sum(i => i.Properties.Length);
         }
 
         public string CurrentDirectory

@@ -59,6 +59,8 @@ namespace Kex.Controller.Popups
 
         public static string GetDriveInfoString(DriveInfo di)
         {
+            if (!di.IsReady) 
+                return string.Format("{0} - not ready", di.Name);
             try
             {
                 return string.Format("{0} {1} ({2}/{3} GB free)", di.Name, di.VolumeLabel, di.TotalFreeSpace / 1000000000, di.TotalSize / 1000000000);

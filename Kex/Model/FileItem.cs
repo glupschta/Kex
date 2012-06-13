@@ -35,9 +35,6 @@ namespace Kex.Model
         public string FullPath { get; set; }
         public string Name { get; set; }
         public ItemType ItemType { get; set; }
-        public DateTime? LastModified { get { return Properties == null ? null : Properties.LastModified; } }
-        public DateTime? Created { get { return Properties == null ? null : Properties.Created; } }
-        public long Length { get { return Properties == null ? 0 : Properties.Length; } }
         public ShellObject ShellObject { get { return Properties == null ? null : Properties.ShellObject; } }
         public BitmapSource Thumbnail { get { return Properties == null ? null : Properties.Thumbnail; } } 
 
@@ -54,11 +51,11 @@ namespace Kex.Model
 
         public void PropertiesChanged()
         {
-            OnNotifyPropertyChanged("LastModified");
-            OnNotifyPropertyChanged("Created");
-            OnNotifyPropertyChanged("Length");
-            OnNotifyPropertyChanged("ShellObject");
-            OnNotifyPropertyChanged("Thumbnail");
+            //OnNotifyPropertyChanged("LastModified");
+            //OnNotifyPropertyChanged("Created");
+            //OnNotifyPropertyChanged("Length");
+            //OnNotifyPropertyChanged("ShellObject");
+            //OnNotifyPropertyChanged("Thumbnail");
             OnNotifyPropertyChanged("Properties");
         }
 

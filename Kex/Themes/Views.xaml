@@ -12,7 +12,7 @@
         <GridViewColumn Width="28">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
-                    <Image Source="{Binding Thumbnail}"/>
+                    <Image Source="{Binding Properties.Thumbnail}"/>
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
@@ -20,7 +20,7 @@
         <GridViewColumn Header="LastModified" Width="142">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding LastModified, Converter={StaticResource dateTimeConverter}}" TextAlignment="Right"/>
+                    <TextBlock Text="{Binding Properties.LastModified, Converter={StaticResource dateTimeConverter}}" TextAlignment="Right"/>
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
@@ -34,7 +34,7 @@
         <GridViewColumn Header="Length" Width="Auto">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Length, Converter={StaticResource lengthConverter}}" TextAlignment="Right"/>
+                    <TextBlock Text="{Binding Properties.Length, Converter={StaticResource lengthConverter}}" TextAlignment="Right"/>
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
