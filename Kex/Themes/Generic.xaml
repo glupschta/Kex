@@ -49,8 +49,7 @@
         <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
         <Setter Property="ContentTemplate" Value="{Binding Path=View.ItemTemplate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"></Setter>
     </Style>
-    
-  
+
 
 
     <Style x:Key="{x:Type TabControl}" TargetType="{x:Type TabControl}">
@@ -61,9 +60,6 @@
             <Setter.Value>
                 <ControlTemplate TargetType="TabControl">
                     <Grid>
-                        <Grid.BitmapEffect>
-                            <DropShadowBitmapEffect Direction="120" Color="LightGray" Opacity="0.7" Softness="0.5" />
-                        </Grid.BitmapEffect>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
@@ -84,7 +80,7 @@
 
     <Style TargetType="TabItem">
         <Setter Property="BorderThickness" Value="2"/>
-        <Setter Property="BorderBrush" Value="DarkGray"/>
+        <Setter Property="BorderBrush" Value="White"/>
         <Setter Property="Background" Value="{StaticResource lightBlueGradient}"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -92,9 +88,6 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabItem}">
                     <Border>
-                        <Border.BitmapEffect>
-                            <DropShadowBitmapEffect Direction="120" Color="LightBlue" Opacity="0.7" Softness="0.5" />
-                        </Border.BitmapEffect>
                         <Grid>
                             <Grid>
                                 <Border x:Name="tabBorder" CornerRadius="3,3,0,0" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"/>
@@ -117,5 +110,6 @@
             </Setter.Value>
         </Setter>
     </Style>
+
 
 </ResourceDictionary>

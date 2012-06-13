@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Converters1="clr-namespace:Kex.Views.Converters" mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Popup x:Name="popup" PopupAnimation="Slide" AllowsTransparency="True" Opacity="50"
+    <Popup x:Name="popup" PopupAnimation="Scroll" AllowsTransparency="True" Opacity="50"
            StaysOpen="False" HorizontalOffset="0">
         <Popup.Resources>
             <LinearGradientBrush x:Key="headerGradient" StartPoint="0,0" EndPoint="0,1">

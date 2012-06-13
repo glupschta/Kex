@@ -71,7 +71,7 @@ namespace Kex.Model.ItemProvider
                 if (items.Any())
                 {
                     const int preload = 20;
-                    foreach(var item in items.Take(preload))
+                    foreach (var item in items.Take(preload))
                     {
                         FetchDetails(item);
                     }
@@ -79,7 +79,7 @@ namespace Kex.Model.ItemProvider
                 }
                 else
                 {
-                    items = new List<FileItem> {new FileItem(CurrentContainer + "\\..", ItemType.Container, this)};
+                    items = new List<FileItem> { new FileItem(CurrentContainer + "\\..", ItemType.Container, this) };
                 }
             }
             catch (Exception ex)

@@ -170,7 +170,9 @@
     <Compile Include="Controller\Popups\FilterPopup.cs" />
     <Compile Include="Controller\Popups\MenuPopup.cs" />
     <Compile Include="Controller\Popups\NetworkComputersPopup.cs" />
+    <Compile Include="Controller\Popups\OpenLocationPopup.cs" />
     <Compile Include="Controller\Popups\SortPopup.cs" />
+    <Compile Include="Controller\Popups\UserChoicePopup.cs" />
     <Compile Include="Controller\Popups\ViewPopup.cs" />
     <Compile Include="Controller\TabbedListerViewManager.cs" />
     <Compile Include="Controller\ViewHandler.cs" />

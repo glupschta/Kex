@@ -55,20 +55,22 @@ namespace Kex.Views
                 if (item.ItemType == ItemType.Container)
                 {
                     var di = new DirectoryInfo(item.FullPath);
-                    var dest = Path.Combine(di.Root.FullName, renameTextBox.Text);
+                    var parent = di.Parent ?? di.Root;
+                    var dest = Path.Combine(parent.FullName, renameTextBox.Text);
                     di.MoveTo(dest);
                     item.FullPath = dest;
                 }
                 else
                 {
                     var di = new FileInfo(item.FullPath);
-                    var dest = Path.Combine(di.Directory.Root.FullName, renameTextBox.Text);
+                    var parent = di.Directory;
+                    var dest = Path.Combine(parent.FullName, renameTextBox.Text);
                     di.MoveTo(dest);
                     item.FullPath = dest;
                 }
                 item.Name = renameTextBox.Text;
                 item.OnNotifyPropertyChanged("Name");
-                item.OnNotifyPropertyChanged("FullName");
+                item.OnNotifyPropertyChanged("FullPath");
             }
         }
 

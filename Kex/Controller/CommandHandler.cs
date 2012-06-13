@@ -191,13 +191,19 @@ namespace Kex.Controller
 
         public void DoDefaultAction()
         {
+            DoDefaultAction(CurrentItem);
+        }
+
+        public void DoDefaultAction(IItem item)
+        {
             try
             {
-                CurrentView.Lister.ItemProvider.DoAction(CurrentItem);
-            } catch (Exception ex)
+                CurrentView.Lister.ItemProvider.DoAction(item);
+            }
+            catch (Exception ex)
             {
                 HandleException(ex);
-            }
+            } 
         }
 
         public void SetContainer(string directory)
@@ -252,16 +258,10 @@ namespace Kex.Controller
             new MenuPopup(_PopupInput, "MainMenu").Show();
         }
 
-        public void ShowEnterUrlPopup()
+        public void ShowOpenLocationPopup(bool newWindow)
         {
-            //_PopupInput.Handler = new PopupEnterUrlHandler();
-            //_PopupInput.Show();
-        }
-
-        public void ShowShellPropertyPopup()
-        {
-            //_PopupInput.Handler = new ShellPropertyPopupHandler();
-            //_PopupInput.Show();
+            var locationPopup = new OpenLocationPopup(_PopupInput, newWindow);
+            locationPopup.Show();
         }
 
         public void ShowCreateFileDirectoryPopup()
@@ -512,21 +512,30 @@ namespace Kex.Controller
 
         public void Delete()
         {
-            var confirm = MessageBox.Show("Delete?");
-            if (confirm == MessageBoxResult.OK)
-            {
-                var selection = ListerManager.Instance.ListerViewManager.CurrentListerView.View.SelectedItem as IItem;
-                if (selection == null) return;
 
+                var selection = ListerManager.Instance.ListerViewManager.CurrentListerView.View.SelectedItems;
+                if (selection.Count == 0) return;
+                var ask = new UserChoicePopup(_PopupInput, "Delete?", new[] {"Yes", "No", "Dont Know"});
+                ask.SelectionDone += ask_SelectionDone;
+                ask.Show();
+        }
+
+        void ask_SelectionDone(object sender, string selectedAnswer)
+        {
+            if (selectedAnswer == "Yes")
+            {
+                var selection = ListerManager.Instance.ListerViewManager.CurrentListerView.View.SelectedItems;
                 var itemContainer = CurrentView.View.ItemContainerGenerator;
                 var container = itemContainer.ContainerFromItem(selection);
-                var index = itemContainer.IndexFromContainer(container)-1;
+                var index = (container != null) ? itemContainer.IndexFromContainer(container) - 1 : 0;
+
                 var focusedContainer = itemContainer.ContainerFromIndex(Math.Max(0, index));
                 var focusedItem = itemContainer.ItemFromContainer(focusedContainer) as IItem;
                 var focusedPath = focusedItem.FullPath;
                 FileAction.Delete();
                 CurrentView.Lister.Refresh();
-                CurrentItem = CurrentView.Lister.Items.FirstOrDefault(i => i.FullPath == focusedPath);
+                CurrentItem = CurrentView.Lister.Items.FirstOrDefault(i => i.FullPath == focusedPath)
+                              ?? CurrentView.Lister.Items.FirstOrDefault();
             }
         }
 

@@ -32,6 +32,7 @@ namespace Kex
         void MainView_Activated(object sender, EventArgs e)
         {
             ListerManager.Instance.CommandManager.FocusView();
+            MainWindow.Debug("FocusView called");
         }
 
         public void OpenLister()

@@ -17,8 +17,7 @@ namespace Kex.Common
 
         public static void SetSelection()
         {
-            var selection = ListerManager.Instance.ListerViewManager.CurrentListerView
-                .View.SelectedItems.Cast<IItem>().Select(s => s.FullPath).ToArray();
+            var selection = ListerManager.Instance.ListerViewManager.CurrentListerView.Lister.Selection.Select(s => s.FullPath).ToArray();
             var files = new StringCollection();
             files.AddRange(selection);
             Clipboard.SetFileDropList(files);
@@ -76,8 +75,8 @@ namespace Kex.Common
 
         public static void Delete()
         {
-            var selection = ListerManager.Instance.ListerViewManager.CurrentListerView
-                .View.SelectedItems.Cast<IItem>();
+
+            var selection = ListerManager.Instance.ListerViewManager.CurrentListerView.Lister.Selection;
             foreach (var item in selection)
             {
                 try

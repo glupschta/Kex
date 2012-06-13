@@ -31,8 +31,10 @@ namespace Kex.Model
 
         public void SelectionChanged(ListView view, SelectionChangedEventArgs selectionChangedEventArgs)
         {
+            Selection = view.SelectedItems.OfType<FileItem>().ToList();
             SelectionCount = view.SelectedItems.Count;
             SelectionSize = view.SelectedItems.OfType<FileItem>().Sum(i => i.Properties.Length);
+            MainWindow.Debug("Selection Count "+ Selection.Count());
         }
 
         public string CurrentDirectory
@@ -75,6 +77,8 @@ namespace Kex.Model
                 OnPropertyChanged("SelectionSize");
             }
         }
+
+        public IEnumerable<IItem> Selection { get; set; }
 
         private IEnumerable<IItem> _items;
         public IEnumerable<IItem> Items
