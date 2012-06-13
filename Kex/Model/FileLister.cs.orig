@@ -33,7 +33,12 @@ namespace Kex.Model
         {
             Selection = view.SelectedItems.OfType<FileItem>().ToList();
             SelectionCount = view.SelectedItems.Count;
+<<<<<<< HEAD
             SelectionSize = view.SelectedItems.OfType<FileItem>().Sum(i => i.Properties.Length);
+=======
+            SelectionSize = view.SelectedItems.OfType<FileItem>().Sum(i => i.Length);
+            MainWindow.Debug("Selection Count "+ Selection.Count());
+>>>>>>> 64cc36cd75f7182efbe74418cc1a3deefaffd5ec
         }
 
         public string CurrentDirectory
