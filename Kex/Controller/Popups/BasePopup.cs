@@ -21,6 +21,7 @@ namespace Kex.Controller.Popups
         {
             UnregisterHandlers();
             ListerManager.Instance.ListerViewManager.CurrentListerView.View.Background = Brushes.White;
+            ListerManager.Instance.CommandManager.FocusView();
         }
 
         protected abstract void HandleSelection();
@@ -61,7 +62,6 @@ namespace Kex.Controller.Popups
         public virtual void Hide()
         {
             Input.Hide();
-            ListerManager.Instance.CommandManager.FocusView();
         }
 
         protected virtual void RegisterHandlers()
