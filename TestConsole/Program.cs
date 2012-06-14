@@ -14,6 +14,7 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
+            //var l = Directory.EnumerateFiles(@"c:/documents and settings");
             TestWatcher();
             Console.ReadLine();
         }

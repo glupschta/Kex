@@ -23,8 +23,7 @@ namespace Kex.Views
         public ListboxTextInput()
         {
             InitializeComponent();
-            popup.Placement = PlacementMode.Right;
-            popup.Height = listView.ActualHeight;
+
             listView.PreviewGotKeyboardFocus += (sender, eventArgs) => eventArgs.Handled = true;
             popup.Closed += popup_Closed;
             input.FontFamily = Options.FontFamily;
@@ -35,6 +34,16 @@ namespace Kex.Views
             var typeFace = new Typeface(Options.FontFamily.ToString());
             var ft = new FormattedText(" ", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeFace, Options.FontSize, Brushes.Black);
             input.Height = ft.Height+6;
+            Loaded += new RoutedEventHandler(ListboxTextInput_Loaded);
+        }
+
+        void ListboxTextInput_Loaded(object sender, RoutedEventArgs e)
+        {
+            var currentListerView = ListerManager.Instance.ListerViewManager.CurrentListerView;
+            popup.Placement = PlacementMode.Right;
+            popup.Height = currentListerView.ActualHeight;
+            popup.HorizontalOffset = currentListerView.ActualWidth;
+            popup.PlacementTarget = currentListerView;
         }
 
         void popup_Closed(object sender, EventArgs e)

@@ -9,15 +9,7 @@ namespace Kex.Views.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var length = (long) value;
-            if (length > 1000000)
-            {
-                return (length / 1000000) + " MB";
-            }
-            if (length > 1000)
-            {
-                return (length / 1000) + " KB";
-            }
-            return length.ToString();
+            return (length / 1000) + " KB";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

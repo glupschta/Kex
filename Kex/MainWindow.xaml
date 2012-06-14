@@ -4,8 +4,10 @@
         xmlns:UI="clr-namespace:Kex.Views" 
         Title="Kex" Height="800" Width="800" Icon="/Kex;component/Icon1.ico" >
     <Window.Resources>
-
-
+        <!-- wegen contentalignment der gridspalten -->
+        <Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>

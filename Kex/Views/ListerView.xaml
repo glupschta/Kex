@@ -14,7 +14,7 @@
                 Background="Transparent" BorderThickness="0"
                 ItemsSource="{Binding Items}" KeyDown="ListViewKeyDown"
                 MouseUp="View_MouseUp" MouseDoubleClick="ViewMouseDoubleClick"
-                AllowDrop="True" Focusable="False" SelectionMode="Extended" VirtualizingStackPanel.VirtualizationMode="Standard"
+                AllowDrop="True" Focusable="False" SelectionMode="Extended" VirtualizingStackPanel.VirtualizationMode="Recycling"
                 >
         </ListView>
 

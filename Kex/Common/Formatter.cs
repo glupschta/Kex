@@ -6,15 +6,7 @@ namespace Kex.Common
     {
         public static string FormatLength(long length)
         {
-            if (length > 1000000)
-            {
-                return (length / 1000000) + " MB";
-            }
-            if (length > 1000)
-            {
-                return (length / 1000) + " KB";
-            }
-            return length.ToString();
+            return (length / 1000) + " KB";
         }
 
         public static string FormatDate(DateTime? date)

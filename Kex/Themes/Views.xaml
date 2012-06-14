@@ -24,14 +24,14 @@
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
-        <GridViewColumn Header="Type" Width="Auto">
+        <GridViewColumn Header="Type">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Properties.ShellObject.Properties.System.ItemTypeText.Value}" TextAlignment="Left"/>
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
-        <GridViewColumn Header="Length" Width="Auto">
+        <GridViewColumn Header="Length">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Properties.Length, Converter={StaticResource lengthConverter}}" TextAlignment="Right"/>

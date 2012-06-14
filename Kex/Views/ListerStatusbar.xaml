@@ -16,20 +16,11 @@
                 <GradientStop Color="#DDDDDD" Offset="1" />
             </LinearGradientBrush>
         </StatusBar.Resources>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                
-                <RowDefinition Height="22"/>
-            </Grid.RowDefinitions>
-        </Grid>
-        <WrapPanel Grid.Column="0" >
+        <StatusBarItem>
+        <WrapPanel>
             <TextBlock Padding="2,0,0,0" Text="{Binding Items.Count}"/>
             <TextBlock Text=" Item(s)" />
-            <StackPanel Orientation="Horizontal" Visibility="{Binding SelectedItems, Converter={StaticResource anyToVisibility}}">
+            <StackPanel Orientation="Horizontal">
                 <TextBlock Text=", " />
                 <TextBlock Padding="2,0,0,0"  Text="{Binding SelectionCount}"/>
                 <TextBlock Text=" Item(s) Selected, Size: " />
@@ -40,5 +31,6 @@
                 <TextBlock Padding="2,0,0,0" Text="{Binding Filter}" />
             </StackPanel>
         </WrapPanel>
+        </StatusBarItem>
     </StatusBar>
 </UserControl>

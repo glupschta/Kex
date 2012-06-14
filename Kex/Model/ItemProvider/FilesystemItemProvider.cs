@@ -33,13 +33,39 @@ namespace Kex.Model.ItemProvider
 
         protected IEnumerable<IItem<FileProperties>> currentItems;
 
+        public virtual IEnumerable<string> GetItemsEnumerable1()
+        {
+            var pending = new Stack<string>();
+            pending.Push(CurrentContainer);
+            while (pending.Count != 0)
+            {
+                var path = pending.Pop();
+                string[] next = null;
+                try
+                {
+                    next = Directory.GetFiles(path);
+                }
+                catch { }
+                if (next != null && next.Length != 0)
+                    foreach (var file in next) yield return file;
+                try
+                {
+                    next = Directory.GetDirectories(path);
+                    foreach (var subdir in next) pending.Push(subdir);
+                }
+                catch { }
+            }
+        }
+
         protected virtual IEnumerable<IItem<FileProperties>> GetItemsEnumerable()
         {
             var items = new List<IItem<FileProperties>>();
             if (Directory.Exists(CurrentContainer))
             {
-                items.AddRange(Directory.EnumerateDirectories(CurrentContainer).Select(di => new FileItem(di, ItemType.Container, this)));
-                items.AddRange(Directory.EnumerateFiles(CurrentContainer).Select(fi => new FileItem(fi, ItemType.Executable, this)));
+                items.AddRange(Directory.EnumerateDirectories(CurrentContainer)
+                    .Select(di => getFileItemSafe(di, ItemType.Container)));
+                items.AddRange(Directory.EnumerateFiles(CurrentContainer).
+                    Select(fi => getFileItemSafe(fi, ItemType.Executable)));
             }
             else
             {
@@ -56,7 +82,28 @@ namespace Kex.Model.ItemProvider
                 items.AddRange(shares.Select(lo => new FileItem(CurrentContainer + "\\" + lo.shi1_netname, ItemType.Container, this)));
             }
             
-            return items;//.Where(i => i.FullPath != null);
+            return items.Where(i => i!= null);
+        }
+
+        private FileItem getFileItemSafe(string path, ItemType type)
+        {
+            if (type == ItemType.Container)
+            {
+                try
+                {
+                    var di = new DirectoryInfo(path);
+                    if ((di.Attributes & FileAttributes.Hidden) != 0) return null;
+                    di.EnumerateFiles().Any(); //Enumerate möglich?
+                    return new FileItem(path, type, this);
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+
+            var fi = new FileInfo(path);
+            return (fi.Attributes & FileAttributes.Hidden) != 0 ? null : new FileItem(path, type, this);
         }
 
         public IEnumerable<IItem<FileProperties>> GetItems()
@@ -66,32 +113,35 @@ namespace Kex.Model.ItemProvider
                 Dispose();
             }
             var items = GetItemsEnumerable();
-            try
-            {
-                if (items.Any())
-                {
-                    const int preload = 20;
-                    foreach (var item in items.Take(preload))
-                    {
-                        FetchDetails(item);
-                    }
-                    FetchPropertiesAsync(items.Skip(preload));
-                }
-                else
-                {
-                    items = new List<FileItem> { new FileItem(CurrentContainer + "\\..", ItemType.Container, this) };
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
+            FetchDetails(items.FirstOrDefault());
+            //try
+            //{
+            //    if (items.Any())
+            //    {
+            //        const int preload = 20;
+            //        foreach (var item in items.Take(preload))
+            //        {
+            //            FetchDetails(item);
+            //        }
+            //        FetchPropertiesAsync(items.Skip(preload));
+            //    }
+            //    else
+            //    {
+            //        items = new List<FileItem> { new FileItem(CurrentContainer + "\\..", ItemType.Container, this) };
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.ToString());
+            //}
             currentItems = items;
             return items;
         }
 
         public FileProperties FetchDetails(IItem<FileProperties> item)
         {
+            if (item == null) return null;
+
             var fi = item as FileItem;
             var props = new FileProperties();
             try
@@ -101,13 +151,14 @@ namespace Kex.Model.ItemProvider
                     return props;
                 }
                 props.ShellObject = ShellObject.FromParsingName(item.FullPath);
-                props.ShellObject.Thumbnail.FormatOption = ThumbnailFormatOption;
-                props.ShellObject.Thumbnail.RetrievalOption = ThumbnailRetrievalOption;
                 props.Length = (long) (props.ShellObject.Properties.System.Size.Value ?? 0);
                 props.Created = props.ShellObject.Properties.System.DateCreated.Value;
                 props.LastModified = props.ShellObject.Properties.System.DateCreated.Value;
-                props.Thumbnail = props.ShellObject.Thumbnail.MediumBitmapSource;
-                props.Thumbnail.Freeze();
+
+                props.ShellObject.Thumbnail.FormatOption = ThumbnailFormatOption;
+                props.ShellObject.Thumbnail.RetrievalOption = ThumbnailRetrievalOption;
+                props.Thumbnail = props.ShellObject.Thumbnail.SmallBitmapSource;
+                //props.Thumbnail.Freeze();
                 item.Properties = props;
                 //if (props.ShellObject != null && props.ShellObject.IsLink)
                 //{
@@ -203,11 +254,11 @@ namespace Kex.Model.ItemProvider
         private BackgroundWorker _currentWorker;
         public void Dispose()
         {
-            foreach(var item in currentItems)
-            {
-                if (item != null && item.Properties != null)
-                    item.Properties.Dispose();
-            }
+            //foreach(var item in currentItems)
+            //{
+            //    if (item != null && item.Properties != null)
+            //        item.Properties.Dispose();
+            //}
         }
 
         public Dictionary<string, string> Columns
