@@ -57,8 +57,12 @@ namespace Kex.Model.ItemProvider
                 var shares = share.GetShares(serverName);
                 items.AddRange(shares.Select(lo => new FileItem(CurrentContainer + "\\" + lo.shi1_netname, ItemType.Container, this)));
             }
-            
-            return items.Where(i => i!= null);
+            var ret = items.Where(i => i != null);
+            if (!ret.Any())
+            {
+                ret = new List<FileItem> { new FileItem(CurrentContainer + "\\..", ItemType.Container, this) };
+            }
+            return ret;
         }
 
         private FileItem getFileItemSafe(string path, ItemType type)
