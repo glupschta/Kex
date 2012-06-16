@@ -15,5 +15,6 @@ namespace Kex.Views
         void Hide();
         bool IsOpen { get; }
         event EventHandler Closed;
+        void SetPosition();
     }
 }

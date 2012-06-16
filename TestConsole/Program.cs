@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Packaging;
 using System.Linq;
 using System.Text;
 using Kex.Model;
@@ -14,9 +15,14 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
+            testZip();
             //var l = Directory.EnumerateFiles(@"c:/documents and settings");
             TestWatcher();
             Console.ReadLine();
+        }
+
+        private static void testZip()
+        {
         }
 
         private static void TestWatcher()

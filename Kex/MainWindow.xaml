@@ -8,6 +8,15 @@
         <Style TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
+
+        <Style TargetType="{x:Type ListView}">
+            <Style.Triggers>
+                <Trigger Property="HasItems" Value="false">
+                    <Setter Property="Focusable" Value="False" />
+                    <Setter Property="Background" Value="Red" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>

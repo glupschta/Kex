@@ -12,23 +12,25 @@ using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Kex.Model.ItemProvider
 {
-    public class FilesystemItemProvider : IItemProvider<FileProperties>, IDisposable
+    public class AsyncFilesystemItemProvider : IItemProvider<FileProperties>, IDisposable
     {
-        public FilesystemItemProvider()
+        public AsyncFilesystemItemProvider()
         {
-            _currentWorker = new BackgroundWorker {WorkerSupportsCancellation = true};
+            _currentWorker = new BackgroundWorker { WorkerSupportsCancellation = true };
             ThumbnailFormatOption = ShellThumbnailFormatOption.IconOnly;
             ThumbnailRetrievalOption = ShellThumbnailRetrievalOption.Default;
         }
 
-        public FilesystemItemProvider(string directory) : this()
+        public AsyncFilesystemItemProvider(string directory)
+            : this()
         {
             CurrentContainer = directory;
         }
 
         public string CurrentContainer
         {
-            get; set; 
+            get;
+            set;
         }
 
         protected IEnumerable<IItem<FileProperties>> currentItems;
@@ -57,58 +59,124 @@ namespace Kex.Model.ItemProvider
                 var shares = share.GetShares(serverName);
                 items.AddRange(shares.Select(lo => new FileItem(CurrentContainer + "\\" + lo.shi1_netname, ItemType.Container, this)));
             }
-            
-            return items.Where(i => i!= null);
+
+            return items.Where(i => i != null);
         }
 
         private FileItem getFileItemSafe(string path, ItemType type)
         {
             if (type == ItemType.Container)
             {
-                var di = new DirectoryInfo(path);
-                if (!ShowHiddenItems && (di.Attributes & FileAttributes.Hidden) != 0) return null;
-                //di.EnumerateFiles().Any(); //Enumerate möglich? wenn aktiviert in try/catch packen
-                return new FileItem(path, type, this);
+                try
+                {
+                    var di = new DirectoryInfo(path);
+                    if ((di.Attributes & FileAttributes.Hidden) != 0) return null;
+                    //di.EnumerateFiles().Any(); //Enumerate möglich?
+                    return new FileItem(path, type, this);
+                }
+                catch
+                {
+                    return null;
+                }
             }
 
             var fi = new FileInfo(path);
-            return (!ShowHiddenItems && (fi.Attributes & FileAttributes.Hidden) != 0) ? null : new FileItem(path, type, this);
+            return (fi.Attributes & FileAttributes.Hidden) != 0 ? null : new FileItem(path, type, this);
         }
 
         public IEnumerable<IItem<FileProperties>> GetItems()
         {
             var items = GetItemsEnumerable();
-            FetchDetails(items.FirstOrDefault()); //for grid column widths
+            FetchDetails(items.FirstOrDefault());
+            try
+            {
+                if (items.Any())
+                {
+                    const int preload = 1;
+                    foreach (var item in items.Take(preload))
+                    {
+                        FetchDetails(item);
+                    }
+                    FetchPropertiesAsync(items.Skip(preload));
+                }
+                else
+                {
+                    items = new List<FileItem> { new FileItem(CurrentContainer + "\\..", ItemType.Container, this) };
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
             return items;
         }
+
 
         public FileProperties FetchDetails(IItem<FileProperties> item)
         {
             if (item == null) return null;
 
+            var fi = item as FileItem;
             var props = new FileProperties();
-            props.ShellObject = ShellObject.FromParsingName(item.FullPath);
-            props.Length = (long) (props.ShellObject.Properties.System.Size.Value ?? 0);
-            props.Created = props.ShellObject.Properties.System.DateCreated.Value;
-            props.LastModified = props.ShellObject.Properties.System.DateCreated.Value;
+            try
+            {
+                if (item.FullPath == null)
+                {
+                    return props;
+                }
+                props.ShellObject = ShellObject.FromParsingName(item.FullPath);
+                props.Length = (long)(props.ShellObject.Properties.System.Size.Value ?? 0);
+                props.Created = props.ShellObject.Properties.System.DateCreated.Value;
+                props.LastModified = props.ShellObject.Properties.System.DateCreated.Value;
 
-            props.ShellObject.Thumbnail.FormatOption = ThumbnailFormatOption;
-            props.ShellObject.Thumbnail.RetrievalOption = ThumbnailRetrievalOption;
-            props.Thumbnail = props.ShellObject.Thumbnail.SmallBitmapSource;
-            props.Thumbnail.Freeze();
-            item.Properties = props;
+                props.ShellObject.Thumbnail.FormatOption = ThumbnailFormatOption;
+                props.ShellObject.Thumbnail.RetrievalOption = ThumbnailRetrievalOption;
+                props.Thumbnail = props.ShellObject.Thumbnail.SmallBitmapSource;
+                props.Thumbnail.Freeze();
+                item.Properties = props;
+                fi.PropertiesChanged();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
             return props;
         }
 
-     
+        [STAThread]
+        public void FetchPropertiesAsync(IEnumerable<IItem<FileProperties>> items)
+        {
+            if (_currentWorker.IsBusy)
+            {
+                _currentWorker.CancelAsync();
+                _currentWorker = new BackgroundWorker { WorkerSupportsCancellation = true };
+            }
+            _currentWorker.DoWork += WorkerDoWork;
+            _currentWorker.RunWorkerAsync(items);
+        }
+
+        private void WorkerDoWork(object sender, DoWorkEventArgs e)
+        {
+            var items = e.Argument as IEnumerable<IItem<FileProperties>>;
+            if (items == null) return;
+            foreach (var item in items)
+            {
+                if (((BackgroundWorker)sender).CancellationPending)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+                FetchDetails(item);
+            }
+        }
 
         public ShellThumbnailFormatOption ThumbnailFormatOption { get; set; }
+
         public ShellThumbnailRetrievalOption ThumbnailRetrievalOption { get; set; }
-        public bool ShowHiddenItems { get; set; }
 
         public virtual void DoAction(IItem item)
         {
-            var currentItem = ((FileItem)item).Properties;
+            var currentItem = ((IItem<FileProperties>)item).Properties;
             if (currentItem == null) return;
 
             if (currentItem.ShellObject != null && currentItem.ShellObject.IsLink)
@@ -130,21 +198,10 @@ namespace Kex.Model.ItemProvider
             {
                 try
                 {
-                    if (item.FullPath.EndsWith(".kll"))
-                    {
-                        var locations = File.ReadAllLines(item.FullPath);
-                        foreach (var location in locations)
-                        {
-                            ListerManager.Instance.ListerViewManager.OpenLister(location);
-                        }
-                        ListerManager.Instance.CommandManager.ClosePopup();
-                    }
-                    else
-                    {
-                        var start = new ProcessStartInfo(item.FullPath);
-                        Process.Start(start);
-                    }
-                } catch (Exception ex)
+                    var start = new ProcessStartInfo(item.FullPath);
+                    Process.Start(start);
+                }
+                catch (Exception ex)
                 {
                     Debug.WriteLine(ex);
                 }
@@ -154,11 +211,11 @@ namespace Kex.Model.ItemProvider
         private BackgroundWorker _currentWorker;
         public void Dispose()
         {
-            //foreach(var item in currentItems)
-            //{
-            //    if (item != null && item.Properties != null)
-            //        item.Properties.Dispose();
-            //}
+            foreach (var item in currentItems)
+            {
+                if (item != null && item.Properties != null)
+                    item.Properties.Dispose();
+            }
         }
 
         public Dictionary<string, string> Columns
@@ -166,8 +223,8 @@ namespace Kex.Model.ItemProvider
             get
             {
                 if (columns == null)
-                {   
-                    columns =  new Dictionary<string, string>();
+                {
+                    columns = new Dictionary<string, string>();
                     columns.Add("Name", "Name");
                     columns.Add("LastModified", "Properties.LastModified");
                     columns.Add("Type", "Properties.ShellObject.Properties.System.ItemTypeText.Value");

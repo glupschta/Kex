@@ -42,7 +42,7 @@ namespace Kex.Views
             var currentListerView = ListerManager.Instance.ListerViewManager.CurrentListerView;
             popup.Placement = PlacementMode.Right;
             popup.Height = currentListerView.ActualHeight;
-            popup.HorizontalOffset = currentListerView.ActualWidth;
+            //popup.HorizontalOffset = currentListerView.ActualWidth;
             popup.PlacementTarget = currentListerView;
         }
 
@@ -95,5 +95,13 @@ namespace Kex.Views
         }
 
         public event EventHandler Closed;
+        public void SetPosition()
+        {
+            var currentListerView = ListerManager.Instance.ListerViewManager.CurrentListerView;
+            popup.Placement = PlacementMode.Right;
+            popup.Height = currentListerView.ActualHeight;
+            //popup.HorizontalOffset = currentListerView.ActualWidth;
+            popup.PlacementTarget = currentListerView;
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using Kex.Common;
@@ -57,6 +58,7 @@ namespace Kex.Controller.Popups
             Input.TextBox.Focus();
             RegisterHandlers();
             ListerManager.Instance.ListerViewManager.CurrentListerView.View.Background = new SolidColorBrush(Color.FromRgb(250, 250, 250));
+            Input.SetPosition();
         }
 
         public virtual void Hide()

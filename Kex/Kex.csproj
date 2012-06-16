@@ -139,9 +139,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -189,6 +189,7 @@
     <Compile Include="Model\FileProperties.cs" />
     <Compile Include="Model\FileItem.cs" />
     <Compile Include="Model\IColumnProvider.cs" />
+    <Compile Include="Model\ItemProvider\AsyncFilesystemItemProvider.cs" />
     <Compile Include="Model\ItemType.cs" />
     <Compile Include="Model\FileLister.cs" />
     <Compile Include="Common\MatchMode.cs" />

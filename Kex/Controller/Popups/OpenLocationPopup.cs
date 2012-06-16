@@ -30,6 +30,11 @@ namespace Kex.Controller.Popups
             else
             {
                 SelectedLocation = Input.TextBox.Text;
+                if (string.IsNullOrEmpty(SelectedLocation))
+                {
+                    NewWindow = true;
+                    SelectedLocation =  ListerManager.Instance.ListerViewManager.CurrentListerView.Lister.CurrentDirectory;
+                }
             }
 
             if (File.Exists(SelectedLocation))

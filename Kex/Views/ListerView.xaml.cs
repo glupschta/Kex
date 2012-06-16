@@ -39,12 +39,6 @@ namespace Kex.Views
             CommandKeyHandler.HandleKey(e);
         }
 
-        private void ViewMouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (TryFindParent<GridViewColumnHeader>(e.OriginalSource as DependencyObject) == null)
-                ListerManager.Instance.CommandManager.DoDefaultAction();
-        }
-
         public static T TryFindParent<T>(DependencyObject current) where T : class
         {
             DependencyObject parent = VisualTreeHelper.GetParent(current);
@@ -59,8 +53,16 @@ namespace Kex.Views
             return View.SelectedItems.Cast<IItem>();
         }
 
+        private void ViewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (TryFindParent<GridViewColumnHeader>(e.OriginalSource as DependencyObject) == null)
+                ListerManager.Instance.CommandManager.DoDefaultAction();
+        }
+
         private void View_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            if (TryFindParent<GridViewColumnHeader>(e.OriginalSource as DependencyObject) != null) return;
+
             if (e.ChangedButton == MouseButton.Right)
             {
                 ListerManager.Instance.CommandManager.ShowContextMenu();

@@ -25,13 +25,13 @@
     <LinearGradientBrush x:Key="tabPanelGradient" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="#FFFFFF" Offset="0" />
         <GradientStop Color="#EEEEEE" Offset="0.6" />
-        <GradientStop Color="#CCCCCC" Offset="1" />
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="tabItemGradientUnSelected" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="LightGray" Offset="0" />
         <GradientStop Color="#FFFFFF" Offset="0.7" />
-        <GradientStop Color="#FFFFFF" Offset="1" />
+        <GradientStop Color="#FFFFFF" Offset="0.9" />
+        <GradientStop Color="#CCCCCC" Offset="1" />
     </LinearGradientBrush>
 
     <Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type Views:TileView}, ResourceId=TileView}"
@@ -55,8 +55,6 @@
         <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
         <Setter Property="ContentTemplate" Value="{Binding Path=View.ItemTemplate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"></Setter>
     </Style>
-
-
 
     <Style x:Key="{x:Type TabControl}" TargetType="{x:Type TabControl}">
         <Setter Property="BorderThickness" Value="1"/>
@@ -86,7 +84,7 @@
 
     <Style TargetType="TabItem">
         <Setter Property="BorderThickness" Value="2"/>
-        <Setter Property="BorderBrush" Value="White"/>
+        <Setter Property="BorderBrush" Value="{StaticResource tabPanelGradient}"/>
         <Setter Property="Background" Value="{StaticResource lightBlueGradient}"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
