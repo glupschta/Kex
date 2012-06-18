@@ -337,7 +337,21 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="References\Binarymission.WPF.Controls.BinaryVirtualizingWrapPanel.DLL" />
+    <Content Include="References\Binarymission.WPF.Data.DataExtensions.dll" />
+    <Content Include="References\DotNetZip\Debug\Ionic.Zip.Reduced.dll" />
+    <Content Include="References\DotNetZip\Debug\Ionic.Zip.Reduced.pdb" />
+    <Resource Include="References\DotNetZip\Debug\Ionic.Zip.Reduced.XML" />
+    <Content Include="References\DotNetZip\Release\Ionic.Zip.Reduced.dll" />
+    <Content Include="References\GongShell.dll" />
+    <Content Include="References\Interop.Shell32.dll" />
+    <Content Include="References\Microsoft.WindowsAPICodePack.dll" />
+    <Content Include="References\Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll" />
+    <Content Include="References\Microsoft.WindowsAPICodePack.Sensors.dll" />
+    <Content Include="References\Microsoft.WindowsAPICodePack.Shell.dll" />
+    <Content Include="References\Microsoft.WindowsAPICodePack.ShellExtensions.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
