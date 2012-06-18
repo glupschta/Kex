@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Controls;
 using Kex.Common;
 using Kex.Model.ItemProvider;
-using Kex.Model;
 
 namespace Kex.Model
 {
@@ -17,15 +16,28 @@ namespace Kex.Model
             NavigationHistory = new BrowsingHistory();
         }
 
+        public FileLister(ILister lister)
+        {
+            NavigationHistory = lister.NavigationHistory;
+            ItemProvider = new FilesystemItemProvider();
+        }
+
+        public FileLister(ILister lister, string directory)
+        {
+            NavigationHistory = lister.NavigationHistory;
+            ItemProvider = new FilesystemItemProvider(directory);
+        }
+
         public BrowsingHistory NavigationHistory { get; set; }
 
-        private IItemProvider<FileProperties> _itemProvider;
+        protected IItemProvider<FileProperties> _itemProvider;
         public IItemProvider<FileProperties> ItemProvider
         {
             get { return _itemProvider; }
             set { 
                 _itemProvider = value;
                 CurrentDirectory = _itemProvider.CurrentContainer;
+                OnPropertyChanged("ItemProvider");
             }
         }
 
@@ -36,14 +48,13 @@ namespace Kex.Model
             SelectionSize = view.SelectedItems.OfType<FileItem>().Sum(i => i.Properties.Length);
         }
 
-        public string CurrentDirectory
+        public virtual string CurrentDirectory
         {
             get { return _currentDirectory; }
             set
             {
                 _currentDirectory = value;
                 _itemProvider = new FilesystemItemProvider(value);
-                //ItemProvider.CurrentContainer = value;
                 Refresh();
                 NavigationHistory.Push(value);
             }
@@ -101,7 +112,6 @@ namespace Kex.Model
 
         public string ContainerUp()
         {
-            string parentDirectory = null;
             try
             {
                 var directory = new DirectoryInfo(CurrentDirectory);
@@ -110,15 +120,12 @@ namespace Kex.Model
                     var index = CurrentDirectory.IndexOf("\\", 2);
                     return index != -1 ? CurrentDirectory.Substring(0, index) : null;
                 }
-                else
-                {
-                    parentDirectory = directory.Parent != null ? directory.Parent.FullName : null;
-                }
+                return directory.Parent != null ? directory.Parent.FullName : null;
             } catch (Exception ex)
             {
-                
+                MainWindow.Debug(ex);
+                return null;
             }
-            return parentDirectory;
         }
 
         public HistoryItem HistoryBack()
@@ -139,7 +146,7 @@ namespace Kex.Model
             }
         }
 
-        private string _currentDirectory;
+        protected string _currentDirectory;
         private string _filter;
         private int _selectionCount;
         private long _selectionSize;

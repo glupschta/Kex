@@ -32,7 +32,7 @@ namespace Kex.Controller
         public void OpenLister(string directory)
         {
             var itemProvider = new FilesystemItemProvider(directory);
-            var lister = new FileLister { ItemProvider = itemProvider };
+            var lister = new FileLister() { ItemProvider = itemProvider };
             var listerView = new ListerView { Lister = lister, DataContext = lister };
 
             var newTab = new TabItem();

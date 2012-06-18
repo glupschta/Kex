@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Kex.Controller;
+using Kex.Model;
+using Kex.Model.ItemProvider;
 
 namespace Kex.Common
 {
@@ -45,7 +49,12 @@ namespace Kex.Common
 
             _currentIndex++;
             _maxIndex = _currentIndex;
-            _locations[_currentIndex] = new HistoryItem(newLocation, _currentIndex);
+
+            var currentView = ListerManager.Instance.ListerViewManager.CurrentListerView;
+            var listerType = currentView != null
+                                       ? currentView.Lister.GetType()
+                                       : typeof (FileLister);
+            _locations[_currentIndex] = new HistoryItem(newLocation, _currentIndex, listerType);
         }
 
         public Dictionary<int, HistoryItem> Locations
@@ -57,15 +66,17 @@ namespace Kex.Common
 
     public class HistoryItem
     {
-        public HistoryItem(string fullpath, int index)
+        public HistoryItem(string fullpath, int index, Type listerType)
         {
             FullPath = fullpath;
             SelectedPath = null;
             Index = index;
+            ListerType = listerType;
         }
 
         public string FullPath { get; set; }
         public string SelectedPath { get; set; }
         public int Index { get; set; }
+        public Type ListerType { get; set; }
     }
 }

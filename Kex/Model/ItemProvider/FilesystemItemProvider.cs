@@ -36,6 +36,8 @@ namespace Kex.Model.ItemProvider
         protected virtual IEnumerable<IItem<FileProperties>> GetItemsEnumerable()
         {
             var items = new List<IItem<FileProperties>>();
+            if (CurrentContainer == null) return items;
+
             if (Directory.Exists(CurrentContainer))
             {
                 items.AddRange(Directory.EnumerateDirectories(CurrentContainer)

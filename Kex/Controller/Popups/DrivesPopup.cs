@@ -6,6 +6,8 @@ using System.Text;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using Kex.Common;
+using Kex.Model;
+using Kex.Model.ItemProvider;
 using Kex.Views;
 using Microsoft.WindowsAPICodePack.Shell;
 
@@ -29,8 +31,15 @@ namespace Kex.Controller.Popups
             var selectedDrive = Input.ListBox.SelectedItem as DriveItem;
             if (selectedDrive != null)
             {
-                ListerManager.Instance.CommandManager.SetContainer(selectedDrive.RootDirectory);
+                //ListerManager.Instance.CommandManager.SetContainer(selectedDrive.RootDirectory);
+
+                var zipItemProvider = new FilesystemItemProvider(selectedDrive.RootDirectory);
+                var lister = new FileLister { ItemProvider = zipItemProvider };
+                var view = ListerManager.Instance.ListerViewManager.CurrentListerView;
+                view.Lister = lister;
+                view.DataContext = lister;
                 Hide();
+                ListerManager.Instance.CommandManager.SetContainer(selectedDrive.RootDirectory);
             }
         }
 

@@ -15,6 +15,7 @@ using Kex.Common;
 using Kex.Controller.Popups;
 using Kex.Model;
 using Kex.Model;
+using Kex.Model.ItemProvider;
 using Kex.Views;
 using Microsoft.WindowsAPICodePack.Shell;
 using Application = System.Windows.Application;
@@ -198,7 +199,17 @@ namespace Kex.Controller
         {
             try
             {
-                CurrentView.Lister.ItemProvider.DoAction(item);
+                if (item.FullPath.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                {
+                    var zipItemProvider = new ZipItemProvider(item.FullPath);
+                    var lister = new ZipLister(CurrentView.Lister) {ItemProvider = zipItemProvider};
+                    CurrentView.Lister = lister;
+                    CurrentView.DataContext = lister;
+                }
+                else
+                {
+                    CurrentView.Lister.ItemProvider.DoAction(item);
+                }
             }
             catch (Exception ex)
             {
@@ -420,15 +431,34 @@ namespace Kex.Controller
             var historyItem = CurrentView.Lister.HistoryBack();
             if (historyItem.FullPath != CurrentView.Lister.CurrentDirectory)
             {
-                SetContainer(historyItem.FullPath);
-                CurrentItem = CurrentView.Lister.Items.FirstOrDefault(i => i.FullPath == historyItem.SelectedPath);
+                if (EnsureListerType(historyItem))
+                {
+                    SetContainer(historyItem.FullPath);
+                    CurrentItem = CurrentView.Lister.Items.FirstOrDefault(i => i.FullPath == historyItem.SelectedPath);
+                }
             }
         }
 
         public void HistoryForward()
         {
             var historyItem = CurrentView.Lister.HistoryForward();
-            SetContainer(historyItem.FullPath);
+            if (EnsureListerType(historyItem))
+                SetContainer(historyItem.FullPath);
+        }
+
+        private bool EnsureListerType(HistoryItem historyItem)
+        {
+            if (historyItem == null) return false;
+            if (historyItem.ListerType != CurrentView.Lister.GetType())
+            {
+                var baseLister = CurrentView.Lister;
+                var lister = historyItem.ListerType
+                    .GetConstructor(new [] { typeof(ILister), typeof(string) })
+                    .Invoke(new object[] {baseLister, historyItem.FullPath });
+                CurrentView.Lister = lister as ILister<FileProperties>;
+                return false;
+            }
+            return true;
         }
 
         public void ContainerUp()

@@ -118,6 +118,9 @@
       <HintPath>..\References\Interop.Shell32.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Ionic.Zip.Reduced">
+      <HintPath>..\References\DotNetZip\Release\Ionic.Zip.Reduced.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.WindowsAPICodePack">
       <HintPath>..\References\Microsoft.WindowsAPICodePack.dll</HintPath>
@@ -190,6 +193,7 @@
     <Compile Include="Model\FileItem.cs" />
     <Compile Include="Model\IColumnProvider.cs" />
     <Compile Include="Model\ItemProvider\AsyncFilesystemItemProvider.cs" />
+    <Compile Include="Model\ItemProvider\ZipItemProvider.cs" />
     <Compile Include="Model\ItemType.cs" />
     <Compile Include="Model\FileLister.cs" />
     <Compile Include="Common\MatchMode.cs" />
@@ -197,6 +201,8 @@
     <Compile Include="Common\ShellContextMenu1.cs" />
     <Compile Include="Model\NetworkBrowser.cs" />
     <Compile Include="Model\NetWorkShare.cs" />
+    <Compile Include="Model\ZipItem.cs" />
+    <Compile Include="Model\ZipLister.cs" />
     <Compile Include="Views\Converters\TabHeaderConverter.cs" />
     <Compile Include="Views\IPopupInput.cs" />
     <Compile Include="Views\ListboxTextInput.xaml.cs">

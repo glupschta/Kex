@@ -29,7 +29,7 @@ namespace Kex.Views
 
         void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         void PropertyDialog_KeyDown(object sender, KeyEventArgs e)
