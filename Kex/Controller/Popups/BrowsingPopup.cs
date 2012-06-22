@@ -49,7 +49,7 @@ namespace Kex.Controller.Popups
         protected override void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             var itemsFound = updateItems();
-            if (!itemsFound && Text.Any())
+            if (!itemsFound && Text.Any() && !string.IsNullOrEmpty(Text) && Text.Last() != '-')
             {
                 Text = Text.Substring(0, Text.Length - 1);
                 Input.TextBox.CaretIndex = Text.Length;

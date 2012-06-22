@@ -25,19 +25,17 @@ namespace Kex.Common
 
         public static string Paste(string targetLocation)
         {
-            if (targetLocation== null)
-            {
-                return null;
-            }
+            if (targetLocation== null) return null;
+
             var selection = Clipboard.GetFileDropList();
             string target = null;
             foreach(var filePath in selection)
             {
-                target = getTargetLocation(targetLocation, filePath);
                 try
                 {
                     if (Directory.Exists(filePath))
                     {
+                        target = getTargetLocation(targetLocation, filePath, true);
                         if (ActionType == FileActionType.Copy)
                             FileSystem.CopyDirectory(filePath, target);
                         else if (ActionType == FileActionType.Move)
@@ -45,6 +43,7 @@ namespace Kex.Common
                     }
                     else if (File.Exists(filePath))
                     {
+                        target = getTargetLocation(targetLocation, filePath, false);
                         if (ActionType == FileActionType.Copy)
                             File.Copy(filePath, target);
                         else if (ActionType == FileActionType.Move)
@@ -59,16 +58,31 @@ namespace Kex.Common
             return target;
         }
 
-        private static string getTargetLocation(string targetLocation, string fileName)
+        private static string getTargetLocation(string targetLocation, string fileName, bool isDirectory)
         {
-            var temp = Path.Combine(targetLocation, fileName);
-            var target = temp;
-            int i = 1;
-            while (File.Exists(target))
+            var target = Path.Combine(targetLocation, fileName);
+            while (isDirectory ? Directory.Exists(target) : File.Exists(target))
             {
-                var finf = new FileInfo(temp);
-                var name = finf.FullName.Substring(0, finf.FullName.Length - finf.Extension.Length);
-                target = String.Format("{0}({1}){2}", name, i++, finf.Extension);
+                var finf = new FileInfo(target);
+                var temp = finf.Name.Substring(0, finf.Name.Length - finf.Extension.Length);
+                if (temp.Last() == ')')
+                {
+                    var fileIndex = 0;
+                    var currentIndex = temp.Length - 1;
+                    var multiplier = 1;
+                    while(Char.IsDigit(temp[--currentIndex]))
+                    {
+                        fileIndex = fileIndex  + (temp[currentIndex] - '0') * multiplier;
+                        multiplier *= 10;
+                    }
+                    target = temp[currentIndex] == '(' 
+                        ? Path.Combine(targetLocation, string.Format("{0}({1}){2}", temp.Substring(0, currentIndex), ++fileIndex, finf.Extension)) 
+                        : Path.Combine(targetLocation, temp + "(1)" + finf.Extension);
+                }
+                else
+                {
+                    target = Path.Combine(targetLocation, temp+"(1)"+finf.Extension);
+                }
             }
             return target;
         }

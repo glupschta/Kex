@@ -34,12 +34,17 @@ namespace Kex.Views
             FontFamily = Options.FontFamily;
             FontSize = Options.FontSize;
 
-            var typeFace = new Typeface(Options.FontFamily.ToString());
-            var ft = new FormattedText(" ", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeFace, Options.FontSize, Brushes.Black);
-            renameTextBox.Height = ft.Height + 6;
-
             KeyDown += RenamePopup_KeyDown;
             renamePopup.Closed += renamePopup_Closed;
+            renameTextBox.TextChanged += renameTextBox_TextChanged;
+        }
+
+        void renameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var typeFace = new Typeface(Options.FontFamily.ToString());
+            var ft = new FormattedText(renameTextBox.Text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeFace, Options.FontSize, Brushes.Black);
+            if (ft.Width + 20 > originalSize)
+                renameTextBox.Width = ft.Width + 20;
         }
 
         void renamePopup_Closed(object sender, EventArgs e)
@@ -87,6 +92,7 @@ namespace Kex.Views
                     renamePopup.IsOpen = false;
                     e.Handled = true;
                     break;
+                case Key.Oem102:
                 case Key.Escape:
                     e.Handled = true;
                     renamePopup.IsOpen = false;
@@ -97,22 +103,66 @@ namespace Kex.Views
         public void Show(ListerView view)
         {
             currentView = view;
-            renamePopup.Placement = PlacementMode.Relative;
-            var target = view.View.ItemContainerGenerator.ContainerFromItem(view.View.SelectedItem) as UIElement;
+            var gridView = view.View.View as GridView;
+
+            UIElement target = null;
+            double nameColumnPosition = 0;
+            
+            if (gridView != null)
+            {
+                var nameColumnFound = false;
+                foreach(var col in gridView.Columns)
+                {
+                    if ("Name" == col.Header as string)
+                    {
+                        nameColumnFound = true;
+                        break;
+                    }
+                    nameColumnPosition += col.ActualWidth;
+                }
+                if (!nameColumnFound)
+                {
+                    var firstColumn = gridView.Columns.FirstOrDefault();
+                    nameColumnPosition = gridView.Columns.First().Width;
+                }
+            }
+            else
+            {
+                nameColumnPosition = 31;
+            }
+            target = view.View.ItemContainerGenerator.ContainerFromItem(view.View.SelectedItem) as UIElement;
             renamePopup.PlacementTarget = target;
-            renamePopup.HorizontalOffset = 31;
+            renamePopup.Placement = PlacementMode.Relative;
+            renamePopup.HorizontalOffset = nameColumnPosition + 3;
             renamePopup.VerticalOffset = -1;
-            renamePopup.IsOpen = true;
+
             renameTextBox.Text = ((IItem)view.View.SelectedItem).Name;
+            var typeFace = new Typeface(Options.FontFamily.ToString());
+            var ft = new FormattedText(renameTextBox.Text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeFace, Options.FontSize, Brushes.Black);
+            renameTextBox.Height = ft.Height + 6;
+            renameTextBox.Width = ft.Width + 20;
+            originalSize = ft.Width + 20;
+
+            renamePopup.IsOpen = true;
+
             renameTextBox.Focus();
             var endIndex = renameTextBox.Text.LastIndexOf('.');
-            if (endIndex == -1)
+
+            var item = view.View.SelectedItem as FileItem;
+            var isDirectory = false;
+            if (item != null)
+            {
+                isDirectory = item.ItemType == ItemType.Container;
+            }
+
+            if (endIndex == -1 || isDirectory)
                 endIndex = renameTextBox.Text.Length;
             renameTextBox.SelectionStart = 0;
             renameTextBox.SelectionLength = endIndex;
         }
 
         private ListerView currentView;
+        private double originalSize;
 
     }
 }

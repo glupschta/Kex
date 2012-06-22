@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows;
 using Microsoft.Win32.SafeHandles;
 
 namespace Kex.Common
@@ -78,7 +79,7 @@ namespace Kex.Common
                 }
                 catch (COMException exception)
                 {
-                    throw new IOException(exception.Message, exception);
+                    MessageBox.Show(exception.ToString());
                 }
             }
         }

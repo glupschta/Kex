@@ -16,22 +16,22 @@ namespace Kex.Model.ItemProvider
             CurrentContainer = directory;
         }
 
-        public Dictionary<string, string> Columns
+        public IEnumerable<Column> Columns
         {
             get
             {
-                if (columns == null)
-                {
-                    columns = new Dictionary<string, string>();
-                    columns.Add("Name", "Name");
-                    columns.Add("LastModified", "Properties.LastModified");
-                    columns.Add("Length", "Properties.Length");
-                }
-                return columns;
+                return _columns ?? (
+                    _columns = new[]
+                        {
+                            new Column("Name", "Name"),
+                            new Column("LastModified", "Properties.LastModified"),
+                            new Column("Length", "Properties.Length"),
+                        }
+                );
             }
         }
 
-        private Dictionary<string, string> columns;
+        private IEnumerable<Column> _columns;
 
         public string CurrentContainer { get; set; }
         public void DoAction(IItem item)

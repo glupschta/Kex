@@ -31,23 +31,22 @@
 
             <Converters1:AnyToVisibilityConverter x:Key="anyToVisibility" />
 
-            <DataTemplate x:Key="listboxTemplate">
-                <Border x:Name="border">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{Binding Thumbnail}" Width="14"/>
-                        <TextBlock Text="{Binding DisplayName}" Margin="10 0 0 0" />
-                    </StackPanel>
-                </Border>
-            </DataTemplate>
+            <Style x:Key="myHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+                <Setter Property="Visibility" Value="Collapsed" />
+            </Style>
 
-            <Style TargetType="{x:Type ListBoxItem}">
-                <Style.Resources> 
-                    <LinearGradientBrush  x:Key="{x:Static SystemColors.ControlBrushKey}" StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="LightBlue" Offset="0" />
-                        <GradientStop Color="LightBlue" Offset="1" />
-                    </LinearGradientBrush>
-                </Style.Resources>
-            </Style> 
+            <Storyboard x:Key="FadeIn">
+                <DoubleAnimation 
+                Storyboard.TargetProperty="Opacity" 
+                Duration="0:0:2" From="0" To="1"/>
+            </Storyboard>
+            <Style TargetType="GridViewColumn" x:Key="FadingLabel">
+                <Style.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard Storyboard="{StaticResource FadeIn}"/>
+                    </EventTrigger>
+                </Style.Triggers>
+            </Style>
 
         </Popup.Resources>
         <Border Padding="0" Margin="4" BorderBrush="LightGray" BorderThickness="2" CornerRadius="6" Background="Transparent" Opacity="10">
@@ -71,9 +70,21 @@
                     <Border.BitmapEffect>
                         <DropShadowBitmapEffect Direction="270" Color="LightGray" Opacity="0.4" Softness="0.5" />
                     </Border.BitmapEffect>
-                    <ListBox x:Name="listView" ItemsSource="{Binding ListItems}" Focusable="False" MaxWidth="400"
-                           SelectionMode="Single" Width="Auto" ItemTemplate="{StaticResource listboxTemplate}" BorderBrush="White">
-                    </ListBox>
+                    <ListView x:Name="listView" ItemsSource="{Binding ListItems}" MaxWidth="400"
+                           SelectionMode="Single" Width="Auto" BorderBrush="White" Background="Transparent" BorderThickness="0" Focusable="False">
+                        <ListView.View>
+                            <GridView ColumnHeaderContainerStyle="{StaticResource myHeaderStyle}">
+                                <GridViewColumn Width="28">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding Thumbnail}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn DisplayMemberBinding="{Binding DisplayName}" Width="Auto"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
                 </Border>
             </Grid>
         </Border>

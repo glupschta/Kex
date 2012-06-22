@@ -7,6 +7,6 @@ namespace Kex.Model
 {
     public interface IColumnProvider
     {
-        Dictionary<string, string> Columns { get; }
+        IEnumerable<Column> Columns { get; }
     }
 }

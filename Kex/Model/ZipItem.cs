@@ -21,7 +21,7 @@ namespace Kex.Model
             Properties = new FileProperties();
             Properties.Created = zi.CreationTime;
             Properties.LastModified = zi.LastModified;
-            Properties.Length = zi.CompressedSize;
+            Properties.Length = zi.CompressedSize; 
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

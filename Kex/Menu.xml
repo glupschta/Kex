@@ -11,6 +11,8 @@
       <MenuItem Text="Dock Left" Command="WindowDockLeft" />
       <MenuItem Text="Dock Right" Command="WindowDockRight" />
       <MenuItem Text="Close" Command="WindowClose" />
+      <MenuItem Text="Close All But This" Command="WindowCloseAllButThis" />
+      
     </MenuItem>
     
     <MenuItem Text="File">
@@ -23,6 +25,7 @@
     <MenuItem Text="Send As Mail" Command="SendMail" />
     <MenuItem Text="Notepad++" Command="ExecuteExternal" Argument="C:\Program Files (x86)\Notepad++\notepad++.exe" />
     <MenuItem Text="Add To Favorites" Command="AddToFavorites" />
+    <MenuItem Text="Open Command Prompt" Command="OpenCommandPrompt" />
     
   </MenuItem>
   

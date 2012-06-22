@@ -218,23 +218,23 @@ namespace Kex.Model.ItemProvider
             }
         }
 
-        public Dictionary<string, string> Columns
+        public IEnumerable<Column> Columns
         {
             get
             {
-                if (columns == null)
-                {
-                    columns = new Dictionary<string, string>();
-                    columns.Add("Name", "Name");
-                    columns.Add("LastModified", "Properties.LastModified");
-                    columns.Add("Type", "Properties.ShellObject.Properties.System.ItemTypeText.Value");
-                    columns.Add("Length", "Properties.Length");
-                }
-                return columns;
+                return _columns ?? (
+                    _columns = new[]
+                        {
+                            new Column("Name", "Name"),
+                            new Column("LastModified", "Properties.LastModified"),
+                            new Column("Type", "Properties.ShellObject.Properties.System.ItemTypeText.Value"),
+                            new Column("Length", "Properties.Length"),
+                        }
+                );
             }
         }
 
-        private Dictionary<string, string> columns;
+        private IEnumerable<Column> _columns;
     }
 
 }

@@ -16,7 +16,6 @@ namespace Kex.Model.ItemProvider
     {
         public FilesystemItemProvider()
         {
-            _currentWorker = new BackgroundWorker {WorkerSupportsCancellation = true};
             ThumbnailFormatOption = ShellThumbnailFormatOption.IconOnly;
             ThumbnailRetrievalOption = ShellThumbnailRetrievalOption.Default;
         }
@@ -47,17 +46,25 @@ namespace Kex.Model.ItemProvider
             }
             else
             {
-                string serverName;
-                if (CurrentContainer.StartsWith(@"\\"))
-                    serverName = CurrentContainer.Substring(2);
-                else
+                try
                 {
-                    serverName = CurrentContainer;
-                    CurrentContainer = @"\\" + CurrentContainer;
+                    string serverName;
+                    if (CurrentContainer.StartsWith(@"\\"))
+                        serverName = CurrentContainer.Substring(2);
+                    else
+                    {
+                        serverName = CurrentContainer;
+                        CurrentContainer = @"\\" + CurrentContainer;
+                    }
+                    var share = new NetWorkShare();
+                    var shares = share.GetShares(serverName);
+                    items.AddRange(
+                        shares.Select(
+                            lo => new FileItem(CurrentContainer + "\\" + lo.shi1_netname, ItemType.Container, this)));
+                } catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), "Error");
                 }
-                var share = new NetWorkShare();
-                var shares = share.GetShares(serverName);
-                items.AddRange(shares.Select(lo => new FileItem(CurrentContainer + "\\" + lo.shi1_netname, ItemType.Container, this)));
             }
             var ret = items.Where(i => i != null);
             if (!ret.Any())
@@ -73,7 +80,6 @@ namespace Kex.Model.ItemProvider
             {
                 var di = new DirectoryInfo(path);
                 if (!ShowHiddenItems && (di.Attributes & FileAttributes.Hidden) != 0) return null;
-                //di.EnumerateFiles().Any(); //Enumerate möglich? wenn aktiviert in try/catch packen
                 return new FileItem(path, type, this);
             }
 
@@ -157,33 +163,27 @@ namespace Kex.Model.ItemProvider
             }
         }
 
-        private BackgroundWorker _currentWorker;
         public void Dispose()
         {
-            //foreach(var item in currentItems)
-            //{
-            //    if (item != null && item.Properties != null)
-            //        item.Properties.Dispose();
-            //}
         }
 
-        public Dictionary<string, string> Columns
+        public IEnumerable<Column> Columns
         {
             get
             {
-                if (columns == null)
-                {   
-                    columns =  new Dictionary<string, string>();
-                    columns.Add("Name", "Name");
-                    columns.Add("LastModified", "Properties.LastModified");
-                    columns.Add("Type", "Properties.ShellObject.Properties.System.ItemTypeText.Value");
-                    columns.Add("Length", "Properties.Length");
-                }
-                return columns;
+                return _columns ?? (
+                    _columns = new[]
+                        {
+                            new Column("Name", "Name"),
+                            new Column("LastModified", "Properties.LastModified"),
+                            new Column("Type", "Properties.ShellObject.Properties.System.ItemTypeText.Value"),
+                            new Column("Length", "Properties.Length"),
+                        }
+                );
             }
         }
 
-        private Dictionary<string, string> columns;
+        private IEnumerable<Column> _columns;
     }
 
 }

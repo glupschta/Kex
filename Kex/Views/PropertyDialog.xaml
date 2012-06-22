@@ -7,7 +7,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
-        <ListView x:Name="PropertyList" Grid.Row="0">
+        <ListView x:Name="PropertyList" Grid.Row="0" Focusable="False">
             <ListView.View>
                 <GridView >
                     <GridViewColumn Header="DisplayName" DisplayMemberBinding="{Binding Description.DisplayName}" Width="Auto"/>

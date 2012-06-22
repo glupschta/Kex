@@ -32,8 +32,10 @@ namespace Kex.Controller.Popups
             }
             //TODO
             ListerManager.Instance.ListerViewManager.CurrentListerView.Lister.Refresh();
-            ListerManager.Instance.CommandManager.CurrentItem =
-                ListerManager.Instance.ListerViewManager.CurrentListerView.Lister.Items.First(i => i.FullPath == path);
+            var item = ListerManager.Instance.ListerViewManager.CurrentListerView.Lister.Items.FirstOrDefault(i => i.FullPath == path);
+            if (item != null)
+                ListerManager.Instance.CommandManager.CurrentItem = item;
+                
             ListerManager.Instance.CommandManager.UpdateColumnWidth();
             Hide();
         }

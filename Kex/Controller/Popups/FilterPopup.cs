@@ -15,6 +15,13 @@ namespace Kex.Controller.Popups
             ListItems = FileTypes;
         }
 
+        public override void Show()
+        {
+            base.Show();
+            Text = ListerManager.Instance.ListerViewManager.CurrentListerView.Lister.Filter;
+            Input.TextBox.CaretIndex = Text.Length;
+        }
+
         public override void Hide()
         {
             base.Hide();
@@ -53,24 +60,11 @@ namespace Kex.Controller.Popups
         {
             get
             {
-                //var types = ListerManager.Instance.ListerViewManager.CurrentListerView.Lister.Items.Cast<FileItem>()
-                //    .Select(fi => fi.Properties.ShellObject.Properties.System.FileExtension.Value)
-                //    .Where(ext => !string.IsNullOrEmpty(ext))
-                //    .Distinct().Select(t => new StringPopupItem(t));
-                //return types;
-
-                var items = new List<StringPopupItem>();
-                foreach (var item in ListerManager.Instance.ListerViewManager.CurrentListerView.Lister.Items)
-                {
-                    var index = item.Name.IndexOf(".");
-                    if(index > -1)
-                    {
-                        var extension = item.Name.Substring(index);
-                        if (!items.Any(i => i.DisplayName == extension))
-                            items.Add(new StringPopupItem(extension));
-                    }
-                }
-                return items;
+                var types = ListerManager.Instance.ListerViewManager.CurrentListerView.Lister.Items.Cast<FileItem>()
+                    .Select(fi => fi.Properties.ShellObject.Properties.System.FileExtension.Value)
+                    .Where(ext => !string.IsNullOrEmpty(ext))
+                    .Distinct().Select(t => new StringPopupItem(t));
+                return types;
             }
         }
     }

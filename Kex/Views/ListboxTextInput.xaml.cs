@@ -34,16 +34,7 @@ namespace Kex.Views
             var typeFace = new Typeface(Options.FontFamily.ToString());
             var ft = new FormattedText(" ", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeFace, Options.FontSize, Brushes.Black);
             input.Height = ft.Height+6;
-            Loaded += new RoutedEventHandler(ListboxTextInput_Loaded);
-        }
-
-        void ListboxTextInput_Loaded(object sender, RoutedEventArgs e)
-        {
-            var currentListerView = ListerManager.Instance.ListerViewManager.CurrentListerView;
-            popup.Placement = PlacementMode.Right;
-            popup.Height = currentListerView.ActualHeight;
-            //popup.HorizontalOffset = currentListerView.ActualWidth;
-            popup.PlacementTarget = currentListerView;
+            Loaded += (o,e) => SetPosition();
         }
 
         void popup_Closed(object sender, EventArgs e)
@@ -73,14 +64,6 @@ namespace Kex.Views
         public void Show()
         {
             popup.IsOpen = true;
-            var currentListerView = ListerManager.Instance.ListerViewManager.CurrentListerView;
-            popup.Placement = PlacementMode.Right;
-            popup.Height = currentListerView.ActualHeight;
-            popup.HorizontalOffset = currentListerView.ActualWidth;
-            popup.PlacementTarget = currentListerView;
-            //popup.Placement = PlacementMode.Relative;
-            //popup.HorizontalOffset = (currentListerView.ActualWidth - popup.Child.RenderSize.Width) / 2;
-            //popup.VerticalOffset = (currentListerView.ActualHeight - popup.Child.RenderSize.Height) / 2;
 
         }
 
@@ -99,9 +82,10 @@ namespace Kex.Views
         {
             var currentListerView = ListerManager.Instance.ListerViewManager.CurrentListerView;
             popup.Placement = PlacementMode.Right;
-            popup.Height = currentListerView.ActualHeight;
-            //popup.HorizontalOffset = currentListerView.ActualWidth;
+            popup.MaxHeight = currentListerView.ActualHeight;
+            popup.HorizontalOffset = currentListerView.ActualWidth;
             popup.PlacementTarget = currentListerView;
+            popup.VerticalOffset = 0;
         }
     }
 }

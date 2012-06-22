@@ -21,6 +21,7 @@ using Microsoft.WindowsAPICodePack.Shell;
 using Application = System.Windows.Application;
 using ListViewItem = System.Windows.Controls.ListViewItem;
 using MessageBox = System.Windows.MessageBox;
+using TabControl = System.Windows.Controls.TabControl;
 
 namespace Kex.Controller
 {
@@ -91,7 +92,44 @@ namespace Kex.Controller
                 case "addtofavorites":
                     AddToFavorites();
                     break;
+                case "opencommandprompt":
+                    OpenCommandPrompt();
+                    break;
+                case "windowcloseallbutthis":
+                    WindowCloseAllButThis();
+                    break;
             }
+        }
+
+        private void WindowCloseAllButThis()
+        {
+            var tabControl = Utils.TryFindParent<TabControl>(CurrentView);
+            var items = tabControl.Items.OfType<TabItem>().ToArray();
+            foreach(var tabItem in items)
+            {
+                if (tabItem.Content != CurrentView)
+                {
+                   tabControl.Items.Remove(tabItem); 
+                }
+            }
+        }
+
+        private void OpenCommandPrompt()
+        {
+            var current = CurrentItem;
+            string path;
+            if (current.ItemType == ItemType.Container)
+            {
+                path = current.FullPath;
+            }
+            else
+            {
+                path = new FileInfo(current.FullPath).Directory.FullName;
+            }
+            var psi = new ProcessStartInfo("cmd");
+            psi.WorkingDirectory = path;
+            var p = new Process() {StartInfo = psi};
+            p.Start();
         }
 
         private void AddToFavorites()
@@ -364,6 +402,7 @@ namespace Kex.Controller
         {
             if (filter == null && CurrentView.View.Items.Filter == null)
                 return;
+
             if (filter == null)
             {
                 CurrentView.Lister.Filter = null;
@@ -373,7 +412,11 @@ namespace Kex.Controller
             else
             {
                 CurrentView.Lister.Filter = filter;
-                CurrentView.View.Items.Filter = delegate(object item) { return ((IItem) item).Name.ToLower().Contains(filter.ToLower()); };
+                CurrentView.View.Items.Filter = delegate(object item)
+                {
+                    //TODO gscheit mocha
+                    return new ItemFilter(new[] {((IItem) item)}, filter).Any();
+                };
             }
         }
 

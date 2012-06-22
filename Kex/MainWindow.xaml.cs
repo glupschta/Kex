@@ -59,5 +59,12 @@ namespace Kex
                 main.DebugBox.Text = text+Environment.NewLine+main.DebugBox.Text; 
         }
 
+        public static void ClearDebug()
+        {
+            var main = ((MainWindow)App.Current.MainWindow);
+            if (main.DebugBox.ActualHeight == 0) return;
+            main.DebugBox.Clear();
+        }
+
     }
 }

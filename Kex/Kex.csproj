@@ -164,6 +164,7 @@
     <Compile Include="Common\Options.cs" />
     <Compile Include="Common\StringPopupItem.cs" />
     <Compile Include="Common\SymbolicLink.cs" />
+    <Compile Include="Common\Utils.cs" />
     <Compile Include="Controller\Commands\BaseCommand.cs" />
     <Compile Include="Controller\Commands\MoveCursorDownCommand.cs" />
     <Compile Include="Controller\Commands\MoveCursorUpCommand.cs" />
@@ -189,6 +190,7 @@
     <Compile Include="Controller\Popups\ViewPopup.cs" />
     <Compile Include="Controller\TabbedListerViewManager.cs" />
     <Compile Include="Controller\ViewHandler.cs" />
+    <Compile Include="Model\Column.cs" />
     <Compile Include="Model\FileProperties.cs" />
     <Compile Include="Model\FileItem.cs" />
     <Compile Include="Model\IColumnProvider.cs" />
@@ -340,10 +342,9 @@
   <ItemGroup>
     <Content Include="References\Binarymission.WPF.Controls.BinaryVirtualizingWrapPanel.DLL" />
     <Content Include="References\Binarymission.WPF.Data.DataExtensions.dll" />
-    <Content Include="References\DotNetZip\Debug\Ionic.Zip.Reduced.dll" />
-    <Content Include="References\DotNetZip\Debug\Ionic.Zip.Reduced.pdb" />
-    <Resource Include="References\DotNetZip\Debug\Ionic.Zip.Reduced.XML" />
-    <Content Include="References\DotNetZip\Release\Ionic.Zip.Reduced.dll" />
+    <Content Include="References\DotNetZip\Deb\Ionic.Zip.Reduced.dll" />
+    <Resource Include="References\DotNetZip\Deb\Ionic.Zip.Reduced.XML" />
+    <Content Include="References\DotNetZip\Rel\Ionic.Zip.Reduced.dll" />
     <Content Include="References\GongShell.dll" />
     <Content Include="References\Interop.Shell32.dll" />
     <Content Include="References\Microsoft.WindowsAPICodePack.dll" />

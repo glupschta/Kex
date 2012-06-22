@@ -21,7 +21,7 @@
         </Grid.RowDefinitions>
         <ListView Grid.Row="0" Name="View"
                 Background="Transparent" BorderThickness="0" Focusable="False"
-                ItemsSource="{Binding Items}" PreviewKeyDown="ListViewKeyDown"
+                ItemsSource="{Binding Items}" KeyDown="ListViewKeyDown"
                 MouseUp="View_MouseUp" MouseDoubleClick="ViewMouseDoubleClick"
                 AllowDrop="True" SelectionMode="Extended" VirtualizingStackPanel.VirtualizationMode="Recycling"
                 >

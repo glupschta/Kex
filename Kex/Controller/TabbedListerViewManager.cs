@@ -146,7 +146,7 @@ namespace Kex.Controller
         public void ListerViewGotFocus(object sender, RoutedEventArgs e)
         {
             CurrentListerView = sender as ListerView;
-            TextInput.popup.PlacementTarget = CurrentListerView;
+            //TextInput.popup.PlacementTarget = CurrentListerView;
         }
 
         public void SetFocus(object sender, RoutedEventArgs args)
