@@ -54,32 +54,39 @@ namespace Kex.Views
 
         void doRename()
         {
-            var item = currentView.View.SelectedItem as FileItem;
-            if (item != null)
+            try {
+                var item = currentView.View.SelectedItem as FileItem;
+                if (item != null)
+                {
+                    if (item.ItemType == ItemType.Container)
+                    {
+                        var di = new DirectoryInfo(item.FullPath);
+                        var parent = di.Parent ?? di.Root;
+                        var dest = Path.Combine(parent.FullName, renameTextBox.Text);
+                        if (item.FullPath.Equals(dest, StringComparison.OrdinalIgnoreCase))
+                            return;
+                        di.MoveTo(dest);
+                        item.FullPath = dest;
+                    }
+                    else
+                    {
+                        var di = new FileInfo(item.FullPath);
+                        var parent = di.Directory;
+                        var dest = Path.Combine(parent.FullName, renameTextBox.Text);
+                        if (item.FullPath.Equals(dest, StringComparison.OrdinalIgnoreCase))
+                            return;
+                        di.MoveTo(dest);
+                        item.FullPath = dest;
+                    }
+                    item.Name = renameTextBox.Text;
+                    item.OnNotifyPropertyChanged("Name");
+                    item.OnNotifyPropertyChanged("FullPath");
+
+                }
+            }
+            catch (Exception ex)
             {
-                if (item.ItemType == ItemType.Container)
-                {
-                    var di = new DirectoryInfo(item.FullPath);
-                    var parent = di.Parent ?? di.Root;
-                    var dest = Path.Combine(parent.FullName, renameTextBox.Text);
-                    if (item.FullPath.Equals(dest, StringComparison.OrdinalIgnoreCase))
-                        return;
-                    di.MoveTo(dest);
-                    item.FullPath = dest;
-                }
-                else
-                {
-                    var di = new FileInfo(item.FullPath);
-                    var parent = di.Directory;
-                    var dest = Path.Combine(parent.FullName, renameTextBox.Text);
-                    if (item.FullPath.Equals(dest, StringComparison.OrdinalIgnoreCase))
-                        return;
-                    di.MoveTo(dest);
-                    item.FullPath = dest;
-                }
-                item.Name = renameTextBox.Text;
-                item.OnNotifyPropertyChanged("Name");
-                item.OnNotifyPropertyChanged("FullPath");
+                ErrorHandler.ShowError(ex);
             }
         }
 

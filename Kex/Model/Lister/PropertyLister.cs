@@ -1,0 +1,72 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Kex.Model.Lister
+{
+    public class PropertyLister : BaseLister
+    {
+        private readonly FileItem FileItem;
+
+        public PropertyLister(FileItem fileItem) : base()
+        {
+            FileItem = fileItem;
+        }
+
+        public override void SelectionChanged(System.Windows.Controls.ListView view, System.Windows.Controls.SelectionChangedEventArgs selectionChangedEventArgs){
+        
+        }
+
+        public override void Refresh()
+        {
+            var items = new List<PropertyItem>();
+
+            if (FileItem != null && FileItem.FullPath.ToLower().EndsWith(".dll"))
+            {
+                try
+                {
+                    var container = new PropertyItem("Cecil", "", ItemType.Container);
+                    var a = Mono.Cecil.AssemblyDefinition.ReadAssembly(FileItem.FullPath);
+                    container.Childs.AddRange(a.MainModule.AssemblyReferences.Select(ar => new PropertyItem("Reference", ar.FullName, ItemType.Executable)));
+                    items.Add(container);
+                }
+                catch { }
+            }
+
+            items.AddRange(FileItem.ShellObject.Properties.DefaultPropertyCollection
+                .Where(pc => pc.Description != null && pc.Description.DisplayName != null && pc.ValueAsObject != null)
+                .Select(pc => new PropertyItem(pc.Description.DisplayName, pc.ValueAsObject.ToString(), ItemType.Executable)));
+
+            Items = items;
+        }
+
+        public override string XamlView
+        {
+            get { return null; }
+        }
+
+        public override void DoAction(object obj)
+        {
+            var pi = obj as PropertyItem;
+            if (pi == null) return;
+
+            if (pi.ItemType == ItemType.Container)
+                Items = pi.Childs;
+        }
+
+        private IEnumerable<Column> columns;
+        public override IEnumerable<Column> Columns
+        {
+            get
+            {
+                return columns ?? (columns = new[]
+                                                   {
+                                                       new Column("Name", "Name"), 
+                                                       new Column("Value", "Value")
+                                                   });
+            }
+        }
+    }
+
+}

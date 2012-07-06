@@ -4,10 +4,12 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Packaging;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Kex.Model;
 using Microsoft.WindowsAPICodePack.Net;
 using Microsoft.WindowsAPICodePack.Shell;
+using Mono.Cecil;
 
 namespace TestConsole
 {
@@ -15,10 +17,25 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
-            testZip();
+            //testZip();
             //var l = Directory.EnumerateFiles(@"c:/documents and settings");
-            TestWatcher();
+            //TestWatcher();
+            testManifest();
             Console.ReadLine();
+        }
+
+        private static void testManifest()
+        {
+            var asmPath = @"C:\tfs\MH\Source\noe.MH.Forms\bin\noe.core.web.dll";
+            var a = Mono.Cecil.AssemblyDefinition.ReadAssembly(asmPath);
+
+            Console.WriteLine(a.FullName);
+            foreach(var ar in a.MainModule.AssemblyReferences)
+            {
+                Console.WriteLine(ar.FullName);
+            }
+            
+
         }
 
         private static void testZip()

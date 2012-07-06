@@ -12,8 +12,7 @@ namespace Kex.Controller.Popups
     {
         public SortPopup(IPopupInput input) : base(input)
         {
-            _allColumns = ListerManager.Instance.ListerViewManager.CurrentListerView.Lister
-                .ItemProvider.Columns.ToDictionary(c => c.Header, c => c.BindingExpression);
+            _allColumns = ListerManager.Instance.ListerViewManager.CurrentListerView.Lister.Columns.ToDictionary(c => c.Header, c => c.BindingExpression);
             _allKeys = _allColumns.Select(s => new StringPopupItem(s.Key));
             ListItems = _allKeys;
         }

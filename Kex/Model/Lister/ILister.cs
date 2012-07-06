@@ -3,11 +3,10 @@ using System.ComponentModel;
 using System.Windows.Controls;
 using Kex.Common;
 using Kex.Model.ItemProvider;
-using Kex.Model;
 
-namespace Kex.Model
+namespace Kex.Model.Lister
 {
-    public interface ILister : INotifyPropertyChanged
+    public interface ILister : INotifyPropertyChanged, IColumnProvider
     {
         BrowsingHistory NavigationHistory { get; set; }
         IEnumerable<IItem> Items { get; set; }
@@ -18,17 +17,21 @@ namespace Kex.Model
         int SelectionCount { get; set; }
         long SelectionSize { get; set; }
         IEnumerable<IItem> Selection { get; set; }
+        ListView ListView { get; set; }
+        string XamlView { get; }
 
         HistoryItem HistoryBack();
         HistoryItem HistoryForward();
         string ContainerUp();
 
         void OnPropertyChanged(string property);
+        void DoAction(object item);
+        void SelectionChanged(ListView view, SelectionChangedEventArgs selectionChangedEventArgs);
     }
 
     public interface ILister<T> : ILister
+        where T : IItem
     {
         IItemProvider<T> ItemProvider { get; set; }
-        void SelectionChanged(ListView view, SelectionChangedEventArgs selectionChangedEventArgs);
     }
 }

@@ -2,11 +2,9 @@
 
 namespace Kex.Model.ItemProvider
 {
-    public interface IItemProvider<T> : IColumnProvider
+    public interface IItemProvider<T> 
+        where T : IItem
     {
-        string CurrentContainer { get; set; }
-        void DoAction(IItem item);
-        IEnumerable<IItem<T>> GetItems();
-        T FetchDetails(IItem<T> item);
+        IEnumerable<T> GetItems(string container);
     }
 }

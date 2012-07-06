@@ -144,7 +144,6 @@ namespace Kex.Common
                     else
                         ListerManager.Instance.ListerViewManager.CycleListers(1);
                     break;
-                    break;
                 case Key.Oem3:
                     if (shift)
                         ListerManager.Instance.ListerViewManager.CloseCurrentLister();

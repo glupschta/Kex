@@ -7,13 +7,15 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Forms;
+using System.Windows.Data;
 using System.Windows.Input;
 using Kex.Common;
 using Kex.Model;
 using Kex.Model.ItemProvider;
 using Kex.Model;
+using Kex.Model.Lister;
 using Kex.Views;
+using ListView = System.Windows.Controls.ListView;
 using ListViewItem = System.Windows.Controls.ListViewItem;
 using TabControl = System.Windows.Controls.TabControl;
 
@@ -29,24 +31,50 @@ namespace Kex.Controller
 
         public ListerView CurrentListerView { get; set; }
 
-        public void OpenLister(string directory)
+        public void OpenLister(string container)
         {
-            var itemProvider = new FilesystemItemProvider(directory);
-            var lister = new FileLister() { ItemProvider = itemProvider };
-            var listerView = new ListerView { Lister = lister, DataContext = lister };
+            var lister = new FileLister();
+            OpenLister(container, lister);
+        }
 
+        public void OpenLister(string container, ILister lister)
+        {
+            lister.CurrentDirectory = container;
+            var listerView = new ListerView { Lister = lister, DataContext = lister };
+            lister.ListView = listerView.View;
             var newTab = new TabItem();
-            newTab.Header = directory;
+            newTab.Header = container;
             newTab.Content = listerView;
             _tabControl.Items.Add(newTab);
 
             CurrentListerView = listerView;
-            SetView("fullView");
+
+            if (lister.XamlView == null)
+                setGridViewColumns(listerView.View, lister);
+            else
+                SetView(lister.XamlView);
 
             listerView.GotFocus += ListerViewGotFocus;
             listerView.View.Loaded += SetFocus;
             listerView.Lister.PropertyChanged += ListerPropertyChanged;
             _tabControl.SelectedItem = newTab;
+        }
+
+        private void setGridViewColumns(ListView listView, ILister lister)
+        {
+            GridView myGridView = new GridView();
+            myGridView.AllowsColumnReorder = true;
+
+            foreach (var col in lister.Columns)
+            {
+                GridViewColumn gc = new GridViewColumn();
+                gc.DisplayMemberBinding = new Binding(col.BindingExpression);
+                gc.Header = col.Header;
+                gc.Width = double.NaN;
+                myGridView.Columns.Add(gc);
+            }
+
+            listView.View = myGridView;
         }
 
         public void CloseCurrentLister()
