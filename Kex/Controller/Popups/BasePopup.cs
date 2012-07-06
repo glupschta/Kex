@@ -64,6 +64,7 @@ namespace Kex.Controller.Popups
         public virtual void Hide()
         {
             Input.Hide();
+            ListerManager.Instance.CommandManager.FocusView();
         }
 
         protected virtual void RegisterHandlers()

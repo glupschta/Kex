@@ -30,22 +30,13 @@ namespace Kex.Controller
             _listerView.View.View = xamlView;
 
             string itemTemplateName;
-            var fileItemProvider = _listerView.Lister.ItemProvider as FilesystemItemProvider;
             if (view == "fullView")
             {
                 itemTemplateName = "gridVirtualizing";
-                if (fileItemProvider != null)
-                {
-                    fileItemProvider.ThumbnailFormatOption = ShellThumbnailFormatOption.IconOnly;
-                }
             }
             else
             {
                 itemTemplateName = "tileVirtualizing";
-                if (fileItemProvider != null)
-                {
-                    fileItemProvider.ThumbnailFormatOption = ShellThumbnailFormatOption.Default;
-                }
             }
 
             var itemsPanel = (ItemsPanelTemplate)_listerView.FindResource(itemTemplateName);

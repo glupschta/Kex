@@ -12,7 +12,7 @@ namespace Kex.Controller.Popups
     {
         public FilterPopup(IPopupInput input) : base(input)
         {
-            ListItems = FileTypes;
+            //ListItems = FileTypes;
         }
 
         public override void Show()
@@ -43,7 +43,7 @@ namespace Kex.Controller.Popups
         {
             Input.ListBox.SelectedIndex = -1;
             ListerManager.Instance.CommandManager.SetFilter(Text);
-            ApplyListDefaultFilter(FileTypes);
+            //ApplyListDefaultFilter(FileTypes);
         }
 
         protected override void HandleSelection()

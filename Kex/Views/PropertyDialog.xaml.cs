@@ -25,6 +25,14 @@ namespace Kex.Views
             InitializeComponent();
             KeyDown += PropertyDialog_KeyDown;
             OkButton.Click += OkButton_Click;
+            this.Loaded += new RoutedEventHandler(PropertyDialog_Loaded);
+        }
+
+        void PropertyDialog_Loaded(object sender, RoutedEventArgs e)
+        {
+            PropertyList.SelectedIndex = 0;
+            this.PropertyList.Focus();  
+            Keyboard.Focus(PropertyList.ItemContainerGenerator.ContainerFromItem(PropertyList.SelectedItem) as IInputElement);
         }
 
         void OkButton_Click(object sender, RoutedEventArgs e)
@@ -53,13 +61,35 @@ namespace Kex.Views
 
         public void Show(FileItem fi)
         {
-            var items = fi.ShellObject.Properties.DefaultPropertyCollection;
+            var items = new List<PropertyItem>();
+            items.AddRange(fi.ShellObject.Properties.DefaultPropertyCollection
+                .Where(pc => pc.CanonicalName != null && pc.ValueAsObject != null)
+                .Select(pc => new PropertyItem(pc.Description.DisplayName, pc.ValueAsObject.ToString())));
+
+            if (fi.FullPath.ToLower().EndsWith(".dll"))
+            {
+                try
+                {
+                    items.Add(new PropertyItem("References", ""));
+                    var a = Mono.Cecil.AssemblyDefinition.ReadAssembly(fi.FullPath);
+                    items.AddRange(a.MainModule.AssemblyReferences.Select(ar => new PropertyItem("", ar.FullName)));
+                } catch {}
+            }
             PropertyList.ItemsSource = items;
             Title = fi.Name + " " + "Properties";
-            PropertyList.SelectedIndex = 0;
-            this.PropertyList.Focus();            
-            Keyboard.Focus(PropertyList.ItemContainerGenerator.ContainerFromItem(PropertyList.SelectedItem) as IInputElement);
+                
             ShowDialog();
         }
+    }
+
+    public class PropertyItem
+    {
+        public PropertyItem (string key, string value)
+        {
+            Key = key;
+            Value = value;
+        }
+        public string Key { get; set; }
+        public string Value { get; set; }
     }
 }

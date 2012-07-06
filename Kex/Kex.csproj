@@ -128,6 +128,9 @@
     <Reference Include="Microsoft.WindowsAPICodePack.Shell">
       <HintPath>..\References\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>References\Cecil\Mono.Cecil.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -153,6 +156,7 @@
     </ApplicationDefinition>
     <Compile Include="Common\BrowsingHistory.cs" />
     <Compile Include="Common\CommandKeyHandler.cs" />
+    <Compile Include="Common\ErrorHandler.cs" />
     <Compile Include="Common\FileAction.cs" />
     <Compile Include="Common\Formatter.cs" />
     <Compile Include="Common\IListerViewManager.cs" />
@@ -190,21 +194,25 @@
     <Compile Include="Controller\Popups\ViewPopup.cs" />
     <Compile Include="Controller\TabbedListerViewManager.cs" />
     <Compile Include="Controller\ViewHandler.cs" />
+    <Compile Include="Model\Lister\BaseLister.cs" />
     <Compile Include="Model\Column.cs" />
     <Compile Include="Model\FileProperties.cs" />
     <Compile Include="Model\FileItem.cs" />
     <Compile Include="Model\IColumnProvider.cs" />
+    <Compile Include="Model\IItemActions.cs" />
     <Compile Include="Model\ItemProvider\AsyncFilesystemItemProvider.cs" />
-    <Compile Include="Model\ItemProvider\ZipItemProvider.cs" />
+    <Compile Include="Model\Lister\PropertyLister.cs" />
+    <Compile Include="Model\PropertyItem.cs" />
+    <Compile Include="Model\Zip\ZipItemProvider.cs" />
     <Compile Include="Model\ItemType.cs" />
-    <Compile Include="Model\FileLister.cs" />
+    <Compile Include="Model\Lister\FileLister.cs" />
     <Compile Include="Common\MatchMode.cs" />
     <Compile Include="Common\PathResolver.cs" />
     <Compile Include="Common\ShellContextMenu1.cs" />
     <Compile Include="Model\NetworkBrowser.cs" />
     <Compile Include="Model\NetWorkShare.cs" />
-    <Compile Include="Model\ZipItem.cs" />
-    <Compile Include="Model\ZipLister.cs" />
+    <Compile Include="Model\Zip\ZipItem.cs" />
+    <Compile Include="Model\Zip\ZipLister.cs" />
     <Compile Include="Views\Converters\TabHeaderConverter.cs" />
     <Compile Include="Views\IPopupInput.cs" />
     <Compile Include="Views\ListboxTextInput.xaml.cs">
@@ -240,7 +248,7 @@
     <Compile Include="Views\Converters\ThumbNailConverter.cs" />
     <Compile Include="Model\IItem.cs" />
     <Compile Include="Model\ItemProvider\IItemProvider.cs" />
-    <Compile Include="Model\ILister.cs" />
+    <Compile Include="Model\Lister\ILister.cs" />
     <Compile Include="Model\ItemProvider\FilesystemItemProvider.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

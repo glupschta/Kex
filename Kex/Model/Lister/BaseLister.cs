@@ -4,48 +4,42 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Data;
 using Kex.Common;
-using Kex.Model.ItemProvider;
+using Kex.Controller;
 
-namespace Kex.Model
+namespace Kex.Model.Lister
 {
-    public class FileLister : ILister<FileProperties>
+    public abstract class BaseLister : ILister
     {
-        public FileLister()
+        protected BaseLister()
         {
             NavigationHistory = new BrowsingHistory();
         }
 
-        public FileLister(ILister lister)
+
+        public abstract string XamlView { get;  }
+        public ListView ListView { get; set; }
+
+
+        protected BaseLister(ILister lister)
         {
             NavigationHistory = lister.NavigationHistory;
-            ItemProvider = new FilesystemItemProvider();
         }
 
-        public FileLister(ILister lister, string directory)
+        protected BaseLister(ILister lister, string directory)
         {
             NavigationHistory = lister.NavigationHistory;
-            ItemProvider = new FilesystemItemProvider(directory);
+            CurrentDirectory = directory;
         }
 
         public BrowsingHistory NavigationHistory { get; set; }
 
-        protected IItemProvider<FileProperties> _itemProvider;
-        public IItemProvider<FileProperties> ItemProvider
-        {
-            get { return _itemProvider; }
-            set { 
-                _itemProvider = value;
-                CurrentDirectory = _itemProvider.CurrentContainer;
-                OnPropertyChanged("ItemProvider");
-            }
-        }
-
-        public void SelectionChanged(ListView view, SelectionChangedEventArgs selectionChangedEventArgs)
+        public virtual void SelectionChanged(ListView view, SelectionChangedEventArgs selectionChangedEventArgs)
         {
             Selection = view.SelectedItems.OfType<FileItem>().ToList();
             SelectionCount = view.SelectedItems.Count;
-            SelectionSize = view.SelectedItems.OfType<FileItem>().Sum(i => i.Properties.Length);
+            SelectionSize = view.SelectedItems.Cast<FileItem>().Sum(i => i.Properties.Length);
         }
 
         public virtual string CurrentDirectory
@@ -54,7 +48,6 @@ namespace Kex.Model
             set
             {
                 _currentDirectory = value;
-                _itemProvider = new FilesystemItemProvider(value);
                 Refresh();
                 NavigationHistory.Push(value);
             }
@@ -105,10 +98,7 @@ namespace Kex.Model
             }
         }
 
-        public void Refresh()
-        {
-            Items = ItemProvider.GetItems();
-        }
+        public abstract void Refresh();
 
         public string ContainerUp()
         {
@@ -146,10 +136,14 @@ namespace Kex.Model
             }
         }
 
+        public abstract void DoAction(object obj);
+
         protected string _currentDirectory;
         private string _filter;
         private int _selectionCount;
         private long _selectionSize;
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public abstract IEnumerable<Column> Columns { get; }
     }
 }

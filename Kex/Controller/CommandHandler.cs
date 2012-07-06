@@ -16,6 +16,8 @@ using Kex.Controller.Popups;
 using Kex.Model;
 using Kex.Model;
 using Kex.Model.ItemProvider;
+using Kex.Model.Lister;
+using Kex.Model.Zip;
 using Kex.Views;
 using Microsoft.WindowsAPICodePack.Shell;
 using Application = System.Windows.Application;
@@ -47,6 +49,9 @@ namespace Kex.Controller
             }
             set
             {
+                var it = CurrentView.View.SelectedItem as IItem;
+                if (value != null && it != null && it.FullPath == value.FullPath) return;
+
                 CurrentView.View.SelectedItem = value;
                 SetFocusToItem(value);
             }
@@ -116,18 +121,9 @@ namespace Kex.Controller
 
         private void OpenCommandPrompt()
         {
-            var current = CurrentItem;
-            string path;
-            if (current.ItemType == ItemType.Container)
-            {
-                path = current.FullPath;
-            }
-            else
-            {
-                path = new FileInfo(current.FullPath).Directory.FullName;
-            }
+            var curDir = this._ListerViewManager.CurrentListerView.Lister.CurrentDirectory;
             var psi = new ProcessStartInfo("cmd");
-            psi.WorkingDirectory = path;
+            psi.WorkingDirectory = curDir;
             var p = new Process() {StartInfo = psi};
             p.Start();
         }
@@ -239,14 +235,13 @@ namespace Kex.Controller
             {
                 if (item.FullPath.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
                 {
-                    var zipItemProvider = new ZipItemProvider(item.FullPath);
-                    var lister = new ZipLister(CurrentView.Lister) {ItemProvider = zipItemProvider};
-                    CurrentView.Lister = lister;
-                    CurrentView.DataContext = lister;
+                    var lister = new ZipLister(CurrentView.Lister, item.FullPath);
+                    ListerManager.Instance.ListerViewManager.OpenLister(item.FullPath, lister);
+                    ListerManager.Instance.CommandManager.FocusView();
                 }
                 else
                 {
-                    CurrentView.Lister.ItemProvider.DoAction(item);
+                    CurrentView.Lister.DoAction(item);
                 }
             }
             catch (Exception ex)
@@ -321,6 +316,7 @@ namespace Kex.Controller
         public void FocusView()
         {
             CurrentItem = CurrentView.View.SelectedItem as IItem;
+            SetFocusToItem(CurrentItem);
         }
 
         public void SetView(string view)
@@ -477,6 +473,7 @@ namespace Kex.Controller
                 if (EnsureListerType(historyItem))
                 {
                     SetContainer(historyItem.FullPath);
+                    CurrentView.Lister.Items = CurrentView.Lister.Items.ToList();  //historyback select last item
                     CurrentItem = CurrentView.Lister.Items.FirstOrDefault(i => i.FullPath == historyItem.SelectedPath);
                 }
             }
@@ -498,7 +495,7 @@ namespace Kex.Controller
                 var lister = historyItem.ListerType
                     .GetConstructor(new [] { typeof(ILister), typeof(string) })
                     .Invoke(new object[] {baseLister, historyItem.FullPath });
-                CurrentView.Lister = lister as ILister<FileProperties>;
+                CurrentView.Lister = lister as ILister<IItem>;
                 return false;
             }
             return true;
@@ -580,7 +577,7 @@ namespace Kex.Controller
         {
             string lastPath = FileAction.Paste(CurrentView.Lister.CurrentDirectory);
             CurrentView.Lister.Refresh();
-            CurrentItem = CurrentView.Lister.Items.SingleOrDefault(i => i.FullPath == lastPath);
+            CurrentItem = CurrentView.Lister.Items.SingleOrDefault(i => i.FullPath.ToLower() == lastPath.ToLower());
         }
 
         public void Delete()
@@ -614,8 +611,10 @@ namespace Kex.Controller
 
         public void ShowProperties()
         {
-            var dialog = new PropertyDialog();
-            dialog.Show(CurrentItem as FileItem);
+            //var dialog = new PropertyDialog();
+            //dialog.Show(CurrentItem as FileItem);
+            var propertyLister = new PropertyLister(CurrentItem as FileItem);
+            ListerManager.Instance.ListerViewManager.OpenLister(CurrentItem.FullPath, propertyLister );
         }
 
         public void ShowContextMenu()

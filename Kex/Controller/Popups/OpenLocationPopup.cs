@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Kex.Common;
 using Kex.Model;
+using Kex.Model.ItemProvider;
 using Kex.Views;
 
 namespace Kex.Controller.Popups
@@ -40,7 +41,7 @@ namespace Kex.Controller.Popups
             if (File.Exists(SelectedLocation))
             {
                 SelectedLocation = new FileInfo(SelectedLocation).FullName;
-                FileItem fi = new FileItem(SelectedLocation, ItemType.Executable, ListerManager.Instance.ListerViewManager.CurrentListerView.Lister.ItemProvider);
+                FileItem fi = new FileItem(SelectedLocation, ItemType.Executable, null);// ListerManager.Instance.ListerViewManager.CurrentListerView.Lister.ItemProvider as FilesystemItemProvider);
                 ListerManager.Instance.CommandManager.DoDefaultAction();
             }
             else if (Directory.Exists(SelectedLocation))

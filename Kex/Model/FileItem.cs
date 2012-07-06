@@ -10,11 +10,11 @@ using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Kex.Model
 {
-    public class FileItem : IItem<FileProperties>, IDisposable
+    public class FileItem : IItem, IDisposable
     {
-        private readonly IItemProvider<FileProperties> _itemProvider;
+        private readonly FilesystemItemProvider _itemProvider;
 
-        public FileItem(string fullPath, ItemType type, IItemProvider<FileProperties> provider)
+        public FileItem(string fullPath, ItemType type, FilesystemItemProvider provider)
         { 
             FullPath = fullPath;  
             ItemType = type;
@@ -38,14 +38,20 @@ namespace Kex.Model
         public ShellObject ShellObject { get { return Properties == null ? null : Properties.ShellObject; } }
         public BitmapSource Thumbnail { get { return Properties == null ? null : Properties.Thumbnail; } } 
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnNotifyPropertyChanged(string property)
+        public void FetchDetails()
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
-            }
-        }
+            var props = new FileProperties();
+            props.ShellObject = ShellObject.FromParsingName(FullPath);
+            props.Length = (long)(props.ShellObject.Properties.System.Size.Value ?? 0);
+            props.Created = props.ShellObject.Properties.System.DateCreated.Value;
+            props.LastModified = props.ShellObject.Properties.System.DateCreated.Value;
+
+            props.ShellObject.Thumbnail.FormatOption = ShellThumbnailFormatOption.Default;
+            props.ShellObject.Thumbnail.RetrievalOption = ShellThumbnailRetrievalOption.Default;
+            props.Thumbnail = props.ShellObject.Thumbnail.MediumBitmapSource;
+            //props.Thumbnail.Freeze();
+            Properties = props;
+        } 
 
         private FileProperties _properties;
         public FileProperties Properties
@@ -53,7 +59,7 @@ namespace Kex.Model
             get
             {
                 if (_properties == null)
-                    _itemProvider.FetchDetails(this);
+                    FetchDetails();
                 return _properties;
             }
             set { _properties = value; }
@@ -61,12 +67,16 @@ namespace Kex.Model
 
         public void PropertiesChanged()
         {
-            //OnNotifyPropertyChanged("LastModified");
-            //OnNotifyPropertyChanged("Created");
-            //OnNotifyPropertyChanged("Length");
-            //OnNotifyPropertyChanged("ShellObject");
-            //OnNotifyPropertyChanged("Thumbnail");
             OnNotifyPropertyChanged("Properties");
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnNotifyPropertyChanged(string property)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(property));
+            }
         }
 
         public void Dispose()

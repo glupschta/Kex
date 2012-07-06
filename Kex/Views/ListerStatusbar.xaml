@@ -26,7 +26,7 @@
                 <TextBlock Text=" Item(s) Selected, Size: " />
                 <TextBlock Padding="2,0,0,0"  Text="{Binding SelectionSize, Converter={StaticResource lengthConverter}}"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Visibility="{Binding Filter, Converter={StaticResource nullToVisibility}}">
+            <StackPanel Orientation="Horizontal" Visibility="{Binding Filter, Converter={StaticResource nullToVisibility}}" Background="Azure">
                 <TextBlock Text=", Filter:" />
                 <TextBlock Padding="2,0,0,0" Text="{Binding Filter}" />
             </StackPanel>

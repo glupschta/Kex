@@ -12,6 +12,7 @@ using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Kex.Model.ItemProvider
 {
+    /*
     public class AsyncFilesystemItemProvider : IItemProvider<FileProperties>, IDisposable
     {
         public AsyncFilesystemItemProvider()
@@ -236,5 +237,5 @@ namespace Kex.Model.ItemProvider
 
         private IEnumerable<Column> _columns;
     }
-
+      */
 }

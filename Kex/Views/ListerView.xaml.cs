@@ -9,6 +9,7 @@ using System.Windows.Media;
 using Kex.Common;
 using Kex.Controller;
 using Kex.Model;
+using Kex.Model.Lister;
 
 namespace Kex.Views
 {
@@ -27,10 +28,17 @@ namespace Kex.Views
 
         void View_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Lister.SelectionChanged(this.View, e);
+            if (Lister != null)
+                Lister.SelectionChanged(View, e);
         }
 
-        public ILister<FileProperties> Lister { get;  set;}
+        public ILister Lister
+        {
+            get { return _lister; }
+            set { _lister = value; }
+        }
+
+
         protected DragDropHandler DragDropHandler { get; set; }
         public ViewHandler ViewHandler { get; protected set; }
 
@@ -41,7 +49,7 @@ namespace Kex.Views
 
         public static T TryFindParent<T>(DependencyObject current) where T : class
         {
-            DependencyObject parent = VisualTreeHelper.GetParent(current);
+            var parent = VisualTreeHelper.GetParent(current);
 
             if (parent == null) return null;
             if (parent is T) return parent as T;
@@ -74,6 +82,8 @@ namespace Kex.Views
                 e.Handled = true;
             }
         }
+
+        private ILister _lister;
 
 
     }

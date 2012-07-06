@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Kex.Controller;
 using Kex.Model;
 using Kex.Model.ItemProvider;
+using Kex.Model.Lister;
 
 namespace Kex.Common
 {
