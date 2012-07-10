@@ -46,7 +46,7 @@ namespace Kex.Model
             props.Created = props.ShellObject.Properties.System.DateCreated.Value;
             props.LastModified = props.ShellObject.Properties.System.DateCreated.Value;
 
-            props.ShellObject.Thumbnail.FormatOption = ShellThumbnailFormatOption.Default;
+            props.ShellObject.Thumbnail.FormatOption = ShellThumbnailFormatOption.IconOnly;
             props.ShellObject.Thumbnail.RetrievalOption = ShellThumbnailRetrievalOption.Default;
             props.Thumbnail = props.ShellObject.Thumbnail.MediumBitmapSource;
             //props.Thumbnail.Freeze();

@@ -54,11 +54,12 @@ namespace Kex.Controller.Popups
         {
             Input.Header = Name;
             Input.TextBox.Clear();
-            Input.Show();
-            Input.TextBox.Focus();
+
             RegisterHandlers();
             ListerManager.Instance.ListerViewManager.CurrentListerView.View.Background = new SolidColorBrush(Color.FromRgb(250, 250, 250));
             Input.SetPosition();
+            Input.Show();
+            Input.TextBox.Focus();
         }
 
         public virtual void Hide()

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Kex.Controller;
 
 namespace Kex.Model.Lister
 {
@@ -20,9 +21,10 @@ namespace Kex.Model.Lister
 
         public override void Refresh()
         {
+            if (FileItem == null) return;
             var items = new List<PropertyItem>();
 
-            if (FileItem != null && FileItem.FullPath.ToLower().EndsWith(".dll"))
+            if (FileItem.FullPath.ToLower().EndsWith(".dll") || FileItem.FullPath.EndsWith(".exe"))
             {
                 try
                 {
@@ -52,7 +54,13 @@ namespace Kex.Model.Lister
             if (pi == null) return;
 
             if (pi.ItemType == ItemType.Container)
+            {
                 Items = pi.Childs;
+                ListerManager.Instance.CommandManager.CurrentView.View.Items.SortDescriptions.Clear();
+                ListerManager.Instance.CommandManager.CurrentView.View.SelectedIndex = 0;
+                ListerManager.Instance.CommandManager.UpdateColumnWidth();
+                ListerManager.Instance.CommandManager.FocusView();
+            }
         }
 
         private IEnumerable<Column> columns;
