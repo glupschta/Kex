@@ -9,6 +9,7 @@ using System.Windows;
 using Kex.Common;
 using Kex.Controller;
 using Kex.Model;
+using Kex.Model.Item;
 using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Kex.Model.ItemProvider

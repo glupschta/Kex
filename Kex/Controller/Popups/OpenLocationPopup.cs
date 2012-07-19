@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Kex.Common;
 using Kex.Model;
+using Kex.Model.Item;
 using Kex.Model.ItemProvider;
 using Kex.Views;
 

@@ -6,6 +6,7 @@ using System.Windows;
 using Kex.Controller;
 using Kex.Model;
 using Kex.Model;
+using Kex.Model.Item;
 using Microsoft.VisualBasic.FileIO;
 
 namespace Kex.Common

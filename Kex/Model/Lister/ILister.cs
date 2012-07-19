@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Controls;
 using Kex.Common;
+using Kex.Model.Item;
 using Kex.Model.ItemProvider;
 
 namespace Kex.Model.Lister

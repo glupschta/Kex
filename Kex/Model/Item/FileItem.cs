@@ -1,14 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Media.Imaging;
-using Kex.Common;
-using Kex.Controller;
-using Kex.Model;
 using Kex.Model.ItemProvider;
-using Kex.Model;
 using Microsoft.WindowsAPICodePack.Shell;
 
-namespace Kex.Model
+namespace Kex.Model.Item
 {
     public class FileItem : IItem, IDisposable
     {

@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using Kex.Common;
 using Kex.Controller;
+using Kex.Model.Item;
 
 namespace Kex.Model.Lister
 {

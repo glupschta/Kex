@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Kex.Controller;
+using Kex.Model.Item;
 
 namespace Kex.Model.Lister
 {
@@ -29,11 +30,34 @@ namespace Kex.Model.Lister
                 try
                 {
                     var container = new PropertyItem("Cecil", "", ItemType.Container);
+                    var types = new PropertyItem("Types", "", ItemType.Container);
+                    var references = new PropertyItem("References", "", ItemType.Container);
+                    var ressources = new PropertyItem("Ressources", "", ItemType.Container);
                     var a = Mono.Cecil.AssemblyDefinition.ReadAssembly(FileItem.FullPath);
-                    container.Childs.AddRange(a.MainModule.AssemblyReferences.Select(ar => new PropertyItem("Reference", ar.FullName, ItemType.Executable)));
+
+                    container.Childs.Add(new PropertyItem("Name", a.MainModule.Assembly.FullName, ItemType.Executable));
+                    container.Childs.Add(new PropertyItem("Architecture", a.MainModule.Architecture.ToString(), ItemType.Executable));
+                    container.Childs.Add(new PropertyItem("Runtime", a.MainModule.Runtime.ToString(), ItemType.Executable));
+                    foreach(var attr in a.CustomAttributes)
+                    {
+                        if (attr.HasConstructorArguments && !string.IsNullOrEmpty(attr.ConstructorArguments.First().Value.ToString()))
+                        {
+                            container.Childs.Add(new PropertyItem(attr.AttributeType.Name,
+                                                                  attr.ConstructorArguments.First().Value.ToString(),
+                                                                  ItemType.Executable));
+                        }
+                    }
+                    container.Childs.Add(references);
+                    container.Childs.Add(types);
+                    container.Childs.Add(ressources);
+
+                    
+                    types.Childs.AddRange(a.MainModule.Types.Select(m => new PropertyItem("Type",m.FullName ,ItemType.Executable)));
+                    references.Childs.AddRange(a.MainModule.AssemblyReferences.Select(ar => new PropertyItem("Reference", ar.FullName, ItemType.Executable)));
+                    ressources.Childs.AddRange(a.MainModule.Resources.Select(ar => new PropertyItem("Ressource", ar.Name, ItemType.Executable)));
                     items.Add(container);
                 }
-                catch { }
+                catch (Exception ex){ MainWindow.Debug(ex); }
             }
 
             items.AddRange(FileItem.ShellObject.Properties.DefaultPropertyCollection

@@ -135,7 +135,6 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -194,15 +193,18 @@
     <Compile Include="Controller\Popups\ViewPopup.cs" />
     <Compile Include="Controller\TabbedListerViewManager.cs" />
     <Compile Include="Controller\ViewHandler.cs" />
+    <Compile Include="Model\Item\CecilItem.cs" />
     <Compile Include="Model\Lister\BaseLister.cs" />
     <Compile Include="Model\Column.cs" />
     <Compile Include="Model\FileProperties.cs" />
-    <Compile Include="Model\FileItem.cs" />
+    <Compile Include="Model\Item\FileItem.cs" />
     <Compile Include="Model\IColumnProvider.cs" />
     <Compile Include="Model\IItemActions.cs" />
     <Compile Include="Model\ItemProvider\AsyncFilesystemItemProvider.cs" />
     <Compile Include="Model\Lister\PropertyLister.cs" />
-    <Compile Include="Model\PropertyItem.cs" />
+    <Compile Include="Model\Lister\TextLister.cs" />
+    <Compile Include="Model\Item\PropertyItem.cs" />
+    <Compile Include="Model\Item\TextItem.cs" />
     <Compile Include="Model\Zip\ZipItemProvider.cs" />
     <Compile Include="Model\ItemType.cs" />
     <Compile Include="Model\Lister\FileLister.cs" />
@@ -246,7 +248,7 @@
     <Compile Include="Views\Converters\LengthConverter.cs" />
     <Compile Include="Views\Converters\StringNullOrEmptyToVisibilityConverter.cs" />
     <Compile Include="Views\Converters\ThumbNailConverter.cs" />
-    <Compile Include="Model\IItem.cs" />
+    <Compile Include="Model\Item\IItem.cs" />
     <Compile Include="Model\ItemProvider\IItemProvider.cs" />
     <Compile Include="Model\Lister\ILister.cs" />
     <Compile Include="Model\ItemProvider\FilesystemItemProvider.cs" />
@@ -361,6 +363,7 @@
     <Content Include="References\Microsoft.WindowsAPICodePack.Shell.dll" />
     <Content Include="References\Microsoft.WindowsAPICodePack.ShellExtensions.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,11 +1,7 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows.Media.Imaging;
+﻿using System.ComponentModel;
 using Kex.Common;
-using Kex.Model;
-using Microsoft.WindowsAPICodePack.Shell;
 
-namespace Kex.Model
+namespace Kex.Model.Item
 {
     public interface IItem : INotifyPropertyChanged, IPopupItem
     {

@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Input;
 using Kex.Common;
 using Kex.Model;
+using Kex.Model.Item;
 using Kex.Views;
 
 namespace Kex.Controller.Popups

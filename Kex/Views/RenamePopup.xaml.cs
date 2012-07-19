@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using Kex.Common;
 using Kex.Controller;
 using Kex.Model;
+using Kex.Model.Item;
 using Path = System.IO.Path;
 
 namespace Kex.Views
