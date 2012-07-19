@@ -49,7 +49,7 @@ namespace Kex.Model.ItemProvider
                 itemsFound = true;
                 yield return item;
             }
-
+             
             foreach (var item in
                 Directory.EnumerateFiles(container)
                 .Select(fi => GetItem(fi, ItemType.Executable))
