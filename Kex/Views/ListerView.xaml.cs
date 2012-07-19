@@ -9,6 +9,7 @@ using System.Windows.Media;
 using Kex.Common;
 using Kex.Controller;
 using Kex.Model;
+using Kex.Model.Item;
 using Kex.Model.Lister;
 
 namespace Kex.Views

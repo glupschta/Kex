@@ -10,6 +10,7 @@
       <MenuItem Text="Restore" Command="WindowRestore" />
       <MenuItem Text="Dock Left" Command="WindowDockLeft" />
       <MenuItem Text="Dock Right" Command="WindowDockRight" />
+      <MenuItem Text="Center" Command="WindowCenter" />
       <MenuItem Text="Close" Command="WindowClose" />
       <MenuItem Text="Close All But This" Command="WindowCloseAllButThis" />
       

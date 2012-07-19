@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Kex.Model;
+using Kex.Model.Item;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
 namespace Kex.Views

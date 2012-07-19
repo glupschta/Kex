@@ -17,7 +17,7 @@
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
         <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="Auto"/>
-        <GridViewColumn Header="LastModified" Width="142">
+        <GridViewColumn Header="LastModified" Width="150">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Properties.LastModified, Converter={StaticResource dateTimeConverter}}" TextAlignment="Right"/>

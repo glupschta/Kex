@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Kex.Model.Item;
 
 namespace Kex.Model.ItemProvider
 {

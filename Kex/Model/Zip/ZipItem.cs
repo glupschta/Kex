@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Media.Imaging;
 using Ionic.Zip;
 using Kex.Common;
+using Kex.Model.Item;
 
 namespace Kex.Model
 {

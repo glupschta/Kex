@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Windows.Media.Imaging;
 
-namespace Kex.Model
+namespace Kex.Model.Item
 {
     public class PropertyItem : IItem
     {
         public  PropertyItem(string key, string value, ItemType type)
         {
-            Name = FilterString = DisplayName = key;
+            Name = DisplayName = key;
+            FilterString = key + value;
             Value = FullPath = value;
             Properties1 = new PropertyProperties(value); 
             ItemType = type;

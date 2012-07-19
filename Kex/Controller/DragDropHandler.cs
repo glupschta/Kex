@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Kex.Model;
+using Kex.Model.Item;
 using Kex.Views;
 
 namespace Kex.Controller

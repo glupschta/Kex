@@ -5,19 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Views="clr-namespace:Kex.Views" xmlns:Drawing="clr-namespace:System.Drawing;assembly=System.Drawing" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300" >
         <UserControl.Resources>
-            <Style TargetType="{x:Type ListView}">
-                <Style.Triggers>
-                    <Trigger Property="HasItems" Value="false">
-                        <Setter Property="Focusable" Value="False" />
-                        <Setter Property="Background" Value="Red" />
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-        </UserControl.Resources>
+        <DropShadowEffect RenderingBias="Performance" x:Key="dropShadowEffect" Color="#EEEEEE" />
+
+    </UserControl.Resources>
         <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="22"/>
+            <RowDefinition Height="24"/>
         </Grid.RowDefinitions>
         <ListView Grid.Row="0" Name="View"
                 Background="Transparent" BorderThickness="0" Focusable="False"
@@ -25,6 +19,15 @@
                 MouseUp="View_MouseUp" MouseDoubleClick="ViewMouseDoubleClick"
                 AllowDrop="True" SelectionMode="Extended" VirtualizingStackPanel.VirtualizationMode="Recycling"
                 >
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=ItemType}" Value="Container">
+                            <Setter Property="Effect" Value="{StaticResource ResourceKey=dropShadowEffect}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
 
         <Views:ListerStatusbar x:Name="statusbar" Grid.Row="1" />

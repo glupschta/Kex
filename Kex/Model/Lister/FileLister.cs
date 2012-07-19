@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using Kex.Common;
 using Kex.Controller;
+using Kex.Model.Item;
 using Kex.Model.ItemProvider;
 
 namespace Kex.Model.Lister

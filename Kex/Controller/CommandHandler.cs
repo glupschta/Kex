@@ -15,6 +15,7 @@ using Kex.Common;
 using Kex.Controller.Popups;
 using Kex.Model;
 using Kex.Model;
+using Kex.Model.Item;
 using Kex.Model.ItemProvider;
 using Kex.Model.Lister;
 using Kex.Model.Zip;
@@ -78,6 +79,9 @@ namespace Kex.Controller
                     break;
                 case "windowdockright":
                     WindowDockRight();
+                    break;
+                case "windowcenter":
+                    WindowCenter();
                     break;
                 case "windowclose":
                     _ListerViewManager.CloseCurrentLister();
@@ -207,20 +211,30 @@ namespace Kex.Controller
         {
             var screenWidth = SystemParameters.PrimaryScreenWidth;
             var screenHeight = SystemParameters.PrimaryScreenHeight;
-            Application.Current.MainWindow.Top = 0;
+            //Application.Current.MainWindow.Top = 0;
             Application.Current.MainWindow.Left = 0;
             Application.Current.MainWindow.Width = screenWidth/2;
-            Application.Current.MainWindow.Height = screenHeight;
+            //Application.Current.MainWindow.Height = screenHeight;
         }
 
         public void WindowDockRight()
         {
             var screenWidth = SystemParameters.PrimaryScreenWidth;
             var screenHeight = SystemParameters.PrimaryScreenHeight;
-            Application.Current.MainWindow.Top = 0;
+            //Application.Current.MainWindow.Top = 0;
             Application.Current.MainWindow.Left = screenWidth-screenWidth/2;
             Application.Current.MainWindow.Width = screenWidth -Application.Current.MainWindow.Left;
-            Application.Current.MainWindow.Height = screenHeight;            
+            //Application.Current.MainWindow.Height = screenHeight;            
+        }
+
+        public void WindowCenter()
+        {
+            var screenWidth = SystemParameters.PrimaryScreenWidth;
+            var screenHeight = SystemParameters.PrimaryScreenHeight;
+            //Application.Current.MainWindow.Top = 0;
+            Application.Current.MainWindow.Left = (screenWidth - Application.Current.MainWindow.Width) / 2;
+            //Application.Current.MainWindow.Width = screenWidth - Application.Current.MainWindow.Left;
+            //Application.Current.MainWindow.Height = screenHeight;                
         }
 
 
@@ -615,6 +629,12 @@ namespace Kex.Controller
             //dialog.Show(CurrentItem as FileItem);
             var propertyLister = new PropertyLister(CurrentItem as FileItem);
             ListerManager.Instance.ListerViewManager.OpenLister(CurrentItem.FullPath, propertyLister );
+        }
+
+        public void ShowTextLister()
+        {
+            var textLister = new TextLister(CurrentItem as FileItem);
+            ListerManager.Instance.ListerViewManager.OpenLister(CurrentItem.FullPath, textLister);
         }
 
         public void ShowContextMenu()

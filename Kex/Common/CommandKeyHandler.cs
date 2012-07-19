@@ -41,6 +41,9 @@ namespace Kex.Common
                     else
                         ListerManager.Instance.CommandManager.SelectAll();
                     break;
+                case Key.B:
+                    ListerManager.Instance.CommandManager.ShowTextLister();
+                    break;
                 case Key.C:
                     if (control)
                         ListerManager.Instance.CommandManager.Copy();
