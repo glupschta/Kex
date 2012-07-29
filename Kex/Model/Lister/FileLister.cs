@@ -29,7 +29,7 @@ namespace Kex.Model.Lister
             CurrentDirectory = directory;
         }
 
-        protected readonly IItemProvider<FileItem> ItemProvider;
+        protected readonly FilesystemItemProvider  ItemProvider;
 
         public override void Refresh()
         {

@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using Kex.Common;
 using Kex.Views;
 
@@ -56,7 +59,14 @@ namespace Kex.Controller.Popups
             Input.TextBox.Clear();
 
             RegisterHandlers();
-            ListerManager.Instance.ListerViewManager.CurrentListerView.View.Background = new SolidColorBrush(Color.FromRgb(250, 250, 250));
+
+            var background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            ListerManager.Instance.ListerViewManager.CurrentListerView.View.Background = background;
+            var animation = new ColorAnimation();
+            animation.To = Color.FromRgb(250, 250, 250);
+            animation.Duration = new Duration(TimeSpan.FromSeconds(1));
+            ListerManager.Instance.ListerViewManager.CurrentListerView.View.Background.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+
             Input.SetPosition();
             Input.Show();
             Input.TextBox.Focus();

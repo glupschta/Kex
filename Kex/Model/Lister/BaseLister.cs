@@ -18,7 +18,6 @@ namespace Kex.Model.Lister
             NavigationHistory = new BrowsingHistory();
         }
 
-
         public abstract string XamlView { get;  }
         public ListView ListView { get; set; }
 

@@ -30,9 +30,4 @@ namespace Kex.Model.Lister
         void SelectionChanged(ListView view, SelectionChangedEventArgs selectionChangedEventArgs);
     }
 
-    public interface ILister<T> : ILister
-        where T : IItem
-    {
-        IItemProvider<T> ItemProvider { get; set; }
-    }
 }

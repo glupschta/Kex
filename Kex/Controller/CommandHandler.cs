@@ -50,11 +50,21 @@ namespace Kex.Controller
             }
             set
             {
+
                 var it = CurrentView.View.SelectedItem as IItem;
                 if (value != null && it != null && it.FullPath == value.FullPath) return;
 
+
+                if (value != null)
+                    MainWindow.Debug("set path " + value.FullPath);
+                else
+                {
+                    MainWindow.Debug("null item");
+                    MainWindow.Debug(new StackTrace().ToString());
+                }
                 CurrentView.View.SelectedItem = value;
                 SetFocusToItem(value);
+
             }
         }
 
@@ -509,7 +519,7 @@ namespace Kex.Controller
                 var lister = historyItem.ListerType
                     .GetConstructor(new [] { typeof(ILister), typeof(string) })
                     .Invoke(new object[] {baseLister, historyItem.FullPath });
-                CurrentView.Lister = lister as ILister<IItem>;
+                CurrentView.Lister = lister as ILister;
                 return false;
             }
             return true;

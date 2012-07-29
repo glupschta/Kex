@@ -30,7 +30,7 @@ namespace Kex.Controller.Popups
         protected override void HandleSelection()
         {
             var selectedDrive = Input.ListBox.SelectedItem as DriveItem;
-            if (selectedDrive != null)
+            if (selectedDrive != null && selectedDrive.IsReady)
             {
                 if (!(ListerManager.Instance.ListerViewManager.CurrentListerView.Lister is FileLister))
                 {
@@ -59,11 +59,13 @@ namespace Kex.Controller.Popups
             Name = GetDriveInfoString(info);
             RootDirectory = info.RootDirectory.FullName;
             ShellObject = ShellObject.FromParsingName(RootDirectory);
+            IsReady = info.IsReady;
         }
 
         public static List<DriveItem> GetAllItems()
         {
-            return drives ?? (drives = DriveInfo.GetDrives().Select(d => new DriveItem(d)).ToList());
+            //return drives ?? (drives = DriveInfo.GetDrives().Select(d => new DriveItem(d)).ToList());
+            return drives = DriveInfo.GetDrives().Select(d => new DriveItem(d)).ToList();
         }
 
         private static List<DriveItem> drives;
@@ -104,5 +106,7 @@ namespace Kex.Controller.Popups
                 return ShellObject.Thumbnail.SmallBitmapSource;
             }
         }
+
+        public bool IsReady { get; set; }
     }
 }

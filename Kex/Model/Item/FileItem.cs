@@ -44,7 +44,7 @@ namespace Kex.Model.Item
 
             props.ShellObject.Thumbnail.FormatOption = ShellThumbnailFormatOption.IconOnly;
             props.ShellObject.Thumbnail.RetrievalOption = ShellThumbnailRetrievalOption.Default;
-            props.Thumbnail = props.ShellObject.Thumbnail.MediumBitmapSource;
+            props.Thumbnail = props.ShellObject.Thumbnail.SmallBitmapSource;
             //props.Thumbnail.Freeze();
             Properties = props;
         } 

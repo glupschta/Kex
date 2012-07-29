@@ -25,6 +25,10 @@ namespace Kex.Controller.Popups
 
         public override void Hide()
         {
+            if (!ListerManager.Instance.ListerViewManager.CurrentListerView.View.HasItems)
+            {
+                ListerManager.Instance.CommandManager.SetFilter(null); 
+            }
             base.Hide();
             ListerManager.Instance.ListerViewManager.CurrentListerView.View.SelectedIndex = 0;
             ListerManager.Instance.CommandManager.FocusView();
@@ -44,7 +48,6 @@ namespace Kex.Controller.Popups
         {
             Input.ListBox.SelectedIndex = -1;
             ListerManager.Instance.CommandManager.SetFilter(Text);
-            //ApplyListDefaultFilter(FileTypes);
         }
 
         protected override void HandleSelection()

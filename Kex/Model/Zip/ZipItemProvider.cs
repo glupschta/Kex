@@ -7,7 +7,7 @@ using Kex.Model.ItemProvider;
 
 namespace Kex.Model.Zip
 {
-    public class ZipItemProvider : IItemProvider<ZipItem>
+    public class ZipItemProvider
     {
         public ZipItemProvider(string zipFile)
         {
