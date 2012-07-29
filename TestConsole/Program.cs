@@ -26,7 +26,7 @@ namespace TestConsole
 
         private static void testManifest()
         {
-            var asmPath = @"C:\tfs\MH\Source\noe.MH.Forms\bin\noe.core.web.dll";
+            var asmPath = @"E:\tfs\EH\Source\Forms\bin\noe.core.web.dll";
             var a = Mono.Cecil.AssemblyDefinition.ReadAssembly(asmPath);
 
             Console.WriteLine(a.FullName);
@@ -34,8 +34,8 @@ namespace TestConsole
             {
                 Console.WriteLine(ar.FullName);
             }
-            
-
+            ShellObject so = ShellObject.FromParsingName(@"Systemsteuerung\Alle Systemsteuerungselemente");
+            Console.WriteLine(so.Name);
         }
 
         private static void testZip()
